@@ -1,0 +1,298 @@
+{{define "content"}}
+<div class="profile-container">
+    <!-- 左侧个人信息和导航 -->
+    <div class="profile-sidebar">
+        <!-- 用户信息卡片 -->
+        <div class="user-info-card">
+            <div class="avatar-section">
+                <div class="avatar-container">
+                    <img src="{{.user.Avatar}}" alt="用户头像" class="user-avatar" id="userAvatar">
+                    <div class="avatar-overlay" onclick="document.getElementById('avatarInput').click()">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                </div>
+                <input type="file" id="avatarInput" accept="image/*" style="display: none;" onchange="changeAvatar(this)">
+            </div>
+            <div class="user-details">
+                <h3 class="username">{{.user.Username}}</h3>
+                <div class="user-stats">
+                    <span class="level">等级 {{.user.Level}}</span>
+                    <span class="points">{{.user.Points}} 积分</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 功能导航菜单 -->
+        <nav class="profile-nav">
+            <ul class="nav-menu">
+                <li class="nav-item active" data-section="activity">
+                    <i class="fas fa-stream"></i>
+                    <span>个人动态</span>
+                </li>
+                <li class="nav-item" data-section="edit-profile">
+                    <i class="fas fa-user-edit"></i>
+                    <span>个人资料编辑</span>
+                </li>
+                <li class="nav-item" data-section="my-questions">
+                    <i class="fas fa-question-circle"></i>
+                    <span>我的提问</span>
+                </li>
+                <li class="nav-item" data-section="my-answers">
+                    <i class="fas fa-comment-dots"></i>
+                    <span>我的回答</span>
+                </li>
+                <li class="nav-item" data-section="my-shares">
+                    <i class="fas fa-share-alt"></i>
+                    <span>我的分享</span>
+                </li>
+                <li class="nav-item" data-section="my-resources">
+                    <i class="fas fa-book"></i>
+                    <span>我的资料</span>
+                </li>
+                <li class="nav-item" data-section="my-favorites">
+                    <i class="fas fa-heart"></i>
+                    <span>我的收藏</span>
+                </li>
+                <li class="nav-item" data-section="my-following">
+                    <i class="fas fa-user-plus"></i>
+                    <span>我的关注</span>
+                </li>
+                <li class="nav-item" data-section="my-followers">
+                    <i class="fas fa-users"></i>
+                    <span>我的粉丝</span>
+                </li>
+                <li class="nav-item" data-section="messages">
+                    <i class="fas fa-envelope"></i>
+                    <span>消息中心</span>
+                </li>
+                <li class="nav-item" data-section="settings">
+                    <i class="fas fa-cog"></i>
+                    <span>设置</span>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <!-- 右侧内容展示区 -->
+    <div class="profile-content">
+        <!-- 个人动态 -->
+        <div class="content-section active" id="activity">
+            <div class="section-header">
+                <h2>个人动态</h2>
+                <div class="filter-tabs">
+                    <button class="filter-tab active" data-filter="all">全部</button>
+                    <button class="filter-tab" data-filter="questions">提问</button>
+                    <button class="filter-tab" data-filter="answers">回答</button>
+                    <button class="filter-tab" data-filter="shares">分享</button>
+                    <button class="filter-tab" data-filter="comments">评论</button>
+                </div>
+            </div>
+            <div class="activity-list" id="activityList">
+                <!-- 动态内容将通过JavaScript动态加载 -->
+            </div>
+        </div>
+
+        <!-- 个人资料编辑 -->
+        <div class="content-section" id="edit-profile">
+            <div class="section-header">
+                <h2>个人资料编辑</h2>
+            </div>
+            <div class="edit-form">
+                <form id="profileForm">
+                    <div class="form-group">
+                        <label for="editUsername">昵称</label>
+                        <input type="text" id="editUsername" name="username" value="{{.user.Username}}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editEmail">邮箱</label>
+                        <input type="email" id="editEmail" name="email" value="{{.user.Email}}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="editBio">个人简介</label>
+                        <textarea id="editBio" name="bio" rows="4" placeholder="介绍一下自己...">{{.user.Bio}}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="editPhone">联系电话</label>
+                        <input type="tel" id="editPhone" name="phone" value="{{.user.Phone}}" placeholder="选填">
+                    </div>
+                    <div class="form-group">
+                        <label for="editWebsite">个人网站</label>
+                        <input type="url" id="editWebsite" name="website" value="{{.user.Website}}" placeholder="选填">
+                    </div>
+                    <div class="form-group">
+                        <label>隐私设置</label>
+                        <div class="privacy-options">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="profile_public" {{if .user.ProfilePublic}}checked{{end}}>
+                                <span>公开个人资料</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="show_email" {{if .user.ShowEmail}}checked{{end}}>
+                                <span>显示邮箱</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="show_phone" {{if .user.ShowPhone}}checked{{end}}>
+                                <span>显示电话</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">保存修改</button>
+                        <button type="button" class="btn-secondary" onclick="resetForm()">重置</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- 我的提问 -->
+        <div class="content-section" id="my-questions">
+            <div class="section-header">
+                <h2>我的提问</h2>
+                <div class="section-actions">
+                    <button class="btn-primary" onclick="location.href='/qa'">
+                        <i class="fas fa-plus"></i> 发布新问题
+                    </button>
+                </div>
+            </div>
+            <div class="questions-list" id="questionsList">
+                <!-- 提问列表将通过JavaScript动态加载 -->
+            </div>
+        </div>
+
+        <!-- 我的回答 -->
+        <div class="content-section" id="my-answers">
+            <div class="section-header">
+                <h2>我的回答</h2>
+            </div>
+            <div class="answers-list" id="answersList">
+                <!-- 回答列表将通过JavaScript动态加载 -->
+            </div>
+        </div>
+
+        <!-- 我的分享 -->
+        <div class="content-section" id="my-shares">
+            <div class="section-header">
+                <h2>我的分享</h2>
+                <div class="section-actions">
+                    <button class="btn-primary" onclick="location.href='/category/1'">
+                        <i class="fas fa-plus"></i> 发布分享
+                    </button>
+                </div>
+            </div>
+            <div class="shares-list" id="sharesList">
+                <!-- 分享列表将通过JavaScript动态加载 -->
+            </div>
+        </div>
+
+        <!-- 我的资料 -->
+        <div class="content-section" id="my-resources">
+            <div class="section-header">
+                <h2>我的资料</h2>
+                <div class="section-actions">
+                    <button class="btn-primary" onclick="location.href='/category/2'">
+                        <i class="fas fa-plus"></i> 上传资料
+                    </button>
+                </div>
+            </div>
+            <div class="resources-list" id="resourcesList">
+                <!-- 资料列表将通过JavaScript动态加载 -->
+            </div>
+        </div>
+
+        <!-- 我的收藏 -->
+        <div class="content-section" id="my-favorites">
+            <div class="section-header">
+                <h2>我的收藏</h2>
+            </div>
+            <div class="favorites-list" id="favoritesList">
+                <!-- 收藏列表将通过JavaScript动态加载 -->
+            </div>
+        </div>
+
+        <!-- 我的关注 -->
+        <div class="content-section" id="my-following">
+            <div class="section-header">
+                <h2>我的关注</h2>
+            </div>
+            <div class="following-list" id="followingList">
+                <!-- 关注列表将通过JavaScript动态加载 -->
+            </div>
+        </div>
+
+        <!-- 我的粉丝 -->
+        <div class="content-section" id="my-followers">
+            <div class="section-header">
+                <h2>我的粉丝</h2>
+            </div>
+            <div class="followers-list" id="followersList">
+                <!-- 粉丝列表将通过JavaScript动态加载 -->
+            </div>
+        </div>
+
+        <!-- 消息中心 -->
+        <div class="content-section" id="messages">
+            <div class="section-header">
+                <h2>消息中心</h2>
+                <div class="section-actions">
+                    <button class="btn-secondary" onclick="markAllRead()">
+                        <i class="fas fa-check-double"></i> 全部已读
+                    </button>
+                </div>
+            </div>
+            <div class="messages-list" id="messagesList">
+                <!-- 消息列表将通过JavaScript动态加载 -->
+            </div>
+        </div>
+
+        <!-- 设置 -->
+        <div class="content-section" id="settings">
+            <div class="section-header">
+                <h2>设置</h2>
+            </div>
+            <div class="settings-form">
+                <div class="setting-group">
+                    <h3>账户设置</h3>
+                    <div class="form-group">
+                        <label for="currentPassword">当前密码</label>
+                        <input type="password" id="currentPassword" name="currentPassword">
+                    </div>
+                    <div class="form-group">
+                        <label for="newPassword">新密码</label>
+                        <input type="password" id="newPassword" name="newPassword">
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">确认新密码</label>
+                        <input type="password" id="confirmPassword" name="confirmPassword">
+                    </div>
+                    <button type="button" class="btn-primary" onclick="changePassword()">修改密码</button>
+                </div>
+                
+                <div class="setting-group">
+                    <h3>通知设置</h3>
+                    <div class="notification-options">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="email_notifications" checked>
+                            <span>邮件通知</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="browser_notifications" checked>
+                            <span>浏览器通知</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="question_notifications" checked>
+                            <span>问题回复通知</span>
+                        </label>
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="follow_notifications" checked>
+                            <span>关注通知</span>
+                        </label>
+                    </div>
+                    <button type="button" class="btn-primary" onclick="saveNotificationSettings()">保存设置</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/static/profile.js"></script>
+{{end}} 

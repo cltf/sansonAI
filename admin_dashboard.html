@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI论坛管理后台 - 仪表盘</title>
+    <link rel="icon" type="image/png" href="images/logo.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="images/logo.png" sizes="48x48">
+    <link rel="apple-touch-icon" href="images/logo.png" sizes="180x180">
+    <link rel="icon" type="image/png" href="images/logo.png" sizes="192x192">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f7fa;
+            color: #333;
+        }
+
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* 左侧导航栏 */
+        .sidebar {
+            width: 260px;
+            background: white;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .sidebar-header {
+            padding: 30px 25px;
+            border-bottom: 1px solid #f0f0f0;
+            text-align: center;
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .sidebar-logo img {
+            width: 32px;
+            height: 32px;
+        }
+
+        .sidebar-logo h2 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .sidebar-subtitle {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .nav-menu {
+            padding: 20px 0;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px 25px;
+            color: #666;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-item:hover {
+            background: #f8f9fa;
+            color: #4A90E2;
+            border-left-color: #4A90E2;
+        }
+
+        .nav-item.active {
+            background: #e3f2fd;
+            color: #4A90E2;
+            border-left-color: #4A90E2;
+            font-weight: 500;
+        }
+
+        .nav-item i {
+            width: 20px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        .nav-item span {
+            font-size: 14px;
+        }
+
+        /* 主内容区域 */
+        .main-content {
+            flex: 1;
+            margin-left: 260px;
+            min-height: 100vh;
+        }
+
+        /* 顶部导航栏 */
+        .top-nav {
+            background: white;
+            padding: 20px 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .top-nav-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .notification-icon {
+            position: relative;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 8px;
+            transition: background 0.3s ease;
+        }
+
+        .notification-icon:hover {
+            background: #f8f9fa;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: background 0.3s ease;
+        }
+
+        .user-info:hover {
+            background: #f8f9fa;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .user-role {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .logout-btn {
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #fee;
+            color: #e74c3c;
+        }
+
+        /* 内容区域 */
+        .content-area {
+            padding: 30px;
+        }
+
+        /* 统计卡片 */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .stat-title {
+            font-size: 14px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: white;
+        }
+
+        .stat-icon.users { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .stat-icon.questions { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .stat-icon.articles { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .stat-icon.resources { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .stat-change {
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .stat-change.positive {
+            color: #27ae60;
+        }
+
+        .stat-change.negative {
+            color: #e74c3c;
+        }
+
+        /* 待办事项 */
+        .todo-section {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .todo-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .todo-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .todo-count {
+            background: #4A90E2;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .todo-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .todo-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            border: 1px solid #f0f0f0;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .todo-item:hover {
+            border-color: #4A90E2;
+            background: #f8f9fa;
+        }
+
+        .todo-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            color: white;
+        }
+
+        .todo-icon.questions { background: #f093fb; }
+        .todo-icon.articles { background: #4facfe; }
+        .todo-icon.resources { background: #43e97b; }
+
+        .todo-content {
+            flex: 1;
+        }
+
+        .todo-text {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .todo-meta {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .todo-action {
+            color: #4A90E2;
+            font-size: 14px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- 左侧导航栏 -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <img src="images/logo.png" alt="AI论坛Logo">
+                    <h2>管理后台</h2>
+                </div>
+                <p class="sidebar-subtitle">AI论坛管理系统</p>
+            </div>
+
+            <nav class="nav-menu">
+                <a href="admin_dashboard.html" class="nav-item active">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>仪表盘</span>
+                </a>
+                <a href="admin_users.html" class="nav-item">
+                    <i class="fas fa-users"></i>
+                    <span>用户管理</span>
+                </a>
+                <a href="admin_content.html" class="nav-item">
+                    <i class="fas fa-file-alt"></i>
+                    <span>内容管理</span>
+                </a>
+                <a href="admin_community.html" class="nav-item">
+                    <i class="fas fa-comments"></i>
+                    <span>社群管理</span>
+                </a>
+                <a href="admin_tags.html" class="nav-item">
+                    <i class="fas fa-tags"></i>
+                    <span>标签分类</span>
+                </a>
+                <a href="admin_analytics.html" class="nav-item">
+                    <i class="fas fa-chart-line"></i>
+                    <span>数据统计</span>
+                </a>
+                <a href="admin_settings.html" class="nav-item">
+                    <i class="fas fa-cog"></i>
+                    <span>系统设置</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- 主内容区域 -->
+        <main class="main-content">
+            <!-- 顶部导航栏 -->
+            <header class="top-nav">
+                <h1 class="page-title">仪表盘</h1>
+                
+                <div class="top-nav-right">
+                    <div class="notification-icon">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </div>
+                    
+                    <div class="user-info" onclick="toggleUserMenu()">
+                        <img src="images/user.jpg" alt="管理员头像" class="user-avatar">
+                        <div class="user-details">
+                            <span class="user-name">管理员</span>
+                            <span class="user-role">超级管理员</span>
+                        </div>
+                    </div>
+                    
+                    <button class="logout-btn" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- 内容区域 -->
+            <div class="content-area">
+                <!-- 统计卡片 -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-title">用户总数</span>
+                            <div class="stat-icon users">
+                                <i class="fas fa-users"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value">12,847</div>
+                        <div class="stat-change positive">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>+156 (今日)</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-title">问答总数</span>
+                            <div class="stat-icon questions">
+                                <i class="fas fa-question-circle"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value">8,234</div>
+                        <div class="stat-change positive">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>+23 (今日)</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-title">技术分享</span>
+                            <div class="stat-icon articles">
+                                <i class="fas fa-file-alt"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value">3,456</div>
+                        <div class="stat-change positive">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>+12 (今日)</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-title">学习资料</span>
+                            <div class="stat-icon resources">
+                                <i class="fas fa-book"></i>
+                            </div>
+                        </div>
+                        <div class="stat-value">1,234</div>
+                        <div class="stat-change positive">
+                            <i class="fas fa-arrow-up"></i>
+                            <span>+8 (今日)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 待办事项 -->
+                <div class="todo-section">
+                    <div class="todo-header">
+                        <h3 class="todo-title">待办事项</h3>
+                        <span class="todo-count">8</span>
+                    </div>
+                    
+                    <div class="todo-list">
+                        <div class="todo-item" onclick="goToContent('questions')">
+                            <div class="todo-icon questions">
+                                <i class="fas fa-question-circle"></i>
+                            </div>
+                            <div class="todo-content">
+                                <div class="todo-text">待审核问答</div>
+                                <div class="todo-meta">5个新问答等待审核</div>
+                            </div>
+                            <span class="todo-action">去审核</span>
+                        </div>
+
+                        <div class="todo-item" onclick="goToContent('articles')">
+                            <div class="todo-icon articles">
+                                <i class="fas fa-file-alt"></i>
+                            </div>
+                            <div class="todo-content">
+                                <div class="todo-text">待审核技术分享</div>
+                                <div class="todo-meta">3篇技术分享等待审核</div>
+                            </div>
+                            <span class="todo-action">去审核</span>
+                        </div>
+
+                        <div class="todo-item" onclick="goToContent('resources')">
+                            <div class="todo-icon resources">
+                                <i class="fas fa-book"></i>
+                            </div>
+                            <div class="todo-content">
+                                <div class="todo-text">待审核学习资料</div>
+                                <div class="todo-meta">2个学习资料等待审核</div>
+                            </div>
+                            <span class="todo-action">去审核</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // 检查登录状态
+        function checkLogin() {
+            const isLoggedIn = localStorage.getItem('adminLoggedIn') || sessionStorage.getItem('adminLoggedIn');
+            if (!isLoggedIn) {
+                window.location.href = 'admin_login.html';
+            }
+        }
+
+        // 退出登录
+        function logout() {
+            if (confirm('确定要退出登录吗？')) {
+                localStorage.removeItem('adminLoggedIn');
+                localStorage.removeItem('adminUsername');
+                sessionStorage.removeItem('adminLoggedIn');
+                sessionStorage.removeItem('adminUsername');
+                window.location.href = 'admin_login.html';
+            }
+        }
+
+        // 切换用户菜单
+        function toggleUserMenu() {
+            console.log('切换用户菜单');
+        }
+
+        // 跳转到内容管理
+        function goToContent(type) {
+            window.location.href = `admin_content.html?type=${type}`;
+        }
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            checkLogin();
+        });
+    </script>
+</body>
+</html>

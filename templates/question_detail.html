@@ -1,0 +1,480 @@
+{{define "content"}}
+<!-- 问题详情页 -->
+<div class="question-detail-page">
+    <!-- 问题头部信息 -->
+    <div class="question-header">
+        <div class="question-title">
+            <h1>{{.question.Title}}</h1>
+            {{if .question.IsSolved}}
+            <span class="solved-badge">
+                <i class="fas fa-check-circle"></i> 已解决
+            </span>
+            {{end}}
+        </div>
+        
+        <div class="question-meta">
+            <div class="author-info">
+                <img src="{{.question.UserAvatar}}" alt="用户头像" class="author-avatar">
+                <div class="author-details">
+                    <span class="author-name">{{.question.Username}}</span>
+                    <span class="author-level">Lv.{{.question.UserLevel}}</span>
+                </div>
+                <span class="question-time">{{.question.CreatedAt.Format "2006-01-02 15:04"}}</span>
+            </div>
+            
+            <div class="question-tags">
+                {{range split .question.Tags ","}}
+                <span class="tag">{{.}}</span>
+                {{end}}
+            </div>
+            
+            <div class="question-actions">
+                <button class="btn-action" onclick="toggleFavorite()">
+                    <i class="fas fa-heart"></i> 收藏
+                </button>
+                <button class="btn-action" onclick="shareQuestion()">
+                    <i class="fas fa-share"></i> 分享
+                </button>
+                <button class="btn-action" onclick="reportQuestion()">
+                    <i class="fas fa-flag"></i> 举报
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主要内容区域 -->
+    <div class="question-main-content">
+        <!-- 左侧问题内容 -->
+        <div class="question-content-section">
+            <div class="question-content">
+                <div class="content-body">
+                    {{.question.Content}}
+                </div>
+                
+                <div class="question-stats">
+                    <span><i class="fas fa-eye"></i> {{.question.ViewCount}} 浏览</span>
+                    <span><i class="fas fa-comment"></i> {{.question.AnswerCount}} 回答</span>
+                    <span><i class="fas fa-thumbs-up"></i> {{.question.LikeCount}} 点赞</span>
+                    {{if gt .question.Reward 0}}
+                    <span><i class="fas fa-gift"></i> {{.question.Reward}} 悬赏</span>
+                    {{end}}
+                </div>
+            </div>
+        </div>
+
+        <!-- 右侧回答区域 -->
+        <div class="answers-section">
+            <div class="answers-header">
+                <h3>回答 ({{.question.AnswerCount}})</h3>
+                <div class="answers-sort">
+                    <select id="answerSort" onchange="sortAnswers()">
+                        <option value="accepted">采纳优先</option>
+                        <option value="time">时间排序</option>
+                        <option value="likes">点赞排序</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- 回答列表 -->
+            <div class="answers-list" id="answersList">
+                {{range .answers}}
+                <div class="answer-item {{if .IsAccepted}}accepted{{end}}" data-answer-id="{{.ID}}">
+                    {{if .IsAccepted}}
+                    <div class="accepted-badge">
+                        <i class="fas fa-check-circle"></i> 最佳答案
+                    </div>
+                    {{end}}
+                    
+                    <div class="answer-header">
+                        <div class="answer-author">
+                            <img src="{{.UserAvatar}}" alt="用户头像" class="answer-avatar">
+                            <div class="answer-author-info">
+                                <span class="answer-author-name">{{.Username}}</span>
+                                <span class="answer-time">{{.CreatedAt.Format "2006-01-02 15:04"}}</span>
+                            </div>
+                        </div>
+                        
+                        {{if and $.user (eq $.user.ID $.question.UserID) (not $.question.IsSolved)}}
+                        <button class="btn-accept" onclick="acceptAnswer('{{.ID}}')">
+                            <i class="fas fa-check"></i> 采纳答案
+                        </button>
+                        {{end}}
+                    </div>
+                    
+                    <div class="answer-content">
+                        {{.Content}}
+                    </div>
+                    
+                    <div class="answer-actions">
+                        <button class="btn-like" onclick="likeAnswer('{{.ID}}')">
+                            <i class="fas fa-thumbs-up"></i> 
+                            <span class="like-count">{{.LikeCount}}</span>
+                        </button>
+                        <button class="btn-comment" onclick="showComments('{{.ID}}')">
+                            <i class="fas fa-comment"></i> 评论
+                        </button>
+                        <button class="btn-reply" onclick="replyToAnswer('{{.ID}}')">
+                            <i class="fas fa-reply"></i> 回复
+                        </button>
+                    </div>
+                </div>
+                {{end}}
+            </div>
+
+            <!-- 我要回答区域 -->
+            <div class="answer-form-section">
+                <h3>我要回答</h3>
+                {{if .user}}
+                <form class="answer-form" id="answerForm">
+                    <div class="form-group">
+                        <textarea id="answerContent" placeholder="请输入您的回答..." required></textarea>
+                        <div class="editor-toolbar">
+                            <button type="button" onclick="insertCode()">
+                                <i class="fas fa-code"></i> 插入代码
+                            </button>
+                            <button type="button" onclick="insertImage()">
+                                <i class="fas fa-image"></i> 插入图片
+                            </button>
+                            <button type="button" onclick="insertLink()">
+                                <i class="fas fa-link"></i> 插入链接
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn-submit">提交回答</button>
+                    </div>
+                </form>
+                {{else}}
+                <div class="login-prompt">
+                    <p>请 <a href="/auth/login">登录</a> 后回答问题</p>
+                </div>
+                {{end}}
+            </div>
+        </div>
+    </div>
+
+    <!-- 相关问题推荐 -->
+    <div class="related-questions">
+        <h3>相关问题</h3>
+        <div class="related-list">
+            {{range .relatedQuestions}}
+            <div class="related-item">
+                <a href="/qa/{{.ID}}" class="related-title">{{.Title}}</a>
+                <div class="related-meta">
+                    <span>{{.Username}}</span>
+                    <span>{{.ViewCount}} 浏览</span>
+                    <span>{{.AnswerCount}} 回答</span>
+                </div>
+            </div>
+            {{end}}
+        </div>
+    </div>
+</div>
+
+<!-- 评论模态框 -->
+<div class="modal" id="commentsModal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>评论</h3>
+            <button class="modal-close" onclick="hideComments()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="comments-list" id="commentsList">
+                <!-- 评论列表将通过JavaScript动态加载 -->
+            </div>
+            <div class="comment-form">
+                <textarea id="commentContent" placeholder="请输入您的评论..."></textarea>
+                <button onclick="submitComment()">发表评论</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 分享模态框 -->
+<div class="modal" id="shareModal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>分享问题</h3>
+            <button class="modal-close" onclick="hideShare()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="share-options">
+                <button class="share-btn" onclick="copyLink()">
+                    <i class="fas fa-link"></i> 复制链接
+                </button>
+                <button class="share-btn" onclick="shareToWeChat()">
+                    <i class="fab fa-weixin"></i> 微信
+                </button>
+                <button class="share-btn" onclick="shareToWeibo()">
+                    <i class="fab fa-weibo"></i> 微博
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// 问题详情页JavaScript
+let currentAnswerId = null;
+
+// 采纳答案
+function acceptAnswer(answerId) {
+    if (confirm('确定要采纳这个答案吗？')) {
+        fetch(`/api/answers/${answerId}/accept`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert(data.error || '操作失败');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('操作失败');
+        });
+    }
+}
+
+// 点赞回答
+function likeAnswer(answerId) {
+    fetch(`/api/answers/${answerId}/like`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const likeBtn = document.querySelector(`[data-answer-id="${answerId}"] .like-count`);
+            if (likeBtn) {
+                likeBtn.textContent = data.likeCount;
+            }
+        } else {
+            alert(data.error || '操作失败');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('操作失败');
+    });
+}
+
+// 显示评论
+function showComments(answerId) {
+    currentAnswerId = answerId;
+    document.getElementById('commentsModal').style.display = 'block';
+    loadComments(answerId);
+}
+
+// 隐藏评论
+function hideComments() {
+    document.getElementById('commentsModal').style.display = 'none';
+    currentAnswerId = null;
+}
+
+// 加载评论
+function loadComments(answerId) {
+    fetch(`/api/answers/${answerId}/comments`)
+    .then(response => response.json())
+    .then(data => {
+        const commentsList = document.getElementById('commentsList');
+        commentsList.innerHTML = '';
+        
+        data.comments.forEach(comment => {
+            const commentDiv = document.createElement('div');
+            commentDiv.className = 'comment-item';
+            commentDiv.innerHTML = `
+                <div class="comment-author">
+                    <img src="${comment.userAvatar}" alt="用户头像">
+                    <span>${comment.username}</span>
+                    <span class="comment-time">${comment.createdAt}</span>
+                </div>
+                <div class="comment-content">${comment.content}</div>
+            `;
+            commentsList.appendChild(commentDiv);
+        });
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+// 提交评论
+function submitComment() {
+    const content = document.getElementById('commentContent').value;
+    if (!content.trim()) {
+        alert('请输入评论内容');
+        return;
+    }
+    
+    fetch(`/api/answers/${currentAnswerId}/comments`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ content: content }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            document.getElementById('commentContent').value = '';
+            loadComments(currentAnswerId);
+        } else {
+            alert(data.error || '评论失败');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('评论失败');
+    });
+}
+
+// 提交回答
+document.getElementById('answerForm')?.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const content = document.getElementById('answerContent').value;
+    if (!content.trim()) {
+        alert('请输入回答内容');
+        return;
+    }
+    
+    fetch('/api/answers', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            questionId: '{{.question.ID}}',
+            content: content,
+        }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        } else {
+            alert(data.error || '回答失败');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('回答失败');
+    });
+});
+
+// 收藏问题
+function toggleFavorite() {
+    fetch(`/api/questions/{{.question.ID}}/favorite`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const btn = document.querySelector('.btn-action');
+            if (data.isFavorited) {
+                btn.innerHTML = '<i class="fas fa-heart"></i> 已收藏';
+                btn.classList.add('favorited');
+            } else {
+                btn.innerHTML = '<i class="fas fa-heart"></i> 收藏';
+                btn.classList.remove('favorited');
+            }
+        } else {
+            alert(data.error || '操作失败');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('操作失败');
+    });
+}
+
+// 分享问题
+function shareQuestion() {
+    document.getElementById('shareModal').style.display = 'block';
+}
+
+// 隐藏分享
+function hideShare() {
+    document.getElementById('shareModal').style.display = 'none';
+}
+
+// 复制链接
+function copyLink() {
+    const url = window.location.href;
+    navigator.clipboard.writeText(url).then(() => {
+        alert('链接已复制到剪贴板');
+        hideShare();
+    });
+}
+
+// 举报问题
+function reportQuestion() {
+    const reason = prompt('请输入举报原因：');
+    if (reason) {
+        fetch(`/api/questions/{{.question.ID}}/report`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ reason: reason }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('举报成功');
+            } else {
+                alert(data.error || '举报失败');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('举报失败');
+        });
+    }
+}
+
+// 编辑器功能
+function insertCode() {
+    const textarea = document.getElementById('answerContent');
+    const code = prompt('请输入代码：');
+    if (code) {
+        const codeBlock = '\n```\n' + code + '\n```\n';
+        textarea.value += codeBlock;
+    }
+}
+
+function insertImage() {
+    const textarea = document.getElementById('answerContent');
+    const url = prompt('请输入图片URL：');
+    if (url) {
+        const imageMarkdown = '\n![图片](' + url + ')\n';
+        textarea.value += imageMarkdown;
+    }
+}
+
+function insertLink() {
+    const textarea = document.getElementById('answerContent');
+    const url = prompt('请输入链接URL：');
+    const text = prompt('请输入链接文本：');
+    if (url && text) {
+        const linkMarkdown = '[' + text + '](' + url + ')';
+        textarea.value += linkMarkdown;
+    }
+}
+</script>
+{{end}} 

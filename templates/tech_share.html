@@ -1,0 +1,529 @@
+{{define "content"}}
+<!-- 技术分享页面 -->
+<div class="tech-share-page">
+    <!-- 搜索筛选区 -->
+    <div class="search-filter-section">
+        <div class="search-container">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="搜索技术分享..." value="{{.keyword}}">
+                <button class="btn-search" onclick="performSearch()">搜索</button>
+            </div>
+            
+            <div class="filter-options">
+                <div class="filter-group">
+                    <label>分类筛选</label>
+                    <select id="categoryFilter" onchange="filterByCategory()">
+                        <option value="">全部分类</option>
+                        <option value="algorithm" {{if eq .category "algorithm"}}selected{{end}}>算法研究</option>
+                        <option value="development" {{if eq .category "development"}}selected{{end}}>应用开发</option>
+                        <option value="industry" {{if eq .category "industry"}}selected{{end}}>行业动态</option>
+                        <option value="tutorial" {{if eq .category "tutorial"}}selected{{end}}>教程指南</option>
+                        <option value="research" {{if eq .category "research"}}selected{{end}}>研究论文</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label>排序方式</label>
+                    <select id="sortFilter" onchange="sortArticles()">
+                        <option value="latest" {{if eq .sort "latest"}}selected{{end}}>最新发布</option>
+                        <option value="likes" {{if eq .sort "likes"}}selected{{end}}>最多点赞</option>
+                        <option value="comments" {{if eq .sort "comments"}}selected{{end}}>最多评论</option>
+                        <option value="views" {{if eq .sort "views"}}selected{{end}}>最多阅读</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主要内容区域 -->
+    <div class="tech-share-main">
+        <!-- 左侧专题导航 -->
+        <aside class="topics-sidebar">
+            <div class="topics-header">
+                <h3>技术专题</h3>
+            </div>
+            <nav class="topics-nav">
+                <a href="/tech-share/topic/machine-learning" class="topic-item {{if eq .currentTopic "machine-learning"}}active{{end}}">
+                    <i class="fas fa-brain"></i>
+                    <span>机器学习入门</span>
+                    <span class="topic-count">(15)</span>
+                </a>
+                <a href="/tech-share/topic/robotics" class="topic-item {{if eq .currentTopic "robotics"}}active{{end}}">
+                    <i class="fas fa-robot"></i>
+                    <span>机器人控制技术</span>
+                    <span class="topic-count">(8)</span>
+                </a>
+                <a href="/tech-share/topic/deep-learning" class="topic-item {{if eq .currentTopic "deep-learning"}}active{{end}}">
+                    <i class="fas fa-network-wired"></i>
+                    <span>深度学习</span>
+                    <span class="topic-count">(23)</span>
+                </a>
+                <a href="/tech-share/topic/computer-vision" class="topic-item {{if eq .currentTopic "computer-vision"}}active{{end}}">
+                    <i class="fas fa-eye"></i>
+                    <span>计算机视觉</span>
+                    <span class="topic-count">(12)</span>
+                </a>
+                <a href="/tech-share/topic/nlp" class="topic-item {{if eq .currentTopic "nlp"}}active{{end}}">
+                    <i class="fas fa-language"></i>
+                    <span>自然语言处理</span>
+                    <span class="topic-count">(18)</span>
+                </a>
+                <a href="/tech-share/topic/reinforcement-learning" class="topic-item {{if eq .currentTopic "reinforcement-learning"}}active{{end}}">
+                    <i class="fas fa-gamepad"></i>
+                    <span>强化学习</span>
+                    <span class="topic-count">(6)</span>
+                </a>
+                <a href="/tech-share/topic/ai-ethics" class="topic-item {{if eq .currentTopic "ai-ethics"}}active{{end}}">
+                    <i class="fas fa-balance-scale"></i>
+                    <span>AI伦理与安全</span>
+                    <span class="topic-count">(9)</span>
+                </a>
+                <a href="/tech-share/topic/edge-ai" class="topic-item {{if eq .currentTopic "edge-ai"}}active{{end}}">
+                    <i class="fas fa-microchip"></i>
+                    <span>边缘AI</span>
+                    <span class="topic-count">(11)</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- 中间技术分享列表 -->
+        <main class="articles-section">
+            <div class="articles-header">
+                <h2>技术分享</h2>
+                {{if .user}}
+                <button class="btn-publish" onclick="showPublishForm()">
+                    <i class="fas fa-plus"></i> 发布分享
+                </button>
+                {{else}}
+                <a href="/auth/login" class="btn-publish">
+                    <i class="fas fa-plus"></i> 发布分享
+                </a>
+                {{end}}
+            </div>
+
+            <div class="articles-grid" id="articlesGrid">
+                {{range .articles}}
+                <article class="article-card" data-article-id="{{.ID}}">
+                    <div class="article-cover">
+                        <img src="{{.CoverImage}}" alt="文章封面">
+                        <div class="article-category">{{.CategoryName}}</div>
+                    </div>
+                    
+                    <div class="article-content">
+                        <h3 class="article-title">
+                            <a href="/tech-share/{{.ID}}">{{.Title}}</a>
+                        </h3>
+                        
+                        <div class="article-meta">
+                            <div class="article-author">
+                                <img src="{{.AuthorAvatar}}" alt="作者头像" class="author-avatar">
+                                <span class="author-name">{{.AuthorName}}</span>
+                                <span class="publish-time">{{.CreatedAt.Format "2006-01-02"}}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="article-tags">
+                            {{range split .Tags ","}}
+                            <span class="tag">{{.}}</span>
+                            {{end}}
+                        </div>
+                        
+                        <p class="article-summary">{{.Summary}}</p>
+                        
+                        <div class="article-stats">
+                            <span class="stat-item">
+                                <i class="fas fa-thumbs-up"></i>
+                                <span>{{.LikeCount}}</span>
+                            </span>
+                            <span class="stat-item">
+                                <i class="fas fa-comment"></i>
+                                <span>{{.CommentCount}}</span>
+                            </span>
+                            <span class="stat-item">
+                                <i class="fas fa-eye"></i>
+                                <span>{{.ViewCount}}</span>
+                            </span>
+                        </div>
+                    </div>
+                </article>
+                {{end}}
+            </div>
+
+            <!-- 分页 -->
+            {{if gt .totalPages 1}}
+            <div class="pagination">
+                {{if gt .currentPage 1}}
+                <a href="?page={{subtract .currentPage 1}}{{if .category}}&category={{.category}}{{end}}{{if .keyword}}&q={{.keyword}}{{end}}{{if .sort}}&sort={{.sort}}{{end}}" class="page-link">
+                    <i class="fas fa-chevron-left"></i>
+                </a>
+                {{end}}
+                
+                {{range $i := sequence .totalPages}}
+                <a href="?page={{$i}}{{if $.category}}&category={{$.category}}{{end}}{{if $.keyword}}&q={{$.keyword}}{{end}}{{if $.sort}}&sort={{$.sort}}{{end}}" 
+                   class="page-link {{if eq $i $.currentPage}}active{{end}}">
+                    {{$i}}
+                </a>
+                {{end}}
+                
+                {{if lt .currentPage .totalPages}}
+                <a href="?page={{add .currentPage 1}}{{if .category}}&category={{.category}}{{end}}{{if .keyword}}&q={{.keyword}}{{end}}{{if .sort}}&sort={{.sort}}{{end}}" class="page-link">
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+                {{end}}
+            </div>
+            {{end}}
+        </main>
+
+        <!-- 右侧推荐区域 -->
+        <aside class="recommendations-sidebar">
+            <!-- 热门作者 -->
+            <div class="recommendation-panel">
+                <h3>热门作者</h3>
+                <div class="popular-authors">
+                    {{range .popularAuthors}}
+                    <div class="author-item">
+                        <img src="{{.Avatar}}" alt="作者头像" class="author-avatar">
+                        <div class="author-info">
+                            <div class="author-name">{{.Username}}</div>
+                            <div class="author-stats">
+                                <span>{{.ArticleCount}} 文章</span>
+                                <span>{{.FollowerCount}} 粉丝</span>
+                            </div>
+                        </div>
+                        <button class="btn-follow" onclick="followAuthor({{.ID}})">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                    {{end}}
+                </div>
+            </div>
+
+            <!-- 相关专题 -->
+            <div class="recommendation-panel">
+                <h3>相关专题</h3>
+                <div class="related-topics">
+                    {{range .relatedTopics}}
+                    <div class="topic-item">
+                        <div class="topic-icon">
+                            <i class="{{.Icon}}"></i>
+                        </div>
+                        <div class="topic-info">
+                            <div class="topic-name">{{.Name}}</div>
+                            <div class="topic-count">{{.ArticleCount}} 篇文章</div>
+                        </div>
+                    </div>
+                    {{end}}
+                </div>
+            </div>
+        </aside>
+    </div>
+</div>
+
+<!-- 发布分享模态框 -->
+<div class="modal" id="publishModal" style="display: none;">
+    <div class="modal-content large">
+        <div class="modal-header">
+            <h3>发布技术分享</h3>
+            <button class="modal-close" onclick="hidePublishForm()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <form class="publish-form" id="publishForm">
+            <div class="form-group">
+                <label>文章标题 *</label>
+                <input type="text" name="title" placeholder="请输入文章标题" required>
+            </div>
+            
+            <div class="form-group">
+                <label>封面图片</label>
+                <div class="cover-upload">
+                    <div class="upload-area" id="uploadArea">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>点击上传封面图片</p>
+                        <input type="file" id="coverFile" accept="image/*" style="display: none;">
+                    </div>
+                    <div class="upload-preview" id="uploadPreview" style="display: none;">
+                        <img id="previewImage" src="" alt="预览图">
+                        <button type="button" onclick="removeCover()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>文章分类 *</label>
+                <select name="category" required>
+                    <option value="">请选择分类</option>
+                    <option value="algorithm">算法研究</option>
+                    <option value="development">应用开发</option>
+                    <option value="industry">行业动态</option>
+                    <option value="tutorial">教程指南</option>
+                    <option value="research">研究论文</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>文章内容 *</label>
+                <textarea name="content" id="contentEditor" placeholder="请输入文章内容..." required></textarea>
+                <div class="editor-toolbar">
+                    <button type="button" onclick="insertBold()">
+                        <i class="fas fa-bold"></i>
+                    </button>
+                    <button type="button" onclick="insertItalic()">
+                        <i class="fas fa-italic"></i>
+                    </button>
+                    <button type="button" onclick="insertCode()">
+                        <i class="fas fa-code"></i>
+                    </button>
+                    <button type="button" onclick="insertImage()">
+                        <i class="fas fa-image"></i>
+                    </button>
+                    <button type="button" onclick="insertLink()">
+                        <i class="fas fa-link"></i>
+                    </button>
+                    <button type="button" onclick="insertList()">
+                        <i class="fas fa-list"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>标签</label>
+                <div class="tags-input">
+                    <div class="tags-container" id="tagsContainer"></div>
+                    <input type="text" id="tagInput" placeholder="输入标签后按回车添加">
+                </div>
+                <div class="tags-suggestions">
+                    <span class="suggestion-label">常用标签:</span>
+                    <span class="tag-suggestion" onclick="addTag('机器学习')">机器学习</span>
+                    <span class="tag-suggestion" onclick="addTag('深度学习')">深度学习</span>
+                    <span class="tag-suggestion" onclick="addTag('Python')">Python</span>
+                    <span class="tag-suggestion" onclick="addTag('算法')">算法</span>
+                    <span class="tag-suggestion" onclick="addTag('AI')">AI</span>
+                </div>
+            </div>
+            
+            <div class="form-actions">
+                <button type="button" class="btn-secondary" onclick="hidePublishForm()">取消</button>
+                <button type="submit" class="btn-primary">发布文章</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+// 技术分享页JavaScript
+let selectedTags = [];
+
+// 搜索功能
+function performSearch() {
+    const keyword = document.getElementById('searchInput').value;
+    const category = document.getElementById('categoryFilter').value;
+    const sort = document.getElementById('sortFilter').value;
+    
+    let url = '/tech-share?';
+    if (keyword) url += 'q=' + encodeURIComponent(keyword) + '&';
+    if (category) url += 'category=' + category + '&';
+    if (sort) url += 'sort=' + sort;
+    
+    window.location.href = url;
+}
+
+// 分类筛选
+function filterByCategory() {
+    performSearch();
+}
+
+// 排序
+function sortArticles() {
+    performSearch();
+}
+
+// 显示发布表单
+function showPublishForm() {
+    document.getElementById('publishModal').style.display = 'block';
+    document.body.style.overflow = 'hidden';
+}
+
+// 隐藏发布表单
+function hidePublishForm() {
+    document.getElementById('publishModal').style.display = 'none';
+    document.body.style.overflow = 'auto';
+}
+
+// 封面图片上传
+document.getElementById('uploadArea').addEventListener('click', function() {
+    document.getElementById('coverFile').click();
+});
+
+document.getElementById('coverFile').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('previewImage').src = e.target.result;
+            document.getElementById('uploadArea').style.display = 'none';
+            document.getElementById('uploadPreview').style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+// 移除封面
+function removeCover() {
+    document.getElementById('coverFile').value = '';
+    document.getElementById('uploadArea').style.display = 'block';
+    document.getElementById('uploadPreview').style.display = 'none';
+}
+
+// 编辑器功能
+function insertBold() {
+    const textarea = document.getElementById('contentEditor');
+    const selectedText = textarea.value.substring(textarea.selectionStart, textarea.selectionEnd);
+    const boldText = '**' + selectedText + '**';
+    textarea.value = textarea.value.substring(0, textarea.selectionStart) + boldText + textarea.value.substring(textarea.selectionEnd);
+}
+
+function insertItalic() {
+    const textarea = document.getElementById('contentEditor');
+    const selectedText = textarea.value.substring(textarea.selectionStart, textarea.selectionEnd);
+    const italicText = '*' + selectedText + '*';
+    textarea.value = textarea.value.substring(0, textarea.selectionStart) + italicText + textarea.value.substring(textarea.selectionEnd);
+}
+
+function insertCode() {
+    const textarea = document.getElementById('contentEditor');
+    const code = prompt('请输入代码：');
+    if (code) {
+        const codeBlock = '\n```\n' + code + '\n```\n';
+        textarea.value += codeBlock;
+    }
+}
+
+function insertImage() {
+    const textarea = document.getElementById('contentEditor');
+    const url = prompt('请输入图片URL：');
+    if (url) {
+        const imageMarkdown = '\n![图片](' + url + ')\n';
+        textarea.value += imageMarkdown;
+    }
+}
+
+function insertLink() {
+    const textarea = document.getElementById('contentEditor');
+    const url = prompt('请输入链接URL：');
+    const text = prompt('请输入链接文本：');
+    if (url && text) {
+        const linkMarkdown = '[' + text + '](' + url + ')';
+        textarea.value += linkMarkdown;
+    }
+}
+
+function insertList() {
+    const textarea = document.getElementById('contentEditor');
+    const items = prompt('请输入列表项（用逗号分隔）：');
+    if (items) {
+        const itemArray = items.split(',');
+        let listMarkdown = '\n';
+        itemArray.forEach(item => {
+            listMarkdown += '- ' + item.trim() + '\n';
+        });
+        textarea.value += listMarkdown;
+    }
+}
+
+// 标签功能
+document.getElementById('tagInput').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        const tag = this.value.trim();
+        if (tag && !selectedTags.includes(tag)) {
+            addTag(tag);
+        }
+        this.value = '';
+    }
+});
+
+function addTag(tag) {
+    if (!selectedTags.includes(tag)) {
+        selectedTags.push(tag);
+        updateTagsDisplay();
+    }
+}
+
+function removeTag(tag) {
+    selectedTags = selectedTags.filter(t => t !== tag);
+    updateTagsDisplay();
+}
+
+function updateTagsDisplay() {
+    const container = document.getElementById('tagsContainer');
+    container.innerHTML = '';
+    selectedTags.forEach(tag => {
+        const tagElement = document.createElement('span');
+        tagElement.className = 'tag';
+        tagElement.innerHTML = tag + '<i class="fas fa-times" onclick="removeTag(\'' + tag + '\')"></i>';
+        container.appendChild(tagElement);
+    });
+}
+
+// 关注作者
+function followAuthor(authorId) {
+    fetch(`/api/authors/${authorId}/follow`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('关注成功！');
+        } else {
+            alert(data.error || '关注失败');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('关注失败');
+    });
+}
+
+// 提交发布表单
+document.getElementById('publishForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    formData.append('tags', selectedTags.join(','));
+    
+    fetch('/api/tech-share/publish', {
+        method: 'POST',
+        body: formData,
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('发布成功！');
+            hidePublishForm();
+            location.reload();
+        } else {
+            alert(data.error || '发布失败');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('发布失败');
+    });
+});
+
+// 点击模态框外部关闭
+document.getElementById('publishModal').addEventListener('click', function(e) {
+    if (e.target === this) {
+        hidePublishForm();
+    }
+});
+</script>
+{{end}} 

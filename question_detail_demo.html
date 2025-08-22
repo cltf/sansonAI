@@ -1,0 +1,1422 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>问题详情页演示 - AI论坛</title>
+    <link rel="icon" type="image/png" href="images/logo.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="images/logo.png" sizes="48x48">
+    <link rel="apple-touch-icon" href="images/logo.png" sizes="180x180">
+    <link rel="icon" type="image/png" href="images/logo.png" sizes="192x192">
+    <link rel="stylesheet" href="/static/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* 顶部导航栏样式 */
+        .top-nav {
+            background: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 60px;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-image {
+            height: 40px;
+            width: auto;
+        }
+
+        .logo-link {
+            text-decoration: none;
+            color: inherit;
+            display: flex;
+            align-items: center;
+            transition: opacity 0.3s ease;
+        }
+
+        .logo-link:hover {
+            opacity: 0.8;
+        }
+
+        .main-nav {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-link {
+            color: #666;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: #4A90E2;
+        }
+
+        .nav-link.active {
+            color: #4A90E2;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .search-box {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 12px;
+            color: #999;
+        }
+
+        .search-box input {
+            padding: 10px 15px 10px 40px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            width: 200px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .search-box input:focus {
+            border-color: #4A90E2;
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-actions i {
+            font-size: 20px;
+            color: #666;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .user-actions i:hover {
+            color: #4A90E2;
+        }
+
+        .user-icon-link {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .user-avatar-link {
+            text-decoration: none;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .user-avatar img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid #4A90E2;
+            object-fit: cover;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .nav-container {
+                padding: 0 15px;
+            }
+            
+            .nav-left {
+                gap: 20px;
+            }
+            
+            .main-nav {
+                gap: 15px;
+            }
+            
+            .nav-link {
+                font-size: 14px;
+            }
+            
+            .search-box input {
+                width: 150px;
+            }
+            
+            .user-actions {
+                gap: 10px;
+            }
+            
+            .user-actions i {
+                font-size: 18px;
+            }
+            
+            .user-avatar {
+                width: 32px;
+                height: 32px;
+            }
+            
+            .user-avatar img {
+                width: 32px;
+                height: 32px;
+            }
+        }
+
+        /* 问题详情页样式 */
+        .question-detail-page {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            gap: 30px;
+            min-height: calc(100vh - 150px);
+        }
+
+        /* 左侧导航区 */
+        .sidebar {
+            background: #fff;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            height: fit-content;
+            position: sticky;
+            top: 90px;
+            width: 250px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 30px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            text-decoration: none;
+            color: #555;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-item:hover {
+            background: #f0f7ff;
+            color: #4A90E2;
+        }
+
+        .nav-item.active {
+            background: #4A90E2;
+            color: white;
+        }
+
+        .nav-item i {
+            font-size: 16px;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* 用户等级 */
+        .user-level {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .user-level h3 {
+            margin-bottom: 15px;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .level-progress {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4A90E2, #5BA0F2);
+            border-radius: 4px;
+        }
+
+        .level-text {
+            font-size: 14px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        /* 社区规则 */
+        .rules-section {
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .rules-section h3 {
+            margin-bottom: 15px;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .rule-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .rule-item i {
+            color: #4A90E2;
+            font-size: 16px;
+        }
+
+        /* 问题内容区域 */
+        .question-content-wrapper {
+            flex: 1;
+        }
+
+        .question-header {
+            background: #fff;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .question-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .question-title h1 {
+            font-size: 28px;
+            font-weight: 600;
+            color: #333;
+            margin: 0;
+            flex: 1;
+        }
+
+        .solved-badge {
+            background: #4CAF50;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .question-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .author-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .author-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .author-details {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .author-name {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .author-level {
+            font-size: 12px;
+            color: #666;
+            background: #f0f0f0;
+            padding: 2px 6px;
+            border-radius: 10px;
+            width: fit-content;
+        }
+
+        .question-time {
+            color: #999;
+            font-size: 14px;
+        }
+
+        .question-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .question-tags .tag {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .question-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-action {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            padding: 8px 16px;
+            border-radius: 20px;
+            color: #666;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-action:hover {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .btn-action.favorited {
+            background: #ffebee;
+            color: #e53935;
+            border-color: #e53935;
+        }
+
+        .question-main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .question-content-section {
+            background: #fff;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .question-content .content-body {
+            font-size: 16px;
+            line-height: 1.8;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .question-content .content-body pre {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+
+        .question-content .content-body code {
+            background: #f1f3f4;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .question-content .content-body img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+
+        .question-stats {
+            display: flex;
+            gap: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .question-stats span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .answers-section {
+            background: #fff;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .answers-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .answers-header h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin: 0;
+        }
+
+        .answers-sort select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background: #fff;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .answers-list {
+            margin-bottom: 30px;
+        }
+
+        .answer-item {
+            border: 1px solid #eee;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .answer-item.accepted {
+            border-color: #4CAF50;
+            background: #f8fff8;
+        }
+
+        .accepted-badge {
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: #4CAF50;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .answer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .answer-author {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .answer-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .answer-author-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .answer-author-name {
+            font-weight: 500;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .answer-time {
+            color: #999;
+            font-size: 12px;
+        }
+
+        .btn-accept {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-accept:hover {
+            background: #45a049;
+        }
+
+        .answer-content {
+            font-size: 15px;
+            line-height: 1.7;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .answer-content pre {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+
+        .answer-content code {
+            background: #f1f3f4;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .answer-content img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            margin: 8px 0;
+        }
+
+        .answer-actions {
+            display: flex;
+            gap: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .btn-like, .btn-comment, .btn-reply {
+            background: none;
+            border: none;
+            color: #666;
+            font-size: 14px;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-like:hover, .btn-comment:hover, .btn-reply:hover {
+            color: #4A90E2;
+        }
+
+        .answer-form-section {
+            border-top: 1px solid #eee;
+            padding-top: 25px;
+        }
+
+        .answer-form-section h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .answer-form .form-group {
+            margin-bottom: 20px;
+        }
+
+        .answer-form textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 15px;
+            line-height: 1.6;
+            resize: vertical;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .answer-form textarea:focus {
+            border-color: #4A90E2;
+        }
+
+        .editor-toolbar {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .editor-toolbar button {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .editor-toolbar button:hover {
+            background: #e0e0e0;
+        }
+
+        .form-actions {
+            text-align: right;
+        }
+
+        .btn-submit {
+            background: #4A90E2;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .btn-submit:hover {
+            background: #357abd;
+        }
+
+        .related-questions {
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .related-questions h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .related-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .related-item {
+            padding: 12px 15px;
+            border: 1px solid #f0f0f0;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            background: #fafafa;
+        }
+
+        .related-item:hover {
+            border-color: #4A90E2;
+            box-shadow: 0 2px 8px rgba(74, 144, 226, 0.1);
+            background: #fff;
+        }
+
+        .related-title {
+            display: block;
+            font-weight: 500;
+            color: #333;
+            text-decoration: none;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .related-title:hover {
+            color: #4A90E2;
+        }
+
+        .related-meta {
+            display: flex;
+            gap: 15px;
+            color: #666;
+            font-size: 12px;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 1024px) {
+            .question-main-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .question-detail-page {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .sidebar {
+                width: 100%;
+                order: 3;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .question-detail-page {
+                padding: 15px;
+            }
+            
+            .question-header {
+                padding: 20px;
+            }
+            
+            .question-title h1 {
+                font-size: 24px;
+            }
+            
+            .question-meta {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .question-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .question-content-section,
+            .answers-section {
+                padding: 20px;
+            }
+            
+            .answer-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .answer-actions {
+                flex-wrap: wrap;
+            }
+        }
+
+        /* 返回按钮样式 */
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 50%;
+            color: #666;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .back-btn:hover {
+            background: #e9ecef;
+            color: #4A90E2;
+            border-color: #4A90E2;
+            transform: translateX(-2px);
+        }
+
+        .back-btn i {
+            font-size: 14px;
+        }
+
+        /* 底部导航栏样式 */
+        .footer {
+            background: #2c3e50;
+            color: white;
+            padding: 30px 0;
+            margin-top: 50px;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-logo {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .footer-links a {
+            color: #bdc3c7;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        /* 底部导航栏响应式设计 */
+        @media (max-width: 768px) {
+            .footer-content {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+            
+            .back-btn {
+                width: 32px;
+                height: 32px;
+                margin-right: 12px;
+            }
+            
+            .back-btn i {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <header class="top-nav">
+        <div class="nav-container">
+            <div class="nav-left">
+                <div class="logo" onclick="window.location.href='index.html'" style="cursor: pointer;">
+                    <img src="images/logo.png" alt="AI论坛Logo" class="logo-image">
+                    <span class="logo-text">三生AI</span>
+                </div>
+                <nav class="main-nav">
+                    <a href="qa_preview.html" class="nav-link active">知识问答</a>
+                    <a href="tech_share_demo.html" class="nav-link">技术分享</a>
+                    <a href="learning_resources_demo.html" class="nav-link">学习资料</a>
+                    <a href="community_preview.html" class="nav-link">社群</a>
+                </nav>
+            </div>
+            <div class="nav-right">
+                <span class="nav-title"></span>
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="AI搜索">
+                </div>
+                <div class="user-actions">
+                    <a href="register.html" class="user-icon-link">
+                        <i class="fas fa-user-circle"></i>
+                    </a>
+                    <i class="fas fa-bell"></i>
+                    <a href="register.html" class="user-avatar-link">
+                        <div class="user-avatar">
+                            <img src="images/user.jpg" alt="用户头像">
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 问题详情页 -->
+    <div class="question-detail-page">
+        <!-- 左侧导航区 -->
+        <aside class="sidebar">
+            <nav class="sidebar-nav">
+                <a href="index.html" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    <span>首页</span>
+                </a>
+                <a href="qa_preview.html" class="nav-item active">
+                    <i class="fas fa-question-circle"></i>
+                    <span>知识问答</span>
+                </a>
+                <a href="tech_share_demo.html" class="nav-item">
+                    <i class="fas fa-file-alt"></i>
+                    <span>技术分享</span>
+                </a>
+                <a href="learning_resources_demo.html" class="nav-item">
+                    <i class="fas fa-book"></i>
+                    <span>学习资料</span>
+                </a>
+                <a href="community_preview.html" class="nav-item">
+                    <i class="fas fa-comments"></i>
+                    <span>社群</span>
+                </a>
+                <a href="search.html" class="nav-item">
+                    <i class="fas fa-search"></i>
+                    <span>搜索</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-trophy"></i>
+                    <span>积分规则</span>
+                </a>
+            </nav>
+
+            <!-- 用户等级 -->
+            <div class="user-level">
+                <h3>用户等级</h3>
+                <div class="level-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 65%;"></div>
+                    </div>
+                    <span class="level-text">Lv.3 技术达人</span>
+                </div>
+            </div>
+
+            <!-- 社区规则 -->
+            <div class="rules-section">
+                <h3>社区规则</h3>
+                <div class="rule-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>遵守社区规范</span>
+                </div>
+                <div class="rule-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>积极分享知识</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- 右侧问题内容区域 -->
+        <div class="question-content-wrapper">
+            <!-- 问题头部信息 -->
+            <div class="question-header">
+            <div class="question-title">
+                <a href="qa_preview.html" class="back-btn">
+                    <i class="fas fa-arrow-left"></i>
+                </a>
+                <h1>如何开始学习机器学习？</h1>
+                <span class="solved-badge">
+                    <i class="fas fa-check-circle"></i> 已解决
+                </span>
+            </div>
+            
+            <div class="question-meta">
+                <div class="author-info">
+                    <img src="images/user.jpg" alt="用户头像" class="author-avatar">
+                    <div class="author-details">
+                        <span class="author-name">admin</span>
+                        <span class="author-level">Lv.3</span>
+                    </div>
+                    <span class="question-time">2024-01-15 14:30</span>
+                </div>
+                
+                <div class="question-tags">
+                    <span class="tag">机器学习</span>
+                    <span class="tag">入门</span>
+                    <span class="tag">学习路径</span>
+                </div>
+                
+                <div class="question-actions">
+                    <button class="btn-action" onclick="toggleFavorite()">
+                        <i class="fas fa-heart"></i> 收藏
+                    </button>
+                    <button class="btn-action" onclick="shareQuestion()">
+                        <i class="fas fa-share"></i> 分享
+                    </button>
+                    <button class="btn-action" onclick="reportQuestion()">
+                        <i class="fas fa-flag"></i> 举报
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 主要内容区域 -->
+        <div class="question-main-content">
+            <!-- 左侧问题内容 -->
+            <div class="question-content-section">
+                <div class="question-content">
+                    <div class="content-body">
+                        <p>作为一个初学者，我想了解如何系统地学习机器学习。请推荐一些学习路径和资源。</p>
+                        
+                        <p>我目前的情况：</p>
+                        <ul>
+                            <li>有一定的编程基础（Python）</li>
+                            <li>对数学有一定了解</li>
+                            <li>希望从基础开始，逐步深入</li>
+                        </ul>
+                        
+                        <p>我想了解：</p>
+                        <ol>
+                            <li>学习机器学习的完整路径</li>
+                            <li>推荐的学习资源（书籍、课程、网站）</li>
+                            <li>实践项目建议</li>
+                            <li>学习时间规划</li>
+                        </ol>
+                        
+                        <p>谢谢大家的帮助！</p>
+                    </div>
+                    
+                    <div class="question-stats">
+                        <span><i class="fas fa-eye"></i> 1,234 浏览</span>
+                        <span><i class="fas fa-comment"></i> 5 回答</span>
+                        <span><i class="fas fa-thumbs-up"></i> 12 点赞</span>
+                        <span><i class="fas fa-gift"></i> 50 悬赏</span>
+                    </div>
+                </div>
+
+                <!-- 相关问题推荐 -->
+                <div class="related-questions">
+                    <h3>相关问题</h3>
+                    <div class="related-list">
+                        <div class="related-item">
+                            <a href="question_detail_demo.html" class="related-title">深度学习在图像识别中的应用</a>
+                            <div class="related-meta">
+                                <span>testuser</span>
+                                <span>856 浏览</span>
+                                <span>3 回答</span>
+                            </div>
+                        </div>
+                        <div class="related-item">
+                            <a href="question_detail_demo.html" class="related-title">Python机器学习库对比</a>
+                            <div class="related-meta">
+                                <span>admin</span>
+                                <span>1,234 浏览</span>
+                                <span>7 回答</span>
+                            </div>
+                        </div>
+                        <div class="related-item">
+                            <a href="question_detail_demo.html" class="related-title">神经网络训练技巧</a>
+                            <div class="related-meta">
+                                <span>ml_expert</span>
+                                <span>567 浏览</span>
+                                <span>4 回答</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 右侧回答区域 -->
+            <div class="answers-section">
+                <div class="answers-header">
+                    <h3>回答 (5)</h3>
+                    <div class="answers-sort">
+                        <select id="answerSort" onchange="sortAnswers()">
+                            <option value="accepted">采纳优先</option>
+                            <option value="time">时间排序</option>
+                            <option value="likes">点赞排序</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 回答列表 -->
+                <div class="answers-list" id="answersList">
+                    <div class="answer-item accepted" data-answer-id="1">
+                        <div class="accepted-badge">
+                            <i class="fas fa-check-circle"></i> 最佳答案
+                        </div>
+                        
+                        <div class="answer-header">
+                            <div class="answer-author">
+                                <img src="images/user.jpg" alt="用户头像" class="answer-avatar">
+                                <div class="answer-author-info">
+                                    <span class="answer-author-name">testuser</span>
+                                    <span class="answer-time">2024-01-15 15:00</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="answer-content">
+                            <p>建议从吴恩达的机器学习课程开始，这是最经典的入门课程。</p>
+                            
+                            <p><strong>学习路径：</strong></p>
+                            <ol>
+                                <li>吴恩达机器学习课程（Coursera）</li>
+                                <li>Python基础 + 数据科学库（NumPy, Pandas, Matplotlib）</li>
+                                <li>scikit-learn 实践</li>
+                                <li>深度学习基础（吴恩达深度学习课程）</li>
+                                <li>实战项目</li>
+                            </ol>
+                            
+                            <p><strong>推荐资源：</strong></p>
+                            <ul>
+                                <li>《机器学习》- 周志华</li>
+                                <li>《Python机器学习》- Sebastian Raschka</li>
+                                <li>Kaggle 竞赛平台</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="answer-actions">
+                            <button class="btn-like" onclick="likeAnswer('1')">
+                                <i class="fas fa-thumbs-up"></i> 
+                                <span class="like-count">25</span>
+                            </button>
+                            <button class="btn-comment" onclick="showComments('1')">
+                                <i class="fas fa-comment"></i> 评论
+                            </button>
+                            <button class="btn-reply" onclick="replyToAnswer('1')">
+                                <i class="fas fa-reply"></i> 回复
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="answer-item" data-answer-id="2">
+                        <div class="answer-header">
+                            <div class="answer-author">
+                                <img src="images/user.jpg" alt="用户头像" class="answer-avatar">
+                                <div class="answer-author-info">
+                                    <span class="answer-author-name">ml_expert</span>
+                                    <span class="answer-time">2024-01-15 16:30</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="answer-content">
+                            <p>除了理论课程，建议多做一些实践项目：</p>
+                            
+                            <p><strong>入门项目：</strong></p>
+                            <ul>
+                                <li>鸢尾花分类</li>
+                                <li>房价预测</li>
+                                <li>手写数字识别</li>
+                            </ul>
+                            
+                            <p><strong>进阶项目：</strong></p>
+                            <ul>
+                                <li>推荐系统</li>
+                                <li>自然语言处理</li>
+                                <li>计算机视觉</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="answer-actions">
+                            <button class="btn-like" onclick="likeAnswer('2')">
+                                <i class="fas fa-thumbs-up"></i> 
+                                <span class="like-count">18</span>
+                            </button>
+                            <button class="btn-comment" onclick="showComments('2')">
+                                <i class="fas fa-comment"></i> 评论
+                            </button>
+                            <button class="btn-reply" onclick="replyToAnswer('2')">
+                                <i class="fas fa-reply"></i> 回复
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 我要回答区域 -->
+                <div class="answer-form-section">
+                    <h3>我要回答</h3>
+                    <form class="answer-form" id="answerForm">
+                        <div class="form-group">
+                            <textarea id="answerContent" placeholder="请输入您的回答..." required></textarea>
+                            <div class="editor-toolbar">
+                                <button type="button" onclick="insertCode()">
+                                    <i class="fas fa-code"></i> 插入代码
+                                </button>
+                                <button type="button" onclick="insertImage()">
+                                    <i class="fas fa-image"></i> 插入图片
+                                </button>
+                                <button type="button" onclick="insertLink()">
+                                    <i class="fas fa-link"></i> 插入链接
+                                </button>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn-submit">提交回答</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        </div> <!-- 关闭 question-content-wrapper -->
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <span>三生AI</span>
+            </div>
+            <div class="footer-links">
+                <a href="#">关于我们</a>
+                <a href="#">使用条款</a>
+                <a href="#">隐私政策</a>
+                <a href="#">联系我们</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 问题详情页JavaScript
+        let currentAnswerId = null;
+
+        // 采纳答案
+        function acceptAnswer(answerId) {
+            if (confirm('确定要采纳这个答案吗？')) {
+                alert('答案已采纳！');
+                location.reload();
+            }
+        }
+
+        // 点赞回答
+        function likeAnswer(answerId) {
+            const likeBtn = document.querySelector(`[data-answer-id="${answerId}"] .like-count`);
+            const currentCount = parseInt(likeBtn.textContent);
+            likeBtn.textContent = currentCount + 1;
+            alert('点赞成功！');
+        }
+
+        // 显示评论
+        function showComments(answerId) {
+            currentAnswerId = answerId;
+            alert('评论功能演示：显示回答 ' + answerId + ' 的评论');
+        }
+
+        // 回复回答
+        function replyToAnswer(answerId) {
+            alert('回复功能演示：回复回答 ' + answerId);
+        }
+
+        // 收藏问题
+        function toggleFavorite() {
+            const btn = document.querySelector('.btn-action');
+            if (btn.classList.contains('favorited')) {
+                btn.innerHTML = '<i class="fas fa-heart"></i> 收藏';
+                btn.classList.remove('favorited');
+                alert('取消收藏成功！');
+            } else {
+                btn.innerHTML = '<i class="fas fa-heart"></i> 已收藏';
+                btn.classList.add('favorited');
+                alert('收藏成功！');
+            }
+        }
+
+        // 分享问题
+        function shareQuestion() {
+            alert('分享功能演示：可以复制链接、分享到微信、微博等');
+        }
+
+        // 举报问题
+        function reportQuestion() {
+            const reason = prompt('请输入举报原因：');
+            if (reason) {
+                alert('举报成功！原因：' + reason);
+            }
+        }
+
+        // 排序回答
+        function sortAnswers() {
+            const sortType = document.getElementById('answerSort').value;
+            alert('排序功能演示：按 ' + sortType + ' 排序');
+        }
+
+        // 提交回答
+        document.getElementById('answerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const content = document.getElementById('answerContent').value;
+            if (!content.trim()) {
+                alert('请输入回答内容');
+                return;
+            }
+            
+            alert('回答提交成功！');
+            document.getElementById('answerContent').value = '';
+        });
+
+        // 编辑器功能
+        function insertCode() {
+            const textarea = document.getElementById('answerContent');
+            const code = prompt('请输入代码：');
+            if (code) {
+                const codeBlock = '\n```\n' + code + '\n```\n';
+                textarea.value += codeBlock;
+            }
+        }
+
+        function insertImage() {
+            const textarea = document.getElementById('answerContent');
+            const url = prompt('请输入图片URL：');
+            if (url) {
+                const imageMarkdown = '\n![图片](' + url + ')\n';
+                textarea.value += imageMarkdown;
+            }
+        }
+
+        function insertLink() {
+            const textarea = document.getElementById('answerContent');
+            const url = prompt('请输入链接URL：');
+            const text = prompt('请输入链接文本：');
+            if (url && text) {
+                const linkMarkdown = '[' + text + '](' + url + ')';
+                textarea.value += linkMarkdown;
+            }
+        }
+    </script>
+</body>
+</html> 

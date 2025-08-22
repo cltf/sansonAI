@@ -1,0 +1,555 @@
+{{define "content"}}
+<!-- 学习资料页面 -->
+<div class="learning-resources-page">
+    <!-- 搜索筛选区 -->
+    <div class="search-filter-section">
+        <div class="search-container">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="搜索学习资料..." value="{{.keyword}}">
+                <button class="btn-search" onclick="performSearch()">搜索</button>
+            </div>
+            
+            <div class="filter-options">
+                <div class="filter-group">
+                    <label>资料类型</label>
+                    <select id="typeFilter" onchange="filterByType()">
+                        <option value="">全部类型</option>
+                        <option value="ebook" {{if eq .type "ebook"}}selected{{end}}>电子书</option>
+                        <option value="video" {{if eq .type "video"}}selected{{end}}>视频教程</option>
+                        <option value="slides" {{if eq .type "slides"}}selected{{end}}>课件</option>
+                        <option value="dataset" {{if eq .type "dataset"}}selected{{end}}>数据集</option>
+                        <option value="code" {{if eq .type "code"}}selected{{end}}>代码示例</option>
+                        <option value="paper" {{if eq .type "paper"}}selected{{end}}>论文</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label>难度级别</label>
+                    <select id="levelFilter" onchange="filterByLevel()">
+                        <option value="">全部级别</option>
+                        <option value="beginner" {{if eq .level "beginner"}}selected{{end}}>入门</option>
+                        <option value="intermediate" {{if eq .level "intermediate"}}selected{{end}}>进阶</option>
+                        <option value="advanced" {{if eq .level "advanced"}}selected{{end}}>高级</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label>上传时间</label>
+                    <select id="timeFilter" onchange="filterByTime()">
+                        <option value="">全部时间</option>
+                        <option value="today" {{if eq .time "today"}}selected{{end}}>今天</option>
+                        <option value="week" {{if eq .time "week"}}selected{{end}}>本周</option>
+                        <option value="month" {{if eq .time "month"}}selected{{end}}>本月</option>
+                        <option value="year" {{if eq .time "year"}}selected{{end}}>今年</option>
+                    </select>
+                </div>
+                
+                <div class="filter-group">
+                    <label>评分</label>
+                    <select id="ratingFilter" onchange="filterByRating()">
+                        <option value="">全部评分</option>
+                        <option value="5" {{if eq .rating "5"}}selected{{end}}>5星</option>
+                        <option value="4" {{if eq .rating "4"}}selected{{end}}>4星及以上</option>
+                        <option value="3" {{if eq .rating "3"}}selected{{end}}>3星及以上</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主要内容区域 -->
+    <div class="learning-resources-main">
+        <!-- 左侧分类导航 -->
+        <aside class="categories-sidebar">
+            <div class="categories-header">
+                <h3>资料分类</h3>
+            </div>
+            <nav class="categories-nav">
+                <a href="/learning-resources/category/machine-learning" class="category-item {{if eq .currentCategory "machine-learning"}}active{{end}}">
+                    <i class="fas fa-brain"></i>
+                    <span>机器学习</span>
+                    <span class="category-count">(156)</span>
+                </a>
+                <a href="/learning-resources/category/deep-learning" class="category-item {{if eq .currentCategory "deep-learning"}}active{{end}}">
+                    <i class="fas fa-network-wired"></i>
+                    <span>深度学习</span>
+                    <span class="category-count">(89)</span>
+                </a>
+                <a href="/learning-resources/category/robotics" class="category-item {{if eq .currentCategory "robotics"}}active{{end}}">
+                    <i class="fas fa-robot"></i>
+                    <span>机器人学</span>
+                    <span class="category-count">(67)</span>
+                </a>
+                <a href="/learning-resources/category/computer-vision" class="category-item {{if eq .currentCategory "computer-vision"}}active{{end}}">
+                    <i class="fas fa-eye"></i>
+                    <span>计算机视觉</span>
+                    <span class="category-count">(78)</span>
+                </a>
+                <a href="/learning-resources/category/nlp" class="category-item {{if eq .currentCategory "nlp"}}active{{end}}">
+                    <i class="fas fa-language"></i>
+                    <span>自然语言处理</span>
+                    <span class="category-count">(92)</span>
+                </a>
+                <a href="/learning-resources/category/reinforcement-learning" class="category-item {{if eq .currentCategory "reinforcement-learning"}}active{{end}}">
+                    <i class="fas fa-gamepad"></i>
+                    <span>强化学习</span>
+                    <span class="category-count">(45)</span>
+                </a>
+                <a href="/learning-resources/category/data-science" class="category-item {{if eq .currentCategory "data-science"}}active{{end}}">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>数据科学</span>
+                    <span class="category-count">(134)</span>
+                </a>
+                <a href="/learning-resources/category/ai-ethics" class="category-item {{if eq .currentCategory "ai-ethics"}}active{{end}}">
+                    <i class="fas fa-balance-scale"></i>
+                    <span>AI伦理</span>
+                    <span class="category-count">(38)</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- 中间资料列表 -->
+        <main class="resources-section">
+            <div class="resources-header">
+                <h2>学习资料</h2>
+                {{if .user}}
+                <button class="btn-upload" onclick="showUploadForm()">
+                    <i class="fas fa-upload"></i> 上传资料
+                </button>
+                {{else}}
+                <a href="/auth/login" class="btn-upload">
+                    <i class="fas fa-upload"></i> 上传资料
+                </a>
+                {{end}}
+            </div>
+            
+            <div class="resources-grid" id="resourcesGrid">
+                {{range .resources}}
+                <div class="resource-card" data-resource-id="{{.ID}}">
+                    <div class="resource-cover">
+                        <img src="{{.CoverImage}}" alt="{{.Title}}">
+                        <div class="resource-type-badge">
+                            <i class="{{.TypeIcon}}"></i>
+                        </div>
+                        <div class="resource-size">{{.FileSize}}</div>
+                    </div>
+                    
+                    <div class="resource-info">
+                        <h3 class="resource-title">
+                            <a href="/learning-resources/{{.ID}}">{{.Title}}</a>
+                        </h3>
+                        
+                        <div class="resource-meta">
+                            <div class="uploader-info">
+                                <img src="{{.UploaderAvatar}}" alt="{{.UploaderName}}" class="uploader-avatar">
+                                <span class="uploader-name">{{.UploaderName}}</span>
+                                <span class="upload-time">{{.CreatedAt.Format "2006-01-02"}}</span>
+                            </div>
+                            
+                            <div class="resource-stats">
+                                <div class="resource-rating">
+                                    <div class="stars">
+                                        {{range $i := seq 5}}
+                                        <i class="fas fa-star {{if le $i .Rating}}filled{{end}}"></i>
+                                        {{end}}
+                                    </div>
+                                    <span class="rating-text">{{.Rating}}/5</span>
+                                </div>
+                                
+                                <div class="resource-actions">
+                                    <span class="download-count">
+                                        <i class="fas fa-download"></i>
+                                        {{.DownloadCount}}
+                                    </span>
+                                    <span class="comment-count">
+                                        <i class="fas fa-comment"></i>
+                                        {{.CommentCount}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="resource-description">{{.Description}}</div>
+                        
+                        <div class="resource-tags">
+                            {{range .TagsArray}}
+                            <span class="tag">{{.}}</span>
+                            {{end}}
+                        </div>
+                        
+                        <div class="resource-footer">
+                            <div class="difficulty-level level-{{.DifficultyLevel}}">
+                                {{.DifficultyText}}
+                            </div>
+                            <button class="btn-download" onclick="downloadResource('{{.ID}}')">
+                                <i class="fas fa-download"></i>
+                                下载
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                {{end}}
+            </div>
+            
+            <!-- 分页 -->
+            {{if gt .totalPages 1}}
+            <div class="pagination">
+                {{if gt .currentPage 1}}
+                <a href="?page={{subtract .currentPage 1}}" class="page-link">上一页</a>
+                {{end}}
+                
+                {{range $i := seq .totalPages}}
+                <a href="?page={{$i}}" class="page-link {{if eq $i $.currentPage}}active{{end}}">{{$i}}</a>
+                {{end}}
+                
+                {{if lt .currentPage .totalPages}}
+                <a href="?page={{add .currentPage 1}}" class="page-link">下一页</a>
+                {{end}}
+            </div>
+            {{end}}
+        </main>
+        
+        <!-- 右侧推荐区域 -->
+        <aside class="recommendations-sidebar">
+            <!-- 最新上传资料 -->
+            <div class="latest-resources">
+                <h4>最新上传</h4>
+                <div class="latest-resources-list">
+                    {{range .latestResources}}
+                    <a href="/learning-resources/{{.ID}}" class="latest-resource-item">
+                        <div class="latest-resource-cover">
+                            <img src="{{.CoverImage}}" alt="{{.Title}}">
+                            <div class="resource-type-icon">
+                                <i class="{{.TypeIcon}}"></i>
+                            </div>
+                        </div>
+                        <div class="latest-resource-info">
+                            <h5>{{.Title}}</h5>
+                            <div class="latest-resource-meta">
+                                <span class="uploader">{{.UploaderName}}</span>
+                                <span class="time">{{.CreatedAt.Format "01-02"}}</span>
+                            </div>
+                        </div>
+                    </a>
+                    {{end}}
+                </div>
+            </div>
+            
+            <!-- 最高评分资料 -->
+            <div class="top-rated-resources">
+                <h4>最高评分</h4>
+                <div class="top-rated-resources-list">
+                    {{range .topRatedResources}}
+                    <a href="/learning-resources/{{.ID}}" class="top-rated-resource-item">
+                        <div class="top-rated-resource-cover">
+                            <img src="{{.CoverImage}}" alt="{{.Title}}">
+                            <div class="rating-badge">
+                                <i class="fas fa-star"></i>
+                                <span>{{.Rating}}</span>
+                            </div>
+                        </div>
+                        <div class="top-rated-resource-info">
+                            <h5>{{.Title}}</h5>
+                            <div class="top-rated-resource-meta">
+                                <span class="category">{{.Category}}</span>
+                                <span class="downloads">{{.DownloadCount}} 下载</span>
+                            </div>
+                        </div>
+                    </a>
+                    {{end}}
+                </div>
+            </div>
+        </aside>
+    </div>
+</div>
+
+<!-- 上传资料模态框 -->
+<div class="modal large" id="uploadModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>上传学习资料</h3>
+            <button class="modal-close" onclick="closeUploadModal()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form id="uploadForm" class="upload-form">
+                <div class="form-group">
+                    <label for="resourceTitle">资料名称 *</label>
+                    <input type="text" id="resourceTitle" name="title" required placeholder="请输入资料名称">
+                </div>
+                
+                <div class="form-group">
+                    <label for="resourceDescription">资料简介 *</label>
+                    <textarea id="resourceDescription" name="description" rows="4" required placeholder="请简要描述资料内容、适用人群等"></textarea>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="resourceType">资料类型 *</label>
+                        <select id="resourceType" name="type" required>
+                            <option value="">请选择资料类型</option>
+                            <option value="ebook">电子书</option>
+                            <option value="video">视频教程</option>
+                            <option value="slides">课件</option>
+                            <option value="dataset">数据集</option>
+                            <option value="code">代码示例</option>
+                            <option value="paper">论文</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="resourceLevel">难度级别 *</label>
+                        <select id="resourceLevel" name="level" required>
+                            <option value="">请选择难度级别</option>
+                            <option value="beginner">入门</option>
+                            <option value="intermediate">进阶</option>
+                            <option value="advanced">高级</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="resourceCategory">所属分类 *</label>
+                    <select id="resourceCategory" name="category" required>
+                        <option value="">请选择分类</option>
+                        <option value="machine-learning">机器学习</option>
+                        <option value="deep-learning">深度学习</option>
+                        <option value="robotics">机器人学</option>
+                        <option value="computer-vision">计算机视觉</option>
+                        <option value="nlp">自然语言处理</option>
+                        <option value="reinforcement-learning">强化学习</option>
+                        <option value="data-science">数据科学</option>
+                        <option value="ai-ethics">AI伦理</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="resourceTags">标签</label>
+                    <input type="text" id="resourceTags" name="tags" placeholder="请输入标签，用逗号分隔">
+                    <div class="tags-suggestions" id="tagsSuggestions"></div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="resourceCover">封面图片</label>
+                    <div class="cover-upload">
+                        <input type="file" id="resourceCover" name="cover" accept="image/*">
+                        <div class="upload-preview" id="coverPreview">
+                            <i class="fas fa-image"></i>
+                            <span>点击上传封面图片</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="resourceFiles">资料文件 *</label>
+                    <div class="file-upload">
+                        <input type="file" id="resourceFiles" name="files" multiple required>
+                        <div class="upload-area" id="uploadArea">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <span>拖拽文件到此处或点击选择文件</span>
+                            <small>支持多文件上传，最大单个文件100MB</small>
+                        </div>
+                        <div class="file-list" id="fileList"></div>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="closeUploadModal()">取消</button>
+                    <button type="submit" class="btn-primary">上传资料</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+// 搜索和筛选功能
+function performSearch() {
+    const keyword = document.getElementById('searchInput').value;
+    const type = document.getElementById('typeFilter').value;
+    const level = document.getElementById('levelFilter').value;
+    const time = document.getElementById('timeFilter').value;
+    const rating = document.getElementById('ratingFilter').value;
+    
+    let url = '/learning-resources?';
+    if (keyword) url += `keyword=${encodeURIComponent(keyword)}&`;
+    if (type) url += `type=${type}&`;
+    if (level) url += `level=${level}&`;
+    if (time) url += `time=${time}&`;
+    if (rating) url += `rating=${rating}&`;
+    
+    window.location.href = url.slice(0, -1); // 移除最后的&
+}
+
+function filterByType() {
+    performSearch();
+}
+
+function filterByLevel() {
+    performSearch();
+}
+
+function filterByTime() {
+    performSearch();
+}
+
+function filterByRating() {
+    performSearch();
+}
+
+// 下载资源
+function downloadResource(resourceId) {
+    // 检查用户是否已登录
+    if (!confirm('确定要下载这个资料吗？')) {
+        return;
+    }
+    
+    fetch(`/api/learning-resources/${resourceId}/download`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // 创建下载链接
+            const link = document.createElement('a');
+            link.href = data.downloadUrl;
+            link.download = data.filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            // 更新下载计数
+            const downloadCount = document.querySelector(`[data-resource-id="${resourceId}"] .download-count`);
+            if (downloadCount) {
+                const currentCount = parseInt(downloadCount.textContent.trim());
+                downloadCount.innerHTML = `<i class="fas fa-download"></i> ${currentCount + 1}`;
+            }
+        } else {
+            alert(data.message || '下载失败');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('网络错误，请稍后重试');
+    });
+}
+
+// 上传功能
+function showUploadForm() {
+    document.getElementById('uploadModal').style.display = 'flex';
+}
+
+function closeUploadModal() {
+    document.getElementById('uploadModal').style.display = 'none';
+    document.getElementById('uploadForm').reset();
+    document.getElementById('coverPreview').innerHTML = '<i class="fas fa-image"></i><span>点击上传封面图片</span>';
+    document.getElementById('fileList').innerHTML = '';
+}
+
+// 封面图片预览
+document.getElementById('resourceCover').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('coverPreview').innerHTML = `<img src="${e.target.result}" alt="封面预览">`;
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+// 文件上传处理
+document.getElementById('resourceFiles').addEventListener('change', function(e) {
+    const files = Array.from(e.target.files);
+    const fileList = document.getElementById('fileList');
+    fileList.innerHTML = '';
+    
+    files.forEach(file => {
+        const fileItem = document.createElement('div');
+        fileItem.className = 'file-item';
+        fileItem.innerHTML = `
+            <i class="fas fa-file"></i>
+            <span class="file-name">${file.name}</span>
+            <span class="file-size">${formatFileSize(file.size)}</span>
+        `;
+        fileList.appendChild(fileItem);
+    });
+});
+
+// 拖拽上传
+const uploadArea = document.getElementById('uploadArea');
+uploadArea.addEventListener('dragover', function(e) {
+    e.preventDefault();
+    uploadArea.classList.add('dragover');
+});
+
+uploadArea.addEventListener('dragleave', function(e) {
+    e.preventDefault();
+    uploadArea.classList.remove('dragover');
+});
+
+uploadArea.addEventListener('drop', function(e) {
+    e.preventDefault();
+    uploadArea.classList.remove('dragover');
+    
+    const files = Array.from(e.dataTransfer.files);
+    const fileInput = document.getElementById('resourceFiles');
+    
+    // 创建新的FileList对象
+    const dt = new DataTransfer();
+    files.forEach(file => dt.items.add(file));
+    fileInput.files = dt.files;
+    
+    // 触发change事件
+    fileInput.dispatchEvent(new Event('change'));
+});
+
+// 表单提交
+document.getElementById('uploadForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    
+    fetch('/api/learning-resources/upload', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('资料上传成功！');
+            closeUploadModal();
+            location.reload(); // 刷新页面显示新上传的资料
+        } else {
+            alert(data.message || '上传失败');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('网络错误，请稍后重试');
+    });
+});
+
+// 工具函数
+function formatFileSize(bytes) {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
+
+// 点击模态框外部关闭
+window.onclick = function(event) {
+    const uploadModal = document.getElementById('uploadModal');
+    if (event.target === uploadModal) {
+        closeUploadModal();
+    }
+}
+</script>
+{{end}} 

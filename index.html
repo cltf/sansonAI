@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI论坛 - 知识分享与交流平台</title>
+    <link rel="icon" type="image/png" href="images/logo.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="images/logo.png" sizes="16x16">
+    <link rel="apple-touch-icon" href="images/logo.png" sizes="180x180">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <header class="top-nav">
+        <div class="nav-container">
+            <div class="nav-left">
+                <div class="logo" onclick="window.location.href='index.html'" style="cursor: pointer;">
+                    <img src="images/logo.png" alt="AI论坛Logo" class="logo-image">
+                    <span class="logo-text">三生AI</span>
+                </div>
+                <nav class="main-nav">
+                    <a href="qa_preview.html" class="nav-link">知识问答</a>
+                    <a href="tech_share_demo.html" class="nav-link">技术分享</a>
+                    <a href="learning_resources_demo.html" class="nav-link">学习资料</a>
+                    <a href="community_preview.html" class="nav-link">社群</a>
+                </nav>
+            </div>
+            <div class="nav-right">
+                <span class="nav-title"></span>
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="AI搜索">
+                </div>
+                <div class="user-actions">
+                    <a href="register.html" class="user-icon-link">
+                        <i class="fas fa-user-circle"></i>
+                    </a>
+                    <i class="fas fa-bell"></i>
+                    <a href="register.html" class="user-avatar-link">
+                        <div class="user-avatar">
+                            <img src="images/user.jpg" alt="用户头像">
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主要内容区域 -->
+    <main class="main-content">
+        <!-- 左侧导航区 -->
+        <aside class="sidebar">
+            <nav class="sidebar-nav">
+                <a href="index.html" class="nav-item active">
+                    <i class="fas fa-home"></i>
+                    <span>首页</span>
+                </a>
+                <a href="qa_preview.html" class="nav-item">
+                    <i class="fas fa-question-circle"></i>
+                    <span>知识问答</span>
+                </a>
+                <a href="tech_share_demo.html" class="nav-item">
+                    <i class="fas fa-file-alt"></i>
+                    <span>技术分享</span>
+                </a>
+                <a href="learning_resources_demo.html" class="nav-item">
+                    <i class="fas fa-book"></i>
+                    <span>学习资料</span>
+                </a>
+                <a href="community_preview.html" class="nav-item">
+                    <i class="fas fa-comments"></i>
+                    <span>社群</span>
+                </a>
+                <a href="search.html" class="nav-item">
+                    <i class="fas fa-search"></i>
+                    <span>搜索</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-trophy"></i>
+                    <span>积分规则</span>
+                </a>
+            </nav>
+
+            <!-- 用户等级 -->
+            <div class="user-level">
+                <h3>用户等级</h3>
+                <div class="level-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 65%;"></div>
+                    </div>
+                    <span class="level-text">Lv.3 技术达人</span>
+                </div>
+            </div>
+
+            <!-- 社区规则 -->
+            <div class="rules-section">
+                <h3>社区规则</h3>
+                <div class="rule-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>遵守社区规范</span>
+                </div>
+                <div class="rule-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>积极分享知识</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- 中间内容展示区 -->
+        <section class="content-area">
+            <!-- 轮播图 -->
+            <div class="carousel-section">
+                <div class="carousel">
+                    <div class="carousel-item active">
+                        <div class="carousel-content">
+                            <div class="carousel-image">
+                                <img src="images/lunbo1.png" alt="AI技术大会">
+                            </div>
+                            <div class="carousel-text">
+                                <h2>2024 AI技术大会</h2>
+                                <p>汇聚全球AI专家，探讨最新技术趋势，分享前沿研究成果</p>
+                                <button class="btn-primary">立即报名</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="carousel-item">
+                        <div class="carousel-content">
+                            <div class="carousel-image">
+                                <img src="images/lunbo2.png" alt="深度学习课程">
+                            </div>
+                            <div class="carousel-text">
+                                <h2>深度学习实战课程</h2>
+                                <p>从零开始学习深度学习，掌握TensorFlow和PyTorch框架</p>
+                                <button class="btn-primary">开始学习</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="carousel-item">
+                        <div class="carousel-content">
+                            <div class="carousel-image">
+                                <img src="images/lunbo3.png" alt="技术分享大赛">
+                            </div>
+                            <div class="carousel-text">
+                                <h2>技术分享大赛</h2>
+                                <p>展示你的技术实力，赢取丰厚奖品，与同行交流学习</p>
+                                <button class="btn-primary">参与比赛</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+
+                </div>
+                
+                <!-- 轮播图控制按钮 -->
+                <button class="carousel-control prev" onclick="changeSlide(-1)">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="carousel-control next" onclick="changeSlide(1)">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+                
+                <!-- 轮播图指示器 -->
+                <div class="carousel-indicators">
+                    <span class="indicator active" onclick="currentSlide(1)"></span>
+                    <span class="indicator" onclick="currentSlide(2)"></span>
+                    <span class="indicator" onclick="currentSlide(3)"></span>
+                </div>
+            </div>
+
+            <!-- 最新问答板块 -->
+            <div class="qa-section">
+                <h2 class="section-title">最新问答</h2>
+                <div class="qa-list">
+                    <div class="qa-item">
+                        <div class="qa-avatar">
+                            <img src="images/user.jpg" alt="用户头像">
+                        </div>
+                        <div class="qa-content">
+                            <h3 class="qa-title"><a href="question_detail_demo.html">如何优化深度学习模型的训练效率？</a></h3>
+                            <div class="qa-meta">
+                                <span class="qa-author">用户彬容砺</span>
+                                <span class="qa-time">2小时前</span>
+                                <span class="qa-tags">
+                                    <span class="tag">深度学习</span>
+                                    <span class="tag">优化</span>
+                                </span>
+                            </div>
+                            <div class="qa-stats">
+                                <span><i class="fas fa-eye"></i> 156</span>
+                                <span><i class="fas fa-comment"></i> 23</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="qa-item">
+                        <div class="qa-avatar">
+                            <img src="images/user.jpg" alt="用户头像">
+                        </div>
+                        <div class="qa-content">
+                            <h3 class="qa-title"><a href="question_detail_demo.html">Transformer架构在NLP中的应用有哪些？</a></h3>
+                            <div class="qa-meta">
+                                <span class="qa-author">AI研究者</span>
+                                <span class="qa-time">5小时前</span>
+                                <span class="qa-tags">
+                                    <span class="tag">NLP</span>
+                                    <span class="tag">Transformer</span>
+                                </span>
+                            </div>
+                            <div class="qa-stats">
+                                <span><i class="fas fa-eye"></i> 89</span>
+                                <span><i class="fas fa-comment"></i> 15</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="section-footer">
+                    <a href="qa_preview.html" class="view-more">查看更多问答 <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+
+            <!-- 精选技术分享 -->
+            <div class="tech-section">
+                <h2 class="section-title">精选技术分享</h2>
+                <div class="tech-item">
+                    <div class="tech-cover">
+                        <img src="images/article.png" alt="技术分享封面">
+                    </div>
+                    <div class="tech-content">
+                        <h3 class="tech-title"><a href="tech_share_detail_demo.html">Our Tranfiecar, papiteadresoe egarkarre</a></h3>
+                        <p class="tech-summary">深入探讨人工智能在医疗领域的应用前景，包括诊断辅助、药物研发等方面的最新进展。</p>
+                        <div class="tech-meta">
+                            <div class="tech-author">
+                                <img src="images/user.jpg" alt="作者头像">
+                                <span>陈吴敦</span>
+                            </div>
+                            <div class="tech-stats">
+                                <span><i class="fas fa-thumbs-up"></i> 45</span>
+                                <span><i class="fas fa-comment"></i> 201</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="section-footer">
+                    <a href="tech_share_demo.html" class="view-more">查看更多技术分享 <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+
+            <!-- 热门学习资料 -->
+            <div class="learning-section">
+                <h2 class="section-title">热门学习资料</h2>
+                <div class="learning-grid">
+                    <div class="learning-item">
+                        <div class="learning-cover">
+                            <img src="images/ziliao.png" alt="学习资料封面">
+                            <div class="video-duration">18:30</div>
+                        </div>
+                        <div class="learning-content">
+                            <h3 class="learning-title"><a href="learning_resource_detail_demo.html">LJUTHAIYOON 18 vi, tepale alore</a></h3>
+                            <p class="learning-desc">Sitics pragttlia - 深度学习实战教程</p>
+                            <div class="learning-meta">
+                                <span class="learning-type">视频教程</span>
+                                <span class="learning-size">156MB</span>
+                            </div>
+                            <div class="learning-stats">
+                                <div class="rating">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                </div>
+                                <a href="#" class="download-link">下载</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="learning-item">
+                        <div class="learning-cover">
+                            <img src="images/ziliao.png" alt="学习资料封面">
+                        </div>
+                        <div class="learning-content">
+                            <h3 class="learning-title"><a href="learning_resource_detail_demo.html">研究领域限衔</a></h3>
+                            <p class="learning-desc">Ponami atrener - 人工智能研究前沿</p>
+                            <div class="learning-meta">
+                                <span class="learning-type">PDF文档</span>
+                                <span class="learning-size">2.3MB</span>
+                            </div>
+                            <div class="learning-stats">
+                                <div class="rating">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                    <i class="far fa-star"></i>
+                                </div>
+                                <a href="#" class="download-link">下载</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="section-footer">
+                    <a href="learning_resources_demo.html" class="view-more">查看更多学习资料 <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 右侧信息推荐区 -->
+        <aside class="recommendation-area">
+            <!-- 登录面板 -->
+            <div class="login-panel">
+                <div class="panel-header">
+                    <h3>登录</h3>
+                    <a href="register.html" class="register-link">注册</a>
+                </div>
+                <div class="user-info">
+                    <img src="images/user.jpg" alt="用户头像">
+                    <div class="user-details">
+                        <h4><a href="profile_preview.html">用户彬容砺</a></h4>
+                        <div class="user-level-info">
+                            <span>2018</span>
+                            <div class="stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <form class="login-form">
+                    <div class="form-group">
+                        <input type="text" placeholder="用户名" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" placeholder="用户密码" required>
+                    </div>
+                    <button type="submit" class="btn-login">登录</button>
+                </form>
+                <div class="form-footer">
+                    <span>用户密</span>
+                    <a href="forgot_password.html" class="forgot-password">忘记密码</a>
+                </div>
+            </div>
+
+            <!-- 活跃社群推荐 -->
+            <div class="community-panel">
+                <h3>活跃社群推荐</h3>
+                <div class="community-list">
+                    <div class="community-item">
+                        <div class="community-avatar">
+                            <img src="images/user.jpg" alt="社群头像">
+                        </div>
+                        <div class="community-info">
+                            <h4><a href="community_detail_preview.html">AI技术交流群</a></h4>
+                            <p>成员: 1,234 | 近期活动: 5</p>
+                        </div>
+                    </div>
+                    <div class="community-item">
+                        <div class="community-avatar">
+                            <img src="images/user.jpg" alt="社群头像">
+                        </div>
+                        <div class="community-info">
+                            <h4><a href="community_detail_preview.html">机器学习实践</a></h4>
+                            <p>成员: 856 | 近期活动: 3</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="section-footer">
+                    <a href="community_preview.html" class="view-more">查看更多社群 <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+
+            <!-- 专家学者推荐 -->
+            <div class="expert-panel">
+                <h3>专家学者推荐</h3>
+                <div class="expert-list">
+                    <div class="expert-item">
+                        <img src="images/user.jpg" alt="专家头像">
+                        <div class="expert-info">
+                            <h4>张教授</h4>
+                            <p>计算机视觉专家</p>
+                        </div>
+                    </div>
+                    <div class="expert-item">
+                        <img src="images/user.jpg" alt="专家头像">
+                        <div class="expert-info">
+                            <h4>李博士</h4>
+                            <p>自然语言处理</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 热门标签 -->
+            <div class="tags-panel">
+                <h3>热门标签</h3>
+                <div class="tag-cloud">
+                    <span class="tag">新</span>
+                    <span class="tag">等分</span>
+                    <span class="tag">运营</span>
+                    <span class="tag">活创社区推荐</span>
+                    <span class="tag">陈吴敦</span>
+                    <span class="tag">SEALIB</span>
+                    <span class="tag">回答</span>
+                    <span class="tag">提问</span>
+                    <span class="tag">歌铝</span>
+                    <span class="tag">信息</span>
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <span>三生AI</span>
+            </div>
+            <div class="footer-links">
+                <a href="#">关于我们</a>
+                <a href="#">使用条款</a>
+                <a href="#">隐私政策</a>
+                <a href="#">联系我们</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // 确保轮播图函数立即可用
+        if (typeof window.changeSlide === 'undefined') {
+            window.changeSlide = function(direction) {
+                const carouselItems = document.querySelectorAll('.carousel-item');
+                const indicators = document.querySelectorAll('.indicator');
+                
+                if (carouselItems.length === 0) return;
+                
+                let currentIndex = 0;
+                carouselItems.forEach((item, index) => {
+                    if (item.classList.contains('active')) {
+                        currentIndex = index;
+                    }
+                });
+                
+                let newIndex;
+                if (direction === 1) {
+                    newIndex = (currentIndex + 1) % carouselItems.length;
+                } else {
+                    newIndex = currentIndex === 0 ? carouselItems.length - 1 : currentIndex - 1;
+                }
+                
+                // 隐藏所有轮播项
+                carouselItems.forEach(item => item.classList.remove('active'));
+                // 移除所有指示器活动状态
+                indicators.forEach(indicator => indicator.classList.remove('active'));
+                
+                // 显示当前轮播项
+                if (carouselItems[newIndex]) {
+                    carouselItems[newIndex].classList.add('active');
+                }
+                // 激活当前指示器
+                if (indicators[newIndex]) {
+                    indicators[newIndex].classList.add('active');
+                }
+            };
+        }
+        
+        if (typeof window.currentSlide === 'undefined') {
+            window.currentSlide = function(index) {
+                const carouselItems = document.querySelectorAll('.carousel-item');
+                const indicators = document.querySelectorAll('.indicator');
+                
+                if (carouselItems.length === 0) return;
+                
+                const targetIndex = index - 1; // 转换为0基索引
+                
+                // 隐藏所有轮播项
+                carouselItems.forEach(item => item.classList.remove('active'));
+                // 移除所有指示器活动状态
+                indicators.forEach(indicator => indicator.classList.remove('active'));
+                
+                // 显示目标轮播项
+                if (carouselItems[targetIndex]) {
+                    carouselItems[targetIndex].classList.add('active');
+                }
+                // 激活目标指示器
+                if (indicators[targetIndex]) {
+                    indicators[targetIndex].classList.add('active');
+                }
+            };
+        }
+    </script>
+</body>
+</html> 

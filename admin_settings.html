@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI论坛管理后台 - 系统设置</title>
+    <link rel="icon" type="image/png" href="images/logo.png" sizes="32x32">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f7fa;
+            color: #333;
+        }
+
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* 左侧导航栏 */
+        .sidebar {
+            width: 260px;
+            background: white;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .sidebar-header {
+            padding: 30px 25px;
+            border-bottom: 1px solid #f0f0f0;
+            text-align: center;
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 10px;
+        }
+
+        .sidebar-logo img {
+            width: 32px;
+            height: 32px;
+        }
+
+        .sidebar-logo h2 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .sidebar-subtitle {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .nav-menu {
+            padding: 20px 0;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px 25px;
+            color: #666;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-item:hover {
+            background: #f8f9fa;
+            color: #4A90E2;
+            border-left-color: #4A90E2;
+        }
+
+        .nav-item.active {
+            background: #e3f2fd;
+            color: #4A90E2;
+            border-left-color: #4A90E2;
+            font-weight: 500;
+        }
+
+        .nav-item i {
+            width: 20px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        .nav-item span {
+            font-size: 14px;
+        }
+
+        /* 主内容区域 */
+        .main-content {
+            flex: 1;
+            margin-left: 260px;
+            min-height: 100vh;
+        }
+
+        /* 顶部导航栏 */
+        .top-nav {
+            background: white;
+            padding: 20px 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .top-nav-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .notification-icon {
+            position: relative;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 8px;
+            transition: background 0.3s ease;
+        }
+
+        .notification-icon:hover {
+            background: #f8f9fa;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            padding: 8px 12px;
+            border-radius: 8px;
+            transition: background 0.3s ease;
+        }
+
+        .user-info:hover {
+            background: #f8f9fa;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .user-role {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .logout-btn {
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #fee;
+            color: #e74c3c;
+        }
+
+        /* 内容区域 */
+        .content-area {
+            padding: 30px;
+        }
+
+        /* 设置导航 */
+        .settings-nav {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .settings-tabs {
+            display: flex;
+            gap: 10px;
+            border-bottom: 1px solid #f0f0f0;
+            padding-bottom: 20px;
+        }
+
+        .settings-tab {
+            padding: 12px 20px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            color: #666;
+        }
+
+        .settings-tab:hover {
+            background: #f8f9fa;
+            color: #4A90E2;
+        }
+
+        .settings-tab.active {
+            background: #4A90E2;
+            color: white;
+        }
+
+        /* 设置内容 */
+        .settings-content {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .settings-section {
+            display: none;
+        }
+
+        .settings-section.active {
+            display: block;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        /* 表单样式 */
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #4A90E2;
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+        }
+
+        .form-textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 100px;
+            transition: border-color 0.3s ease;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+
+        .form-textarea:focus {
+            outline: none;
+            border-color: #4A90E2;
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+            transition: border-color 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .form-select:focus {
+            outline: none;
+            border-color: #4A90E2;
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+        }
+
+        /* 开关样式 */
+        .switch-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .switch-label {
+            font-size: 14px;
+            color: #333;
+        }
+
+        .switch-description {
+            font-size: 12px;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 24px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #4A90E2;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        /* 按钮样式 */
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: #4A90E2;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #357abd;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+
+        .btn-success {
+            background: #27ae60;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #229954;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .settings-tabs {
+                flex-wrap: wrap;
+            }
+            
+            .switch-container {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- 左侧导航栏 -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <img src="images/logo.png" alt="AI论坛Logo">
+                    <h2>管理后台</h2>
+                </div>
+                <p class="sidebar-subtitle">AI论坛管理系统</p>
+            </div>
+
+            <nav class="nav-menu">
+                <a href="admin_dashboard.html" class="nav-item">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>仪表盘</span>
+                </a>
+                <a href="admin_users.html" class="nav-item">
+                    <i class="fas fa-users"></i>
+                    <span>用户管理</span>
+                </a>
+                <a href="admin_content.html" class="nav-item">
+                    <i class="fas fa-file-alt"></i>
+                    <span>内容管理</span>
+                </a>
+                <a href="admin_community.html" class="nav-item">
+                    <i class="fas fa-comments"></i>
+                    <span>社群管理</span>
+                </a>
+                <a href="admin_tags.html" class="nav-item">
+                    <i class="fas fa-tags"></i>
+                    <span>标签分类</span>
+                </a>
+                <a href="admin_analytics.html" class="nav-item">
+                    <i class="fas fa-chart-line"></i>
+                    <span>数据统计</span>
+                </a>
+                <a href="admin_settings.html" class="nav-item active">
+                    <i class="fas fa-cog"></i>
+                    <span>系统设置</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- 主内容区域 -->
+        <main class="main-content">
+            <!-- 顶部导航栏 -->
+            <header class="top-nav">
+                <h1 class="page-title">系统设置</h1>
+                
+                <div class="top-nav-right">
+                    <div class="notification-icon">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </div>
+                    
+                    <div class="user-info" onclick="toggleUserMenu()">
+                        <img src="images/user.jpg" alt="管理员头像" class="user-avatar">
+                        <div class="user-details">
+                            <span class="user-name">管理员</span>
+                            <span class="user-role">超级管理员</span>
+                        </div>
+                    </div>
+                    
+                    <button class="logout-btn" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- 内容区域 -->
+            <div class="content-area">
+                <!-- 设置导航 -->
+                <div class="settings-nav">
+                    <div class="settings-tabs">
+                        <button class="settings-tab active" onclick="showSettingsTab('basic')">
+                            <i class="fas fa-cog"></i> 基本设置
+                        </button>
+                        <button class="settings-tab" onclick="showSettingsTab('security')">
+                            <i class="fas fa-shield-alt"></i> 安全设置
+                        </button>
+                        <button class="settings-tab" onclick="showSettingsTab('notification')">
+                            <i class="fas fa-bell"></i> 通知设置
+                        </button>
+                        <button class="settings-tab" onclick="showSettingsTab('backup')">
+                            <i class="fas fa-database"></i> 备份设置
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 设置内容 -->
+                <div class="settings-content">
+                    <!-- 基本设置 -->
+                    <div id="basic-settings" class="settings-section active">
+                        <h2 class="section-title">基本设置</h2>
+                        
+                        <form id="basic-form">
+                            <div class="form-group">
+                                <label class="form-label">网站名称</label>
+                                <input type="text" class="form-input" id="siteName" value="AI论坛" placeholder="请输入网站名称">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">网站描述</label>
+                                <textarea class="form-textarea" id="siteDescription" placeholder="请输入网站描述">AI技术交流与学习平台，汇聚全球AI爱好者和专业人士</textarea>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">网站关键词</label>
+                                <input type="text" class="form-input" id="siteKeywords" value="AI,人工智能,机器学习,深度学习,技术交流" placeholder="请输入网站关键词，用逗号分隔">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">管理员邮箱</label>
+                                <input type="email" class="form-input" id="adminEmail" value="admin@aiforum.com" placeholder="请输入管理员邮箱">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">时区设置</label>
+                                <select class="form-select" id="timezone">
+                                    <option value="Asia/Shanghai" selected>中国标准时间 (UTC+8)</option>
+                                    <option value="UTC">协调世界时 (UTC)</option>
+                                    <option value="America/New_York">美国东部时间 (UTC-5)</option>
+                                    <option value="Europe/London">英国时间 (UTC+0)</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">语言设置</label>
+                                <select class="form-select" id="language">
+                                    <option value="zh-CN" selected>简体中文</option>
+                                    <option value="en-US">English</option>
+                                    <option value="ja-JP">日本語</option>
+                                </select>
+                            </div>
+                            
+                            <button type="button" class="btn btn-primary" onclick="saveBasicSettings()">保存基本设置</button>
+                        </form>
+                    </div>
+
+                    <!-- 安全设置 -->
+                    <div id="security-settings" class="settings-section">
+                        <h2 class="section-title">安全设置</h2>
+                        
+                        <div class="switch-container">
+                            <div>
+                                <div class="switch-label">启用两步验证</div>
+                                <div class="switch-description">为管理员账户启用两步验证，提高账户安全性</div>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="twoFactorAuth" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="switch-container">
+                            <div>
+                                <div class="switch-label">强制密码复杂度</div>
+                                <div class="switch-description">要求用户设置包含大小写字母、数字和特殊字符的密码</div>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="passwordComplexity" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="switch-container">
+                            <div>
+                                <div class="switch-label">登录失败锁定</div>
+                                <div class="switch-description">连续登录失败5次后锁定账户30分钟</div>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="loginLockout" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="switch-container">
+                            <div>
+                                <div class="switch-label">会话超时</div>
+                                <div class="switch-description">用户30分钟无操作后自动登出</div>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="sessionTimeout" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">密码最小长度</label>
+                            <input type="number" class="form-input" id="minPasswordLength" value="8" min="6" max="20">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">密码有效期（天）</label>
+                            <input type="number" class="form-input" id="passwordExpiry" value="90" min="30" max="365">
+                        </div>
+                        
+                        <button type="button" class="btn btn-primary" onclick="saveSecuritySettings()">保存安全设置</button>
+                    </div>
+
+                    <!-- 通知设置 -->
+                    <div id="notification-settings" class="settings-section">
+                        <h2 class="section-title">通知设置</h2>
+                        
+                        <div class="switch-container">
+                            <div>
+                                <div class="switch-label">邮件通知</div>
+                                <div class="switch-description">启用邮件通知功能</div>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="emailNotification" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="switch-container">
+                            <div>
+                                <div class="switch-label">新用户注册通知</div>
+                                <div class="switch-description">新用户注册时发送通知邮件</div>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="newUserNotification" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="switch-container">
+                            <div>
+                                <div class="switch-label">内容审核通知</div>
+                                <div class="switch-description">内容审核状态变更时发送通知</div>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="contentReviewNotification" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="switch-container">
+                            <div>
+                                <div class="switch-label">系统维护通知</div>
+                                <div class="switch-description">系统维护时发送通知</div>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="maintenanceNotification">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">SMTP服务器</label>
+                            <input type="text" class="form-input" id="smtpServer" value="smtp.gmail.com" placeholder="请输入SMTP服务器地址">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">SMTP端口</label>
+                            <input type="number" class="form-input" id="smtpPort" value="587" placeholder="请输入SMTP端口">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">发件人邮箱</label>
+                            <input type="email" class="form-input" id="senderEmail" value="noreply@aiforum.com" placeholder="请输入发件人邮箱">
+                        </div>
+                        
+                        <button type="button" class="btn btn-primary" onclick="saveNotificationSettings()">保存通知设置</button>
+                    </div>
+
+                    <!-- 备份设置 -->
+                    <div id="backup-settings" class="settings-section">
+                        <h2 class="section-title">备份设置</h2>
+                        
+                        <div class="switch-container">
+                            <div>
+                                <div class="switch-label">启用自动备份</div>
+                                <div class="switch-description">定期自动备份数据库和文件</div>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="autoBackup" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">备份频率</label>
+                            <select class="form-select" id="backupFrequency">
+                                <option value="daily" selected>每日</option>
+                                <option value="weekly">每周</option>
+                                <option value="monthly">每月</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">保留备份数量</label>
+                            <input type="number" class="form-input" id="backupRetention" value="30" min="7" max="365">
+                        </div>
+                        
+                        <div class="form-group">
+                            <button type="button" class="btn btn-success" onclick="createBackup()">
+                                <i class="fas fa-download"></i> 创建手动备份
+                            </button>
+                        </div>
+                        
+                        <button type="button" class="btn btn-primary" onclick="saveBackupSettings()">保存备份设置</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // 检查登录状态
+        function checkLogin() {
+            const isLoggedIn = localStorage.getItem('adminLoggedIn') || sessionStorage.getItem('adminLoggedIn');
+            if (!isLoggedIn) {
+                window.location.href = 'admin_login.html';
+            }
+        }
+
+        // 退出登录
+        function logout() {
+            if (confirm('确定要退出登录吗？')) {
+                localStorage.removeItem('adminLoggedIn');
+                localStorage.removeItem('adminUsername');
+                sessionStorage.removeItem('adminLoggedIn');
+                sessionStorage.removeItem('adminUsername');
+                window.location.href = 'admin_login.html';
+            }
+        }
+
+        // 切换用户菜单
+        function toggleUserMenu() {
+            console.log('切换用户菜单');
+        }
+
+        // 显示设置标签页
+        function showSettingsTab(tabName) {
+            // 隐藏所有设置内容
+            document.querySelectorAll('.settings-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // 移除所有标签的active状态
+            document.querySelectorAll('.settings-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // 显示选中的设置内容
+            document.getElementById(tabName + '-settings').classList.add('active');
+            
+            // 添加选中标签的active状态
+            event.target.classList.add('active');
+        }
+
+        // 保存基本设置
+        function saveBasicSettings() {
+            const settings = {
+                siteName: document.getElementById('siteName').value,
+                siteDescription: document.getElementById('siteDescription').value,
+                siteKeywords: document.getElementById('siteKeywords').value,
+                adminEmail: document.getElementById('adminEmail').value,
+                timezone: document.getElementById('timezone').value,
+                language: document.getElementById('language').value
+            };
+            
+            console.log('保存基本设置:', settings);
+            alert('基本设置保存成功！');
+        }
+
+        // 保存安全设置
+        function saveSecuritySettings() {
+            const settings = {
+                twoFactorAuth: document.getElementById('twoFactorAuth').checked,
+                passwordComplexity: document.getElementById('passwordComplexity').checked,
+                loginLockout: document.getElementById('loginLockout').checked,
+                sessionTimeout: document.getElementById('sessionTimeout').checked,
+                minPasswordLength: document.getElementById('minPasswordLength').value,
+                passwordExpiry: document.getElementById('passwordExpiry').value
+            };
+            
+            console.log('保存安全设置:', settings);
+            alert('安全设置保存成功！');
+        }
+
+        // 保存通知设置
+        function saveNotificationSettings() {
+            const settings = {
+                emailNotification: document.getElementById('emailNotification').checked,
+                newUserNotification: document.getElementById('newUserNotification').checked,
+                contentReviewNotification: document.getElementById('contentReviewNotification').checked,
+                maintenanceNotification: document.getElementById('maintenanceNotification').checked,
+                smtpServer: document.getElementById('smtpServer').value,
+                smtpPort: document.getElementById('smtpPort').value,
+                senderEmail: document.getElementById('senderEmail').value
+            };
+            
+            console.log('保存通知设置:', settings);
+            alert('通知设置保存成功！');
+        }
+
+        // 保存备份设置
+        function saveBackupSettings() {
+            const settings = {
+                autoBackup: document.getElementById('autoBackup').checked,
+                backupFrequency: document.getElementById('backupFrequency').value,
+                backupRetention: document.getElementById('backupRetention').value
+            };
+            
+            console.log('保存备份设置:', settings);
+            alert('备份设置保存成功！');
+        }
+
+        // 创建备份
+        function createBackup() {
+            if (confirm('确定要创建备份吗？这可能需要几分钟时间。')) {
+                alert('正在创建备份，请稍候...');
+                setTimeout(() => {
+                    alert('备份创建成功！');
+                }, 2000);
+            }
+        }
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            checkLogin();
+        });
+    </script>
+</body>
+</html>

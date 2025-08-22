@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学习资料详情 - AI论坛</title>
+    <link rel="icon" type="image/png" href="images/logo.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="images/logo.png" sizes="48x48">
+    <link rel="apple-touch-icon" href="images/logo.png" sizes="180x180">
+    <link rel="icon" type="image/png" href="images/logo.png" sizes="192x192">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <header class="top-nav">
+        <div class="nav-container">
+            <div class="nav-left">
+                <div class="logo" onclick="window.location.href='index.html'" style="cursor: pointer;">
+                    <img src="images/logo.png" alt="AI论坛Logo" class="logo-image">
+                    <span class="logo-text">三生AI</span>
+                </div>
+                <nav class="main-nav">
+                    <a href="qa_preview.html" class="nav-link">知识问答</a>
+                    <a href="tech_share_demo.html" class="nav-link">技术分享</a>
+                    <a href="learning_resources_demo.html" class="nav-link active">学习资料</a>
+                    <a href="community_preview.html" class="nav-link">社群</a>
+                </nav>
+            </div>
+            <div class="nav-right">
+                <span class="nav-title"></span>
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="AI搜索">
+                </div>
+                <div class="user-actions">
+                    <a href="register.html" class="user-icon-link">
+                        <i class="fas fa-user-circle"></i>
+                    </a>
+                    <i class="fas fa-bell"></i>
+                    <a href="register.html" class="user-avatar-link">
+                        <div class="user-avatar">
+                            <img src="images/user.jpg" alt="用户头像">
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主要内容区域 -->
+    <main class="main-content">
+        <!-- 左侧导航区 -->
+        <aside class="sidebar">
+            <nav class="sidebar-nav">
+                <a href="index.html" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    <span>首页</span>
+                </a>
+                <a href="qa_preview.html" class="nav-item">
+                    <i class="fas fa-question-circle"></i>
+                    <span>知识问答</span>
+                </a>
+                <a href="tech_share_demo.html" class="nav-item">
+                    <i class="fas fa-file-alt"></i>
+                    <span>技术分享</span>
+                </a>
+                <a href="learning_resources_demo.html" class="nav-item active">
+                    <i class="fas fa-book"></i>
+                    <span>学习资料</span>
+                </a>
+                <a href="community_preview.html" class="nav-item">
+                    <i class="fas fa-comments"></i>
+                    <span>社群</span>
+                </a>
+                <a href="search.html" class="nav-item">
+                    <i class="fas fa-search"></i>
+                    <span>搜索</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-trophy"></i>
+                    <span>积分规则</span>
+                </a>
+            </nav>
+
+            <!-- 用户等级 -->
+            <div class="user-level">
+                <h3>用户等级</h3>
+                <div class="level-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 65%;"></div>
+                    </div>
+                    <span class="level-text">Lv.3 技术达人</span>
+                </div>
+            </div>
+
+            <!-- 社区规则 -->
+            <div class="rules-section">
+                <h3>社区规则</h3>
+                <div class="rule-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>遵守社区规范</span>
+                </div>
+                <div class="rule-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>积极分享知识</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- 中间内容展示区 -->
+        <section class="content-area">
+            <style>
+                /* 学习资料详情页样式 */
+                .resource-detail-page {
+                    background: #fff;
+                    border-radius: 12px;
+                    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+                    overflow: hidden;
+                }
+
+                /* 返回导航 */
+                .back-navigation {
+                    padding: 20px 30px;
+                    border-bottom: 1px solid #f0f0f0;
+                }
+
+                .back-btn {
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 8px;
+                    color: #4A90E2;
+                    text-decoration: none;
+                    font-size: 14px;
+                    font-weight: 500;
+                    transition: color 0.3s ease;
+                }
+
+                .back-btn:hover {
+                    color: #357ABD;
+                }
+
+                .back-btn i {
+                    font-size: 12px;
+                }
+
+                /* 资料头部 */
+                .resource-header {
+                    padding: 30px;
+                    border-bottom: 1px solid #f0f0f0;
+                }
+
+                .resource-cover-large {
+                    width: 200px;
+                    height: 150px;
+                    border-radius: 12px;
+                    overflow: hidden;
+                    margin-bottom: 20px;
+                    position: relative;
+                }
+
+                .resource-cover-large img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                }
+
+                .resource-type-badge-large {
+                    position: absolute;
+                    top: 10px;
+                    left: 10px;
+                    background: rgba(74, 144, 226, 0.9);
+                    color: white;
+                    padding: 6px 12px;
+                    border-radius: 20px;
+                    font-size: 12px;
+                    font-weight: 500;
+                    display: flex;
+                    align-items: center;
+                    gap: 5px;
+                }
+
+                .resource-size-large {
+                    position: absolute;
+                    bottom: 10px;
+                    right: 10px;
+                    background: rgba(0, 0, 0, 0.7);
+                    color: white;
+                    padding: 4px 8px;
+                    border-radius: 12px;
+                    font-size: 11px;
+                }
+
+                .resource-title-large {
+                    font-size: 28px;
+                    font-weight: 600;
+                    color: #333;
+                    margin-bottom: 15px;
+                    line-height: 1.3;
+                }
+
+                .resource-meta-large {
+                    display: flex;
+                    align-items: center;
+                    gap: 20px;
+                    margin-bottom: 20px;
+                    flex-wrap: wrap;
+                }
+
+                .uploader-info-large {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                }
+
+                .uploader-avatar-large {
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                    border: 2px solid #4A90E2;
+                }
+
+                .uploader-name-large {
+                    font-weight: 500;
+                    color: #333;
+                }
+
+                .upload-time-large {
+                    color: #666;
+                    font-size: 14px;
+                }
+
+                .resource-stats-large {
+                    display: flex;
+                    gap: 20px;
+                    color: #666;
+                    font-size: 14px;
+                }
+
+                .resource-stats-large span {
+                    display: flex;
+                    align-items: center;
+                    gap: 5px;
+                }
+
+                .resource-actions {
+                    display: flex;
+                    gap: 15px;
+                    margin-top: 20px;
+                }
+
+                .btn-download {
+                    background: #50C878;
+                    color: white;
+                    border: none;
+                    padding: 12px 25px;
+                    border-radius: 25px;
+                    font-size: 16px;
+                    font-weight: 500;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    text-decoration: none;
+                }
+
+                .btn-download:hover {
+                    background: #45a367;
+                    transform: translateY(-1px);
+                    color: white;
+                }
+
+                .btn-favorite {
+                    background: #f8f9fa;
+                    color: #666;
+                    border: 1px solid #ddd;
+                    padding: 12px 20px;
+                    border-radius: 25px;
+                    font-size: 14px;
+                    font-weight: 500;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                }
+
+                .btn-favorite:hover {
+                    background: #e9ecef;
+                    border-color: #4A90E2;
+                    color: #4A90E2;
+                }
+
+                .btn-favorite.favorited {
+                    background: #FFD700;
+                    color: #333;
+                    border-color: #FFD700;
+                }
+
+                /* 资料内容 */
+                .resource-content {
+                    padding: 30px;
+                }
+
+                .resource-description {
+                    margin-bottom: 30px;
+                }
+
+                .resource-description h3 {
+                    font-size: 20px;
+                    font-weight: 600;
+                    color: #333;
+                    margin-bottom: 15px;
+                }
+
+                .resource-description p {
+                    color: #666;
+                    line-height: 1.6;
+                    font-size: 15px;
+                }
+
+                .resource-tags {
+                    margin-bottom: 30px;
+                }
+
+                .resource-tags h3 {
+                    font-size: 16px;
+                    font-weight: 600;
+                    color: #333;
+                    margin-bottom: 10px;
+                }
+
+                .tags-list {
+                    display: flex;
+                    gap: 8px;
+                    flex-wrap: wrap;
+                }
+
+                .tag {
+                    background: #f0f7ff;
+                    color: #4A90E2;
+                    padding: 6px 12px;
+                    border-radius: 15px;
+                    font-size: 13px;
+                    font-weight: 500;
+                }
+
+                /* 相关资料 */
+                .related-resources {
+                    margin-top: 40px;
+                    padding-top: 30px;
+                    border-top: 1px solid #f0f0f0;
+                }
+
+                .related-resources h3 {
+                    font-size: 20px;
+                    font-weight: 600;
+                    color: #333;
+                    margin-bottom: 20px;
+                }
+
+                .related-list {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+                    gap: 20px;
+                }
+
+                .related-item {
+                    display: flex;
+                    gap: 15px;
+                    padding: 15px;
+                    border: 1px solid #e9ecef;
+                    border-radius: 10px;
+                    transition: all 0.3s ease;
+                    text-decoration: none;
+                    color: inherit;
+                }
+
+                .related-item:hover {
+                    border-color: #4A90E2;
+                    box-shadow: 0 2px 10px rgba(74, 144, 226, 0.1);
+                    transform: translateY(-1px);
+                }
+
+                .related-cover {
+                    width: 60px;
+                    height: 45px;
+                    border-radius: 6px;
+                    overflow: hidden;
+                    flex-shrink: 0;
+                }
+
+                .related-cover img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                }
+
+                .related-info {
+                    flex: 1;
+                }
+
+                .related-title {
+                    font-size: 14px;
+                    font-weight: 600;
+                    color: #333;
+                    margin-bottom: 5px;
+                    line-height: 1.3;
+                }
+
+                .related-meta {
+                    font-size: 12px;
+                    color: #666;
+                    display: flex;
+                    gap: 10px;
+                }
+
+                /* 响应式设计 */
+                @media (max-width: 768px) {
+                    .resource-header {
+                        padding: 20px;
+                    }
+
+                    .resource-cover-large {
+                        width: 150px;
+                        height: 112px;
+                    }
+
+                    .resource-title-large {
+                        font-size: 24px;
+                    }
+
+                    .resource-meta-large {
+                        flex-direction: column;
+                        align-items: flex-start;
+                        gap: 15px;
+                    }
+
+                    .resource-actions {
+                        flex-direction: column;
+                        gap: 10px;
+                    }
+
+                    .btn-download,
+                    .btn-favorite {
+                        justify-content: center;
+                    }
+
+                    .resource-content {
+                        padding: 20px;
+                    }
+
+                    .related-list {
+                        grid-template-columns: 1fr;
+                    }
+                }
+            </style>
+
+            <div class="resource-detail-page">
+                <!-- 返回导航 -->
+                <div class="back-navigation">
+                    <a href="learning_resources_demo.html" class="back-btn">
+                        <i class="fas fa-arrow-left"></i>
+                        返回学习资料列表
+                    </a>
+                </div>
+
+                <!-- 资料头部 -->
+                <div class="resource-header">
+                    <div class="resource-cover-large">
+                        <img src="images/AI.png" alt="机器学习实战" id="resourceCover">
+                        <div class="resource-type-badge-large" id="resourceTypeBadge">
+                            <i class="fas fa-book"></i>
+                            <span>电子书</span>
+                        </div>
+                        <div class="resource-size-large" id="resourceSize">15.0 MB</div>
+                    </div>
+
+                    <h1 class="resource-title-large" id="resourceTitle">机器学习实战：从理论到实践</h1>
+
+                    <div class="resource-meta-large">
+                        <div class="uploader-info-large">
+                            <img src="images/user.jpg" alt="上传者" class="uploader-avatar-large" id="uploaderAvatar">
+                            <div>
+                                <div class="uploader-name-large" id="uploaderName">张三</div>
+                                <div class="upload-time-large" id="uploadTime">2024-01-15 发布</div>
+                            </div>
+                        </div>
+
+                        <div class="resource-stats-large">
+                            <span><i class="fas fa-download"></i> <span id="downloadCount">1,234</span></span>
+                            <span><i class="fas fa-heart"></i> <span id="favoriteCount">89</span></span>
+                            <span><i class="fas fa-eye"></i> <span id="viewCount">2,567</span></span>
+                        </div>
+                    </div>
+
+                    <div class="resource-actions">
+                        <button class="btn-download" onclick="downloadResource()">
+                            <i class="fas fa-download"></i>
+                            立即下载
+                        </button>
+                        <button class="btn-favorite" onclick="toggleFavorite()">
+                            <i class="fas fa-heart"></i>
+                            <span id="favoriteText">收藏</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 资料内容 -->
+                <div class="resource-content">
+                    <div class="resource-description">
+                        <h3>资料简介</h3>
+                        <p id="resourceDescription">
+                            这是一本关于机器学习实战的综合性教材，涵盖了从基础理论到实际应用的全过程。本书适合有一定数学基础的初学者，以及希望深入了解机器学习算法实现的开发者。内容包括监督学习、无监督学习、深度学习等核心概念，并提供了大量的Python代码示例和实际项目案例。
+                        </p>
+                    </div>
+
+                    <div class="resource-tags">
+                        <h3>相关标签</h3>
+                        <div class="tags-list" id="resourceTags">
+                            <span class="tag">机器学习</span>
+                            <span class="tag">Python</span>
+                            <span class="tag">算法</span>
+                            <span class="tag">数据科学</span>
+                            <span class="tag">深度学习</span>
+                        </div>
+                    </div>
+
+                    <!-- 相关资料 -->
+                    <div class="related-resources">
+                        <h3>相关资料推荐</h3>
+                        <div class="related-list">
+                            <a href="learning_resource_detail.html?id=2" class="related-item">
+                                <div class="related-cover">
+                                    <img src="images/AI.png" alt="深度学习视频教程">
+                                </div>
+                                <div class="related-info">
+                                    <div class="related-title">深度学习视频教程：神经网络详解</div>
+                                    <div class="related-meta">
+                                        <span>视频教程</span>
+                                        <span>500.0 MB</span>
+                                    </div>
+                                </div>
+                            </a>
+
+                            <a href="learning_resource_detail.html?id=3" class="related-item">
+                                <div class="related-cover">
+                                    <img src="images/AI.png" alt="计算机视觉课件">
+                                </div>
+                                <div class="related-info">
+                                    <div class="related-title">计算机视觉算法课件</div>
+                                    <div class="related-meta">
+                                        <span>课件</span>
+                                        <span>20.0 MB</span>
+                                    </div>
+                                </div>
+                            </a>
+
+                            <a href="learning_resource_detail.html?id=4" class="related-item">
+                                <div class="related-cover">
+                                    <img src="images/AI.png" alt="MNIST数据集">
+                                </div>
+                                <div class="related-info">
+                                    <div class="related-title">MNIST手写数字数据集</div>
+                                    <div class="related-meta">
+                                        <span>数据集</span>
+                                        <span>10.0 MB</span>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 右侧信息推荐区 -->
+        <aside class="recommendation-area">
+            <!-- 登录面板 -->
+            <div class="login-panel">
+                <div class="panel-header">
+                    <h3>用户中心</h3>
+                    <a href="register.html" class="register-link">注册</a>
+                </div>
+                
+                <div class="user-info">
+                    <img src="images/user.jpg" alt="用户头像">
+                    <div class="user-details">
+                        <h4><a href="#">技术达人</a></h4>
+                        <div class="user-level-info">
+                            <span>Lv.3</span>
+                            <div class="stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <form class="login-form">
+                    <div class="form-group">
+                        <input type="text" placeholder="用户名/邮箱" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" placeholder="密码" required>
+                    </div>
+                    <button type="submit" class="btn-login">登录</button>
+                </form>
+                
+                <div class="form-footer">
+                    <label>
+                        <input type="checkbox"> 记住我
+                    </label>
+                    <a href="#" class="forgot-password">忘记密码？</a>
+                </div>
+            </div>
+
+            <!-- 热门资料 -->
+            <div class="community-panel">
+                <h3>热门资料</h3>
+                <div class="community-list">
+                    <div class="community-item">
+                        <div class="community-avatar">
+                            <img src="images/AI.png" alt="Python基础教程">
+                        </div>
+                        <div class="community-info">
+                            <h4><a href="#">Python基础教程</a></h4>
+                            <p>下载量：2,345</p>
+                        </div>
+                    </div>
+                    
+                    <div class="community-item">
+                        <div class="community-avatar">
+                            <img src="images/AI.png" alt="深度学习框架">
+                        </div>
+                        <div class="community-info">
+                            <h4><a href="#">深度学习框架对比</a></h4>
+                            <p>下载量：1,876</p>
+                        </div>
+                    </div>
+                    
+                    <div class="community-item">
+                        <div class="community-avatar">
+                            <img src="images/AI.png" alt="数据分析实战">
+                        </div>
+                        <div class="community-info">
+                            <h4><a href="#">数据分析实战案例</a></h4>
+                            <p>下载量：1,543</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 资料分类 -->
+            <div class="tags-panel">
+                <h3>资料分类</h3>
+                <div class="tag-cloud">
+                    <span class="tag">机器学习</span>
+                    <span class="tag">深度学习</span>
+                    <span class="tag">Python</span>
+                    <span class="tag">数据科学</span>
+                    <span class="tag">算法</span>
+                    <span class="tag">数据分析</span>
+                    <span class="tag">人工智能</span>
+                    <span class="tag">计算机视觉</span>
+                    <span class="tag">自然语言处理</span>
+                    <span class="tag">神经网络</span>
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <span>三生AI</span>
+            </div>
+            <div class="footer-links">
+                <a href="#">关于我们</a>
+                <a href="#">使用条款</a>
+                <a href="#">隐私政策</a>
+                <a href="#">联系我们</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // 根据URL参数动态加载资料信息
+        function loadResourceDetails() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const resourceId = urlParams.get('id') || '1';
+            
+            // 模拟资料数据
+            const resources = {
+                '1': {
+                    title: '机器学习实战：从理论到实践',
+                    type: 'ebook',
+                    typeName: '电子书',
+                    size: '15.0 MB',
+                    uploader: '张三',
+                    uploadTime: '2024-01-15',
+                    downloads: 1234,
+                    favorites: 89,
+                    views: 2567,
+                    description: '这是一本关于机器学习实战的综合性教材，涵盖了从基础理论到实际应用的全过程。本书适合有一定数学基础的初学者，以及希望深入了解机器学习算法实现的开发者。内容包括监督学习、无监督学习、深度学习等核心概念，并提供了大量的Python代码示例和实际项目案例。',
+                    tags: ['机器学习', 'Python', '算法', '数据科学', '深度学习']
+                },
+                '2': {
+                    title: '深度学习视频教程：神经网络详解',
+                    type: 'video',
+                    typeName: '视频教程',
+                    size: '500.0 MB',
+                    uploader: '李四',
+                    uploadTime: '2024-01-14',
+                    downloads: 856,
+                    favorites: 124,
+                    views: 1890,
+                    description: '深入浅出地讲解神经网络的基本概念和实现原理，通过实际案例演示如何使用TensorFlow和PyTorch构建深度学习模型。适合有Python基础的学习者。',
+                    tags: ['深度学习', '神经网络', 'TensorFlow', 'PyTorch', '视频教程']
+                },
+                '3': {
+                    title: '计算机视觉算法课件',
+                    type: 'slides',
+                    typeName: '课件',
+                    size: '20.0 MB',
+                    uploader: '王五',
+                    uploadTime: '2024-01-13',
+                    downloads: 567,
+                    favorites: 45,
+                    views: 1234,
+                    description: '计算机视觉领域的核心算法讲解，包括图像处理、特征提取、目标检测等内容。配有详细的算法原理说明和实现步骤。',
+                    tags: ['计算机视觉', '图像处理', '目标检测', '算法', '课件']
+                },
+                '4': {
+                    title: 'MNIST手写数字数据集',
+                    type: 'dataset',
+                    typeName: '数据集',
+                    size: '10.0 MB',
+                    uploader: '赵六',
+                    uploadTime: '2024-01-12',
+                    downloads: 2345,
+                    favorites: 178,
+                    views: 3456,
+                    description: '经典的手写数字识别数据集，包含60,000个训练样本和10,000个测试样本。每个样本都是28x28像素的灰度图像，适合用于机器学习入门练习。',
+                    tags: ['数据集', 'MNIST', '手写识别', '图像分类', '机器学习']
+                }
+            };
+            
+            const resource = resources[resourceId];
+            if (!resource) return;
+            
+            // 更新页面内容
+            document.getElementById('resourceTitle').textContent = resource.title;
+            document.getElementById('resourceSize').textContent = resource.size;
+            document.getElementById('uploaderName').textContent = resource.uploader;
+            document.getElementById('uploadTime').textContent = resource.uploadTime + ' 发布';
+            document.getElementById('downloadCount').textContent = resource.downloads.toLocaleString();
+            document.getElementById('favoriteCount').textContent = resource.favorites;
+            document.getElementById('viewCount').textContent = resource.views.toLocaleString();
+            document.getElementById('resourceDescription').textContent = resource.description;
+            
+            // 更新类型徽章
+            const typeBadge = document.getElementById('resourceTypeBadge');
+            const typeIcons = {
+                'ebook': 'fas fa-book',
+                'video': 'fas fa-video',
+                'slides': 'fas fa-presentation',
+                'dataset': 'fas fa-database',
+                'code': 'fas fa-code'
+            };
+            typeBadge.innerHTML = `<i class="${typeIcons[resource.type]}"></i><span>${resource.typeName}</span>`;
+            
+            // 更新标签
+            const tagsContainer = document.getElementById('resourceTags');
+            tagsContainer.innerHTML = resource.tags.map(tag => `<span class="tag">${tag}</span>`).join('');
+            
+            // 更新页面标题
+            document.title = resource.title + ' - 学习资料详情 - AI论坛';
+        }
+        
+        // 下载资料
+        function downloadResource() {
+            if (confirm('确定要下载这个资料吗？')) {
+                alert('开始下载资料...');
+                // 这里可以添加实际的下载逻辑
+                
+                // 模拟增加下载计数
+                const downloadCount = document.getElementById('downloadCount');
+                const currentCount = parseInt(downloadCount.textContent.replace(/,/g, ''));
+                downloadCount.textContent = (currentCount + 1).toLocaleString();
+            }
+        }
+        
+        // 切换收藏状态
+        function toggleFavorite() {
+            const favoriteBtn = document.querySelector('.btn-favorite');
+            const favoriteText = document.getElementById('favoriteText');
+            const favoriteCount = document.getElementById('favoriteCount');
+            const currentCount = parseInt(favoriteCount.textContent);
+            
+            if (favoriteBtn.classList.contains('favorited')) {
+                favoriteBtn.classList.remove('favorited');
+                favoriteText.textContent = '收藏';
+                favoriteCount.textContent = currentCount - 1;
+                alert('已取消收藏');
+            } else {
+                favoriteBtn.classList.add('favorited');
+                favoriteText.textContent = '已收藏';
+                favoriteCount.textContent = currentCount + 1;
+                alert('收藏成功');
+            }
+        }
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            loadResourceDetails();
+        });
+    </script>
+</body>
+</html>

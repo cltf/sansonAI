@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>社群 - 三生AI论坛</title>
+    <link rel="icon" type="image/png" href="images/logo.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="images/logo.png" sizes="48x48">
+    <link rel="apple-touch-icon" href="images/logo.png" sizes="180x180">
+    <link rel="icon" type="image/png" href="images/logo.png" sizes="192x192">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* 全局样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+
+        /* 顶部导航栏 */
+        .top-nav {
+            background: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo-text {
+            font-size: 28px;
+            font-weight: 700;
+            color: #4A90E2;
+            letter-spacing: 1px;
+            text-shadow: 0 1px 2px rgba(74, 144, 226, 0.1);
+        }
+
+        .logo-image {
+            height: 70px;
+            width: auto;
+            max-width: 280px;
+            object-fit: contain;
+            background: transparent;
+        }
+
+        .main-nav {
+            display: flex;
+            gap: 25px;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #555;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: #4A90E2;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-title {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .search-box {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 12px;
+            color: #999;
+        }
+
+        .search-box input {
+            padding: 10px 15px 10px 40px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            width: 200px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .search-box input:focus {
+            border-color: #4A90E2;
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-actions i {
+            font-size: 20px;
+            color: #666;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .user-actions i:hover {
+            color: #4A90E2;
+        }
+
+        .user-avatar img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid #4A90E2;
+        }
+
+        /* 主要内容区域 */
+        .main-content {
+            max-width: 1400px;
+            margin: 20px auto;
+            padding: 0 20px;
+            display: flex;
+            gap: 30px;
+            min-height: calc(100vh - 150px);
+        }
+
+        /* 左侧导航区 */
+        .sidebar {
+            background: #fff;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            height: fit-content;
+            position: sticky;
+            top: 90px;
+            width: 250px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 30px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            text-decoration: none;
+            color: #555;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-item:hover {
+            background: #f0f7ff;
+            color: #4A90E2;
+        }
+
+        .nav-item.active {
+            background: #4A90E2;
+            color: white;
+        }
+
+        .nav-item i {
+            font-size: 16px;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* 用户等级 */
+        .user-level {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .user-level h3 {
+            margin-bottom: 15px;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .level-progress {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4A90E2, #5BA0F2);
+            border-radius: 4px;
+        }
+
+        .level-text {
+            font-size: 14px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        /* 社区规则 */
+        .rules-section {
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .rules-section h3 {
+            margin-bottom: 15px;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .rule-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .rule-item i {
+            color: #4A90E2;
+            font-size: 16px;
+        }
+
+        /* 社群分类 */
+        .categories-section {
+            margin-bottom: 25px;
+            background: #fff;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .categories-title {
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .category-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .category-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            color: #555;
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+        }
+
+        .category-item:hover {
+            background: #f0f7ff;
+            color: #4A90E2;
+            border-color: #4A90E2;
+        }
+
+        .category-item.active {
+            background: #4A90E2;
+            color: white;
+            border-color: #4A90E2;
+        }
+
+        .category-item i {
+            font-size: 14px;
+        }
+
+        .category-count {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .category-item.active .category-count {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* 中间内容区域 */
+        .content-area {
+            background: #fff;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            height: fit-content;
+            flex: 1;
+        }
+
+        /* 右侧推荐区域 */
+        .recommendation-area {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            height: fit-content;
+            position: sticky;
+            top: 90px;
+            width: 300px;
+            flex-shrink: 0;
+        }
+
+        .recommendation-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .recommendation-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .recommended-community {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            margin-bottom: 15px;
+        }
+
+        .recommended-community:hover {
+            background: #f8f9fa;
+        }
+
+        .recommended-logo {
+            width: 40px;
+            height: 40px;
+            background: #4A90E2;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .recommended-info h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .recommended-stats {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .event-item {
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            margin-bottom: 15px;
+            border: 1px solid #f0f0f0;
+        }
+
+        .event-item:hover {
+            background: #f8f9fa;
+        }
+
+        .event-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .event-community {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .event-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .online-badge, .offline-badge {
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 10px;
+            font-weight: 500;
+        }
+
+        .online-badge {
+            background: #e8f5e8;
+            color: #2e7d32;
+        }
+
+        .offline-badge {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+
+        /* 搜索和创建区域 */
+        .search-create-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .content-area .search-box {
+            flex: 1;
+            position: relative;
+            max-width: 500px;
+        }
+
+        .content-area .search-box input {
+            width: 100%;
+            padding: 15px 20px 15px 50px;
+            border: 2px solid #e0e0e0;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .content-area .search-box input:focus {
+            border-color: #4A90E2;
+        }
+
+        .content-area .search-box i {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+            font-size: 18px;
+        }
+
+        .create-btn {
+            background: #4A90E2;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .create-btn:hover {
+            background: #357ABD;
+            transform: translateY(-2px);
+        }
+
+
+
+
+
+        /* 中间社群列表 */
+        .communities-section {
+            background: #fff;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 10px;
+        }
+
+        .filter-tab {
+            padding: 8px 16px;
+            border: 1px solid #e0e0e0;
+            border-radius: 20px;
+            background: #fff;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .filter-tab:hover {
+            border-color: #4A90E2;
+            color: #4A90E2;
+        }
+
+        .filter-tab.active {
+            background: #4A90E2;
+            border-color: #4A90E2;
+            color: white;
+        }
+
+        /* 社群卡片 */
+        .communities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+        }
+
+        .community-card {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 25px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .community-card:hover {
+            border-color: #4A90E2;
+            box-shadow: 0 8px 25px rgba(74, 144, 226, 0.15);
+            transform: translateY(-3px);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .community-logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            object-fit: cover;
+            background: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #4A90E2;
+        }
+
+        .community-info h3 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        .community-creator {
+            font-size: 14px;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .community-creator img {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+        }
+
+        .community-stats {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .community-description {
+            color: #666;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .community-tags {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            background: #f8f9fa;
+            color: #666;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+        }
+
+        .upcoming-event {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 15px;
+        }
+
+        .event-title {
+            font-weight: 600;
+            color: #856404;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .event-time {
+            font-size: 12px;
+            color: #856404;
+        }
+
+        .event-details {
+            font-size: 12px;
+            color: #666;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .event-location {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .online-badge {
+            background: #d4edda;
+            color: #155724;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 10px;
+        }
+
+        .offline-badge {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 10px;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .main-content {
+                grid-template-columns: 200px 1fr 250px;
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .recommendation-area {
+                order: 2;
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 0 15px;
+            }
+            
+            .search-create-section {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .search-box {
+                max-width: none;
+            }
+            
+            .communities-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .recommendation-area {
+                grid-template-columns: 1fr;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            
+            .filter-tabs {
+                flex-wrap: wrap;
+            }
+        }
+
+        /* 页脚样式 */
+        .footer {
+            background: #2c3e50;
+            color: white;
+            padding: 30px 0;
+            margin-top: 50px;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-logo {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .footer-links a {
+            color: #bdc3c7;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        /* 页脚响应式设计 */
+        @media (max-width: 768px) {
+            .footer-content {
+                flex-direction: column;
+                gap: 20px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <header class="top-nav">
+        <div class="nav-container">
+            <div class="nav-left">
+                <div class="logo" onclick="window.location.href='index.html'" style="cursor: pointer;">
+                    <img src="images/logo.png" alt="三生AI论坛Logo" class="logo-image">
+                    <span class="logo-text">三生AI</span>
+                </div>
+                <nav class="main-nav">
+                    <a href="qa_preview.html" class="nav-link">知识问答</a>
+                    <a href="tech_share_demo.html" class="nav-link">技术分享</a>
+                    <a href="learning_resources_demo.html" class="nav-link">学习资料</a>
+                    <a href="community_preview.html" class="nav-link active">社群</a>
+                </nav>
+            </div>
+            <div class="nav-right">
+                <span class="nav-title"></span>
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="AI搜索">
+                </div>
+                <div class="user-actions">
+                    <a href="register.html" class="user-icon-link">
+                        <i class="fas fa-user-circle"></i>
+                    </a>
+                    <i class="fas fa-bell"></i>
+                    <a href="register.html" class="user-avatar-link">
+                        <div class="user-avatar">
+                            <img src="images/user.jpg" alt="用户头像">
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主要内容区域 -->
+    <main class="main-content">
+        <!-- 左侧导航区 -->
+        <aside class="sidebar">
+            <nav class="sidebar-nav">
+                <a href="index.html" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    <span>首页</span>
+                </a>
+                <a href="qa_preview.html" class="nav-item">
+                    <i class="fas fa-question-circle"></i>
+                    <span>知识问答</span>
+                </a>
+                <a href="tech_share_demo.html" class="nav-item">
+                    <i class="fas fa-file-alt"></i>
+                    <span>技术分享</span>
+                </a>
+                <a href="learning_resources_demo.html" class="nav-item">
+                    <i class="fas fa-book"></i>
+                    <span>学习资料</span>
+                </a>
+                <a href="community_preview.html" class="nav-item active">
+                    <i class="fas fa-comments"></i>
+                    <span>社群</span>
+                </a>
+                <a href="search.html" class="nav-item">
+                    <i class="fas fa-search"></i>
+                    <span>搜索</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-trophy"></i>
+                    <span>积分规则</span>
+                </a>
+            </nav>
+
+
+
+            <!-- 用户等级 -->
+            <div class="user-level">
+                <h3>用户等级</h3>
+                <div class="level-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 65%;"></div>
+                    </div>
+                    <span class="level-text">Lv.3 技术达人</span>
+                </div>
+            </div>
+
+            <!-- 社区规则 -->
+            <div class="rules-section">
+                <h3>社区规则</h3>
+                <div class="rule-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>遵守社区规范</span>
+                </div>
+                <div class="rule-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>积极分享知识</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- 中间内容展示区 -->
+        <section class="content-area">
+            <!-- 搜索和创建区域 -->
+            <div class="search-create-section">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="搜索社群名称或关键词..." id="searchInput">
+                </div>
+                <button class="create-btn" onclick="createCommunity()">
+                    <i class="fas fa-plus"></i>
+                    创建社群
+                </button>
+            </div>
+
+            <!-- 社群分类 -->
+            <div class="categories-section">
+                <h3 class="categories-title">社群分类</h3>
+                <ul class="category-list">
+                    <li class="category-item active" onclick="filterByCategory('all')">
+                        <i class="fas fa-globe"></i>
+                        <span>全部社群</span>
+                        <span class="category-count">156</span>
+                    </li>
+                    <li class="category-item" onclick="filterByCategory('ml')">
+                        <i class="fas fa-brain"></i>
+                        <span>机器学习</span>
+                        <span class="category-count">42</span>
+                    </li>
+                    <li class="category-item" onclick="filterByCategory('robotics')">
+                        <i class="fas fa-robot"></i>
+                        <span>机器人爱好者</span>
+                        <span class="category-count">28</span>
+                    </li>
+                    <li class="category-item" onclick="filterByCategory('industry')">
+                        <i class="fas fa-industry"></i>
+                        <span>行业应用</span>
+                        <span class="category-count">35</span>
+                    </li>
+                    <li class="category-item" onclick="filterByCategory('research')">
+                        <i class="fas fa-microscope"></i>
+                        <span>学术研究</span>
+                        <span class="category-count">23</span>
+                    </li>
+                    <li class="category-item" onclick="filterByCategory('startup')">
+                        <i class="fas fa-rocket"></i>
+                        <span>创业交流</span>
+                        <span class="category-count">18</span>
+                    </li>
+                    <li class="category-item" onclick="filterByCategory('education')">
+                        <i class="fas fa-graduation-cap"></i>
+                        <span>教育培训</span>
+                        <span class="category-count">31</span>
+                    </li>
+                    <li class="category-item" onclick="filterByCategory('nlp')">
+                        <i class="fas fa-comments"></i>
+                        <span>自然语言处理</span>
+                        <span class="category-count">19</span>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- 中间社群列表 -->
+            <div class="communities-section">
+                <div class="section-header">
+                    <h2 class="section-title">推荐社群</h2>
+                    <div class="filter-tabs">
+                        <button class="filter-tab active" onclick="filterCommunities('all')">全部</button>
+                        <button class="filter-tab" onclick="filterCommunities('popular')">热门</button>
+                        <button class="filter-tab" onclick="filterCommunities('recent')">最新</button>
+                        <button class="filter-tab" onclick="filterCommunities('active')">活跃</button>
+                    </div>
+                </div>
+
+                <div class="communities-grid">
+                    <!-- 社群卡片 1 -->
+                    <div class="community-card" onclick="viewCommunity(1)">
+                        <div class="card-header">
+                            <div class="community-logo">
+                                <i class="fas fa-brain"></i>
+                            </div>
+                            <div class="community-info">
+                                <h3>机器学习实践者</h3>
+                                <div class="community-creator">
+                                    <img src="https://via.placeholder.com/20x20/4A90E2/FFFFFF?text=U" alt="创建者">
+                                    <span>由 张三 创建</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="community-stats">
+                            <div class="stat-item">
+                                <i class="fas fa-users"></i>
+                                <span>1,234 成员</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-calendar"></i>
+                                <span>2023年成立</span>
+                            </div>
+                        </div>
+                        <div class="community-description">
+                            专注于机器学习算法实践和技术分享，定期举办线上技术讨论和项目展示活动。
+                        </div>
+                        <div class="community-tags">
+                            <span class="tag">机器学习</span>
+                            <span class="tag">算法</span>
+                            <span class="tag">实践</span>
+                        </div>
+                        <div class="upcoming-event">
+                            <div class="event-title">本周技术分享：深度学习在图像识别中的应用</div>
+                            <div class="event-time">明天 20:00 | 线上会议</div>
+                        </div>
+                    </div>
+
+                    <!-- 社群卡片 2 -->
+                    <div class="community-card" onclick="viewCommunity(2)">
+                        <div class="card-header">
+                            <div class="community-logo">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <div class="community-info">
+                                <h3>机器人爱好者联盟</h3>
+                                <div class="community-creator">
+                                    <img src="https://via.placeholder.com/20x20/28a745/FFFFFF?text=U" alt="创建者">
+                                    <span>由 李四 创建</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="community-stats">
+                            <div class="stat-item">
+                                <i class="fas fa-users"></i>
+                                <span>856 成员</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-calendar"></i>
+                                <span>2022年成立</span>
+                            </div>
+                        </div>
+                        <div class="community-description">
+                            机器人技术爱好者的聚集地，分享机器人设计、编程和制作经验，组织线下工作坊。
+                        </div>
+                        <div class="community-tags">
+                            <span class="tag">机器人</span>
+                            <span class="tag">硬件</span>
+                            <span class="tag">编程</span>
+                        </div>
+                        <div class="upcoming-event">
+                            <div class="event-title">机器人制作工作坊：Arduino入门</div>
+                            <div class="event-time">本周六 14:00 | 线下活动</div>
+                        </div>
+                    </div>
+
+                    <!-- 社群卡片 3 -->
+                    <div class="community-card" onclick="viewCommunity(3)">
+                        <div class="card-header">
+                            <div class="community-logo">
+                                <i class="fas fa-industry"></i>
+                            </div>
+                            <div class="community-info">
+                                <h3>AI行业应用交流</h3>
+                                <div class="community-creator">
+                                    <img src="https://via.placeholder.com/20x20/dc3545/FFFFFF?text=U" alt="创建者">
+                                    <span>由 王五 创建</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="community-stats">
+                            <div class="stat-item">
+                                <i class="fas fa-users"></i>
+                                <span>2,156 成员</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-calendar"></i>
+                                <span>2021年成立</span>
+                            </div>
+                        </div>
+                        <div class="community-description">
+                            探讨AI技术在各行业的实际应用案例，分享项目实施经验和最佳实践。
+                        </div>
+                        <div class="community-tags">
+                            <span class="tag">行业应用</span>
+                            <span class="tag">案例分享</span>
+                            <span class="tag">最佳实践</span>
+                        </div>
+                        <div class="upcoming-event">
+                            <div class="event-title">AI在医疗行业的应用案例分享</div>
+                            <div class="event-time">下周三 19:30 | 线上会议</div>
+                        </div>
+                    </div>
+
+                    <!-- 社群卡片 4 -->
+                    <div class="community-card" onclick="viewCommunity(4)">
+                        <div class="card-header">
+                            <div class="community-logo">
+                                <i class="fas fa-microscope"></i>
+                            </div>
+                            <div class="community-info">
+                                <h3>AI学术研究前沿</h3>
+                                <div class="community-creator">
+                                    <img src="https://via.placeholder.com/20x20/ffc107/FFFFFF?text=U" alt="创建者">
+                                    <span>由 赵六 创建</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="community-stats">
+                            <div class="stat-item">
+                                <i class="fas fa-users"></i>
+                                <span>678 成员</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-calendar"></i>
+                                <span>2023年成立</span>
+                            </div>
+                        </div>
+                        <div class="community-description">
+                            关注AI领域最新研究进展，讨论学术论文和技术创新，促进学术交流合作。
+                        </div>
+                        <div class="community-tags">
+                            <span class="tag">学术研究</span>
+                            <span class="tag">论文讨论</span>
+                            <span class="tag">前沿技术</span>
+                        </div>
+                        <div class="upcoming-event">
+                            <div class="event-title">最新论文解读：Transformer架构的演进</div>
+                            <div class="event-time">本周日 15:00 | 线上会议</div>
+                        </div>
+                    </div>
+
+                    <!-- 社群卡片 5 -->
+                    <div class="community-card" onclick="viewCommunity(5)">
+                        <div class="card-header">
+                            <div class="community-logo">
+                                <i class="fas fa-rocket"></i>
+                            </div>
+                            <div class="community-info">
+                                <h3>AI创业交流群</h3>
+                                <div class="community-creator">
+                                    <img src="https://via.placeholder.com/20x20/6f42c1/FFFFFF?text=U" alt="创建者">
+                                    <span>由 孙七 创建</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="community-stats">
+                            <div class="stat-item">
+                                <i class="fas fa-users"></i>
+                                <span>432 成员</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-calendar"></i>
+                                <span>2023年成立</span>
+                            </div>
+                        </div>
+                        <div class="community-description">
+                            AI创业者的交流平台，分享创业经验、项目展示、投资对接和资源整合。
+                        </div>
+                        <div class="community-tags">
+                            <span class="tag">创业</span>
+                            <span class="tag">投资</span>
+                            <span class="tag">项目展示</span>
+                        </div>
+                        <div class="upcoming-event">
+                            <div class="event-title">AI创业项目路演活动</div>
+                            <div class="event-time">下周五 14:00 | 线下活动</div>
+                        </div>
+                    </div>
+
+                    <!-- 社群卡片 6 -->
+                    <div class="community-card" onclick="viewCommunity(6)">
+                        <div class="card-header">
+                            <div class="community-logo">
+                                <i class="fas fa-graduation-cap"></i>
+                            </div>
+                            <div class="community-info">
+                                <h3>AI教育培训联盟</h3>
+                                <div class="community-creator">
+                                    <img src="https://via.placeholder.com/20x20/17a2b8/FFFFFF?text=U" alt="创建者">
+                                    <span>由 周八 创建</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="community-stats">
+                            <div class="stat-item">
+                                <i class="fas fa-users"></i>
+                                <span>1,567 成员</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-calendar"></i>
+                                <span>2022年成立</span>
+                            </div>
+                        </div>
+                        <div class="community-description">
+                            AI教育培训机构和学习者的交流平台，分享优质课程、学习资源和教学经验。
+                        </div>
+                        <div class="community-tags">
+                            <span class="tag">教育培训</span>
+                            <span class="tag">课程分享</span>
+                            <span class="tag">学习资源</span>
+                        </div>
+                        <div class="upcoming-event">
+                            <div class="event-title">AI入门课程推荐与讨论</div>
+                            <div class="event-time">本周四 20:00 | 线上会议</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 右侧信息推荐区 -->
+        <aside class="recommendation-area">
+            <!-- 推荐社群 -->
+            <div class="recommendation-card">
+                <h3 class="recommendation-title">推荐社群</h3>
+                <div class="recommended-community" onclick="viewCommunity(7)">
+                    <div class="recommended-logo">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <div class="recommended-info">
+                        <h4>NLP技术交流</h4>
+                        <div class="recommended-stats">1,089 成员 · 高活跃度</div>
+                    </div>
+                </div>
+                <div class="recommended-community" onclick="viewCommunity(8)">
+                    <div class="recommended-logo">
+                        <i class="fas fa-eye"></i>
+                    </div>
+                    <div class="recommended-info">
+                        <h4>计算机视觉</h4>
+                        <div class="recommended-stats">756 成员 · 技术前沿</div>
+                    </div>
+                </div>
+                <div class="recommended-community" onclick="viewCommunity(9)">
+                    <div class="recommended-logo">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <div class="recommended-info">
+                        <h4>数据科学实践</h4>
+                        <div class="recommended-stats">1,234 成员 · 实用性强</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 即将举办的活动 -->
+            <div class="recommendation-card">
+                <h3 class="recommendation-title">即将举办的活动</h3>
+                <div class="event-item" onclick="viewEvent(1)">
+                    <div class="event-name">AI技术发展趋势分享会</div>
+                    <div class="event-community">机器学习实践者</div>
+                    <div class="event-details">
+                        <span><i class="fas fa-clock"></i> 明天 20:00</span>
+                        <span class="event-location">
+                            <i class="fas fa-video"></i>
+                            <span class="online-badge">线上</span>
+                        </span>
+                    </div>
+                </div>
+                <div class="event-item" onclick="viewEvent(2)">
+                    <div class="event-name">机器人制作工作坊</div>
+                    <div class="event-community">机器人爱好者联盟</div>
+                    <div class="event-details">
+                        <span><i class="fas fa-clock"></i> 本周六 14:00</span>
+                        <span class="event-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span class="offline-badge">线下</span>
+                        </span>
+                    </div>
+                </div>
+                <div class="event-item" onclick="viewEvent(3)">
+                    <div class="event-name">AI创业项目路演</div>
+                    <div class="event-community">AI创业交流群</div>
+                    <div class="event-details">
+                        <span><i class="fas fa-clock"></i> 下周五 14:00</span>
+                        <span class="event-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span class="offline-badge">线下</span>
+                        </span>
+                    </div>
+                </div>
+                <div class="event-item" onclick="viewEvent(4)">
+                    <div class="event-name">最新论文解读讨论</div>
+                    <div class="event-community">AI学术研究前沿</div>
+                    <div class="event-details">
+                        <span><i class="fas fa-clock"></i> 本周日 15:00</span>
+                        <span class="event-location">
+                            <i class="fas fa-video"></i>
+                            <span class="online-badge">线上</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <span>三生AI</span>
+            </div>
+            <div class="footer-links">
+                <a href="#">关于我们</a>
+                <a href="#">使用条款</a>
+                <a href="#">隐私政策</a>
+                <a href="#">联系我们</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 搜索功能
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            console.log('搜索:', searchTerm);
+            // 这里可以添加实际的搜索逻辑
+        });
+
+        // 创建社群
+        function createCommunity() {
+            alert('跳转到创建社群页面');
+        }
+
+        // 按分类筛选
+        function filterByCategory(category) {
+            // 移除所有active状态
+            document.querySelectorAll('.category-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // 激活选中的分类
+            event.currentTarget.classList.add('active');
+            
+            console.log('筛选分类:', category);
+            // 这里可以添加实际的筛选逻辑
+        }
+
+        // 筛选社群
+        function filterCommunities(filter) {
+            // 移除所有active状态
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // 激活选中的筛选
+            event.target.classList.add('active');
+            
+            console.log('筛选社群:', filter);
+            // 这里可以添加实际的筛选逻辑
+        }
+
+        // 查看社群详情
+        function viewCommunity(id) {
+            console.log('查看社群:', id);
+            // 这里可以跳转到社群详情页
+            window.open(`community_detail_preview.html?id=${id}`, '_blank');
+        }
+
+        // 查看活动详情
+        function viewEvent(id) {
+            console.log('查看活动:', id);
+            // 这里可以跳转到活动详情页
+        }
+    </script>
+</body>
+</html> 

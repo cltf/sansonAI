@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人中心 - 三生AI论坛</title>
+    <link rel="icon" type="image/png" href="images/logo.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="images/logo.png" sizes="48x48">
+    <link rel="apple-touch-icon" href="images/logo.png" sizes="180x180">
+    <link rel="icon" type="image/png" href="images/logo.png" sizes="192x192">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* 顶部导航栏样式 */
+        .top-nav {
+            background: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-image {
+            height: 70px;
+            width: auto;
+            max-width: 280px;
+            object-fit: contain;
+            background: transparent;
+        }
+
+        .main-nav {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-link {
+            color: #666;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: #4A90E2;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-title {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .search-box {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 12px;
+            color: #999;
+        }
+
+        .search-box input {
+            padding: 10px 15px 10px 40px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            width: 200px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .search-box input:focus {
+            border-color: #4A90E2;
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-actions i {
+            font-size: 20px;
+            color: #666;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .user-actions i:hover {
+            color: #4A90E2;
+        }
+
+        .user-avatar img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid #4A90E2;
+        }
+
+        /* 个人中心容器 */
+        .profile-container {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px 20px;
+            min-height: calc(100vh - 200px);
+        }
+
+        /* 左侧边栏 */
+        .profile-sidebar {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .user-info-card {
+            padding: 30px 20px;
+            text-align: center;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .avatar-container {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        .user-avatar-large {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #fff;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .avatar-overlay {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 32px;
+            height: 32px;
+            background: #4A90E2;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid #fff;
+        }
+
+        .avatar-overlay:hover {
+            background: #357ABD;
+            transform: scale(1.1);
+        }
+
+        .avatar-overlay i {
+            color: white;
+            font-size: 14px;
+        }
+
+        .user-details h3 {
+            margin: 0 0 10px 0;
+            color: #333;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .user-stats {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            font-size: 14px;
+        }
+
+        .level {
+            color: #4A90E2;
+            font-weight: 500;
+        }
+
+        .points {
+            color: #666;
+        }
+
+        /* 导航菜单 */
+        .profile-nav {
+            padding: 20px 0;
+        }
+
+        .nav-menu {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-item:hover {
+            background: #f8f9fa;
+            border-left-color: #4A90E2;
+        }
+
+        .nav-item.active {
+            background: #E3F2FD;
+            border-left-color: #4A90E2;
+            color: #4A90E2;
+        }
+
+        .nav-item i {
+            width: 20px;
+            margin-right: 12px;
+            font-size: 16px;
+        }
+
+        .nav-item span {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* 右侧内容区域 */
+        .profile-content {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .content-section {
+            display: none;
+            padding: 30px;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .section-header h2 {
+            margin: 0;
+            color: #333;
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 10px;
+        }
+
+        .filter-tab {
+            padding: 8px 16px;
+            border: 1px solid #e0e0e0;
+            border-radius: 20px;
+            background: #fff;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .filter-tab:hover {
+            border-color: #4A90E2;
+            color: #4A90E2;
+        }
+
+        .filter-tab.active {
+            background: #4A90E2;
+            border-color: #4A90E2;
+            color: white;
+        }
+
+        /* 表单样式 */
+        .edit-form {
+            max-width: 600px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #4A90E2;
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .privacy-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            width: auto;
+            margin-right: 10px;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        /* 按钮样式 */
+        .btn-primary {
+            background: #4A90E2;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary:hover {
+            background: #357ABD;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #666;
+            border: 1px solid #ddd;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-secondary:hover {
+            background: #e9ecef;
+            border-color: #adb5bd;
+        }
+
+        /* 列表样式 */
+        .activity-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .activity-item {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            border-left: 4px solid #4A90E2;
+            transition: all 0.3s ease;
+        }
+
+        .activity-item:hover {
+            background: #fff;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .item-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin: 0;
+        }
+
+        .activity-type {
+            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-weight: 500;
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .item-content {
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .item-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .item-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* 空状态样式 */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+
+        .empty-state h3 {
+            margin: 0 0 10px 0;
+            color: #999;
+            font-size: 18px;
+        }
+
+        .empty-state p {
+            margin: 0;
+            color: #999;
+            font-size: 14px;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 1024px) {
+            .profile-container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .profile-sidebar {
+                order: 2;
+            }
+            
+            .profile-content {
+                order: 1;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .profile-container {
+                padding: 20px 15px;
+            }
+            
+            .content-section {
+                padding: 20px;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            
+            .filter-tabs {
+                flex-wrap: wrap;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <header class="top-nav">
+        <div class="nav-container">
+            <div class="nav-left">
+                <div class="logo" onclick="window.location.href='index.html'" style="cursor: pointer;">
+                    <img src="images/logo.png" alt="三生AI论坛Logo" class="logo-image">
+                    <span class="logo-text">三生AI</span>
+                </div>
+                <nav class="main-nav">
+                    <a href="qa_preview.html" class="nav-link">知识问答</a>
+                    <a href="tech_share_demo.html" class="nav-link">技术分享</a>
+                    <a href="learning_resources_demo.html" class="nav-link">学习资料</a>
+                    <a href="community_preview.html" class="nav-link">社群</a>
+                </nav>
+            </div>
+            <div class="nav-right">
+                <span class="nav-title"></span>
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="AI搜索">
+                </div>
+                <div class="user-actions">
+                    <a href="register.html" class="user-icon-link">
+                        <i class="fas fa-user-circle"></i>
+                    </a>
+                    <i class="fas fa-bell"></i>
+                    <a href="register.html" class="user-avatar-link">
+                        <div class="user-avatar">
+                            <img src="images/user.jpg" alt="用户头像">
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 个人中心内容 -->
+    <div class="profile-container">
+        <!-- 左侧个人信息和导航 -->
+        <div class="profile-sidebar">
+            <!-- 用户信息卡片 -->
+            <div class="user-info-card">
+                <div class="avatar-container">
+                    <img src="images/user.jpg" alt="用户头像" class="user-avatar-large">
+                    <div class="avatar-overlay">
+                        <i class="fas fa-camera"></i>
+                    </div>
+                </div>
+                <div class="user-details">
+                    <h3>张三</h3>
+                    <div class="user-stats">
+                        <span class="level">等级 3</span>
+                        <span class="points">280 积分</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 功能导航菜单 -->
+            <nav class="profile-nav">
+                <ul class="nav-menu">
+                    <li class="nav-item active" onclick="switchSection('activity')">
+                        <i class="fas fa-stream"></i>
+                        <span>个人动态</span>
+                    </li>
+                    <li class="nav-item" onclick="switchSection('edit-profile')">
+                        <i class="fas fa-user-edit"></i>
+                        <span>个人资料编辑</span>
+                    </li>
+                    <li class="nav-item" onclick="switchSection('my-questions')">
+                        <i class="fas fa-question-circle"></i>
+                        <span>我的提问</span>
+                    </li>
+                    <li class="nav-item" onclick="switchSection('my-answers')">
+                        <i class="fas fa-comment-dots"></i>
+                        <span>我的回答</span>
+                    </li>
+                    <li class="nav-item" onclick="switchSection('my-shares')">
+                        <i class="fas fa-share-alt"></i>
+                        <span>我的分享</span>
+                    </li>
+                    <li class="nav-item" onclick="switchSection('my-resources')">
+                        <i class="fas fa-book"></i>
+                        <span>我的资料</span>
+                    </li>
+                    <li class="nav-item" onclick="switchSection('my-favorites')">
+                        <i class="fas fa-heart"></i>
+                        <span>我的收藏</span>
+                    </li>
+                    <li class="nav-item" onclick="switchSection('my-following')">
+                        <i class="fas fa-user-plus"></i>
+                        <span>我的关注</span>
+                    </li>
+                    <li class="nav-item" onclick="switchSection('my-followers')">
+                        <i class="fas fa-users"></i>
+                        <span>我的粉丝</span>
+                    </li>
+                    <li class="nav-item" onclick="switchSection('messages')">
+                        <i class="fas fa-envelope"></i>
+                        <span>消息中心</span>
+                    </li>
+                    <li class="nav-item" onclick="switchSection('settings')">
+                        <i class="fas fa-cog"></i>
+                        <span>设置</span>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+
+        <!-- 右侧内容展示区 -->
+        <div class="profile-content">
+            <!-- 个人动态 -->
+            <div class="content-section active" id="activity">
+                <div class="section-header">
+                    <h2>个人动态</h2>
+                    <div class="filter-tabs">
+                        <button class="filter-tab active" onclick="filterActivity('all')">全部</button>
+                        <button class="filter-tab" onclick="filterActivity('questions')">提问</button>
+                        <button class="filter-tab" onclick="filterActivity('answers')">回答</button>
+                        <button class="filter-tab" onclick="filterActivity('shares')">分享</button>
+                        <button class="filter-tab" onclick="filterActivity('comments')">评论</button>
+                    </div>
+                </div>
+                <div class="activity-list">
+                    <div class="activity-item">
+                        <div class="item-header">
+                            <h4 class="item-title">如何学习机器学习？</h4>
+                            <span class="activity-type">提问</span>
+                        </div>
+                        <div class="item-content">我是一个初学者，想学习机器学习，请问应该从哪里开始？有什么好的学习资源推荐吗？</div>
+                        <div class="item-meta">
+                            <span><i class="fas fa-clock"></i> 2小时前</span>
+                            <span><i class="fas fa-eye"></i> 45 次浏览</span>
+                            <span><i class="fas fa-comment"></i> 3 条评论</span>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="item-header">
+                            <h4 class="item-title">回答了：Python数据分析入门指南</h4>
+                            <span class="activity-type">回答</span>
+                        </div>
+                        <div class="item-content">建议从pandas和numpy开始学习，这两个库是数据分析的基础...</div>
+                        <div class="item-meta">
+                            <span><i class="fas fa-clock"></i> 1天前</span>
+                            <span><i class="fas fa-thumbs-up"></i> 12 个赞</span>
+                            <span><i class="fas fa-comment"></i> 2 条评论</span>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="item-header">
+                            <h4 class="item-title">深度学习框架对比：TensorFlow vs PyTorch</h4>
+                            <span class="activity-type">分享</span>
+                        </div>
+                        <div class="item-content">分享一篇关于主流深度学习框架的详细对比分析...</div>
+                        <div class="item-meta">
+                            <span><i class="fas fa-clock"></i> 3天前</span>
+                            <span><i class="fas fa-eye"></i> 128 次浏览</span>
+                            <span><i class="fas fa-heart"></i> 25 个赞</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 个人资料编辑 -->
+            <div class="content-section" id="edit-profile">
+                <div class="section-header">
+                    <h2>个人资料编辑</h2>
+                </div>
+                <div class="edit-form">
+                    <form>
+                        <div class="form-group">
+                            <label for="username">昵称</label>
+                            <input type="text" id="username" name="username" value="张三" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">邮箱</label>
+                            <input type="email" id="email" name="email" value="zhangsan@example.com" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="bio">个人简介</label>
+                            <textarea id="bio" name="bio" rows="4" placeholder="介绍一下自己...">热爱技术，专注于机器学习和人工智能领域的学习和研究。</textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">联系电话</label>
+                            <input type="tel" id="phone" name="phone" value="138****8888" placeholder="选填">
+                        </div>
+                        <div class="form-group">
+                            <label for="website">个人网站</label>
+                            <input type="url" id="website" name="website" value="https://zhangsan.dev" placeholder="选填">
+                        </div>
+                        <div class="form-group">
+                            <label>隐私设置</label>
+                            <div class="privacy-options">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="profile_public" checked>
+                                    <span>公开个人资料</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="show_email">
+                                    <span>显示邮箱</span>
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" name="show_phone">
+                                    <span>显示电话</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn-primary">保存修改</button>
+                            <button type="button" class="btn-secondary">重置</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- 我的提问 -->
+            <div class="content-section" id="my-questions">
+                <div class="section-header">
+                    <h2>我的提问</h2>
+                    <button class="btn-primary">
+                        <i class="fas fa-plus"></i> 发布新问题
+                    </button>
+                </div>
+                <div class="activity-list">
+                    <div class="activity-item">
+                        <div class="item-header">
+                            <h4 class="item-title">如何学习机器学习？</h4>
+                            <span class="activity-type" style="background: #d4edda; color: #155724;">已回答</span>
+                        </div>
+                        <div class="item-content">我是一个初学者，想学习机器学习，请问应该从哪里开始？有什么好的学习资源推荐吗？</div>
+                        <div class="item-meta">
+                            <span><i class="fas fa-clock"></i> 2小时前</span>
+                            <span><i class="fas fa-comment"></i> 3 个回答</span>
+                            <span><i class="fas fa-eye"></i> 45 次浏览</span>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="item-header">
+                            <h4 class="item-title">TensorFlow安装问题</h4>
+                            <span class="activity-type" style="background: #fff3cd; color: #856404;">待解决</span>
+                        </div>
+                        <div class="item-content">在Windows系统上安装TensorFlow时遇到了一些问题...</div>
+                        <div class="item-meta">
+                            <span><i class="fas fa-clock"></i> 1天前</span>
+                            <span><i class="fas fa-comment"></i> 1 个回答</span>
+                            <span><i class="fas fa-eye"></i> 23 次浏览</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 其他内容区域（简化显示） -->
+            <div class="content-section" id="my-answers">
+                <div class="section-header">
+                    <h2>我的回答</h2>
+                </div>
+                <div class="empty-state">
+                    <i class="fas fa-comment-dots"></i>
+                    <h3>暂无回答</h3>
+                    <p>您还没有回答过问题</p>
+                </div>
+            </div>
+
+            <div class="content-section" id="my-shares">
+                <div class="section-header">
+                    <h2>我的分享</h2>
+                    <button class="btn-primary">
+                        <i class="fas fa-plus"></i> 发布分享
+                    </button>
+                </div>
+                <div class="activity-list">
+                    <div class="activity-item">
+                        <div class="item-header">
+                            <h4 class="item-title">深度学习框架对比：TensorFlow vs PyTorch</h4>
+                            <span class="activity-type">技术分享</span>
+                        </div>
+                        <div class="item-content">分享一篇关于主流深度学习框架的详细对比分析...</div>
+                        <div class="item-meta">
+                            <span><i class="fas fa-clock"></i> 3天前</span>
+                            <span><i class="fas fa-eye"></i> 128 次浏览</span>
+                            <span><i class="fas fa-heart"></i> 25 个赞</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section" id="my-resources">
+                <div class="section-header">
+                    <h2>我的资料</h2>
+                    <button class="btn-primary">
+                        <i class="fas fa-plus"></i> 上传资料
+                    </button>
+                </div>
+                <div class="empty-state">
+                    <i class="fas fa-book"></i>
+                    <h3>暂无资料</h3>
+                    <p>您还没有上传过资料</p>
+                </div>
+            </div>
+
+            <div class="content-section" id="my-favorites">
+                <div class="section-header">
+                    <h2>我的收藏</h2>
+                </div>
+                <div class="empty-state">
+                    <i class="fas fa-heart"></i>
+                    <h3>暂无收藏</h3>
+                    <p>您还没有收藏任何内容</p>
+                </div>
+            </div>
+
+            <div class="content-section" id="my-following">
+                <div class="section-header">
+                    <h2>我的关注</h2>
+                </div>
+                <div class="empty-state">
+                    <i class="fas fa-user-plus"></i>
+                    <h3>暂无关注</h3>
+                    <p>您还没有关注任何用户</p>
+                </div>
+            </div>
+
+            <div class="content-section" id="my-followers">
+                <div class="section-header">
+                    <h2>我的粉丝</h2>
+                </div>
+                <div class="empty-state">
+                    <i class="fas fa-users"></i>
+                    <h3>暂无粉丝</h3>
+                    <p>您还没有粉丝</p>
+                </div>
+            </div>
+
+            <div class="content-section" id="messages">
+                <div class="section-header">
+                    <h2>消息中心</h2>
+                    <button class="btn-secondary">
+                        <i class="fas fa-check-double"></i> 全部已读
+                    </button>
+                </div>
+                <div class="activity-list">
+                    <div class="activity-item">
+                        <div class="item-header">
+                            <h4 class="item-title">欢迎加入AI论坛</h4>
+                            <span class="activity-type">系统消息</span>
+                        </div>
+                        <div class="item-content">感谢您注册AI论坛，开始您的学习之旅吧！</div>
+                        <div class="item-meta">
+                            <span><i class="fas fa-clock"></i> 1周前</span>
+                            <span><i class="fas fa-user"></i> 系统</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-section" id="settings">
+                <div class="section-header">
+                    <h2>设置</h2>
+                </div>
+                <div class="edit-form">
+                    <div class="form-group">
+                        <label for="currentPassword">当前密码</label>
+                        <input type="password" id="currentPassword" name="currentPassword">
+                    </div>
+                    <div class="form-group">
+                        <label for="newPassword">新密码</label>
+                        <input type="password" id="newPassword" name="newPassword">
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">确认新密码</label>
+                        <input type="password" id="confirmPassword" name="confirmPassword">
+                    </div>
+                    <button type="button" class="btn-primary">修改密码</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // 切换内容区域
+        function switchSection(sectionId) {
+            // 移除所有导航项的active状态
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // 隐藏所有内容区域
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // 激活选中的导航项
+            event.currentTarget.classList.add('active');
+            
+            // 显示对应的内容区域
+            document.getElementById(sectionId).classList.add('active');
+        }
+
+        // 过滤个人动态
+        function filterActivity(filter) {
+            // 移除所有过滤标签的active状态
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // 激活选中的过滤标签
+            event.target.classList.add('active');
+            
+            // 这里可以添加实际的过滤逻辑
+            console.log('过滤动态:', filter);
+        }
+    </script>
+</body>
+</html> 

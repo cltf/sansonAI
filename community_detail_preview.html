@@ -1,0 +1,2598 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>机器学习实践者 - 三生AI论坛</title>
+    <link rel="icon" type="image/png" href="images/logo.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="images/logo.png" sizes="48x48">
+    <link rel="apple-touch-icon" href="images/logo.png" sizes="180x180">
+    <link rel="icon" type="image/png" href="images/logo.png" sizes="192x192">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* 全局样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+
+        /* 顶部导航栏 */
+        .top-nav {
+            background: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo-text {
+            font-size: 28px;
+            font-weight: 700;
+            color: #4A90E2;
+            letter-spacing: 1px;
+            text-shadow: 0 1px 2px rgba(74, 144, 226, 0.1);
+        }
+
+        .logo-image {
+            height: 70px;
+            width: auto;
+            max-width: 280px;
+            object-fit: contain;
+            background: transparent;
+        }
+
+        .main-nav {
+            display: flex;
+            gap: 25px;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #555;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: #4A90E2;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: #f8f9fa;
+            border-radius: 25px;
+            padding: 8px 15px;
+            gap: 10px;
+        }
+
+        .search-box i {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .search-box input {
+            border: none;
+            background: transparent;
+            outline: none;
+            width: 200px;
+            font-size: 14px;
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-icon-link {
+            color: #666;
+            font-size: 20px;
+            text-decoration: none;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* 主要内容区域 */
+        .main-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 250px 1fr 300px;
+            gap: 20px;
+        }
+
+        /* 左侧导航栏 */
+        .left-sidebar {
+            background: #fff;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            height: fit-content;
+            position: sticky;
+            top: 90px;
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 30px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            text-decoration: none;
+            color: #555;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-item:hover {
+            background: #f0f7ff;
+            color: #4A90E2;
+        }
+
+        .nav-item.active {
+            background: #4A90E2;
+            color: white;
+        }
+
+        .nav-item i {
+            font-size: 16px;
+            width: 20px;
+            text-align: center;
+        }
+
+
+
+        /* 用户等级 */
+        .user-level {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .user-level h3 {
+            margin-bottom: 15px;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .level-progress {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #FFD700, #50C878);
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .level-text {
+            font-size: 14px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        /* 社区规则 */
+        .rules-section {
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .rules-section h3 {
+            margin-bottom: 15px;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .rule-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .rule-item i {
+            color: #50C878;
+            font-size: 16px;
+        }
+
+        /* 社群基本信息区域 */
+        .community-header {
+            background: #fff;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .community-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .community-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #4A90E2, #5BA0F2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        .community-details {
+            flex: 1;
+        }
+
+        .community-title-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .community-name {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+            margin: 0;
+        }
+
+        .community-description {
+            color: #666;
+            font-size: 16px;
+            margin-bottom: 12px;
+        }
+
+        .community-stats {
+            display: flex;
+            gap: 20px;
+            font-size: 14px;
+            color: #888;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .join-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .join-btn {
+            background: #4A90E2;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .join-btn:hover {
+            background: #357ABD;
+            transform: translateY(-1px);
+        }
+
+        .leave-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .leave-btn:hover {
+            background: #c82333;
+            transform: translateY(-1px);
+        }
+
+        .share-btn {
+            background: #f8f9fa;
+            color: #666;
+            border: 1px solid #e9ecef;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .share-btn:hover {
+            background: #e9ecef;
+        }
+
+        .publish-btn-top {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .publish-btn-top:hover {
+            background: #218838;
+            transform: translateY(-1px);
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        /* 社群动态区域 */
+        .community-content {
+            background: #fff;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .content-tabs {
+            display: flex;
+            border-bottom: 2px solid #f0f0f0;
+            margin-bottom: 30px;
+        }
+
+        .content-tab {
+            padding: 15px 25px;
+            background: none;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        .content-tab.active {
+            color: #4A90E2;
+            border-bottom-color: #4A90E2;
+        }
+
+        .content-tab:hover {
+            color: #4A90E2;
+        }
+
+        /* 动态内容 */
+        .activity-item {
+            display: flex;
+            gap: 15px;
+            padding: 20px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-weight: bold;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .activity-author {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .activity-time {
+            color: #888;
+            font-size: 14px;
+        }
+
+        .activity-type {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .activity-text {
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .activity-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            color: #666;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: color 0.3s ease;
+        }
+
+        .action-btn:hover {
+            color: #4A90E2;
+        }
+
+        /* 右侧边栏 */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            height: fit-content;
+            position: sticky;
+            top: 90px;
+        }
+
+        .sidebar-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .sidebar-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* 成员列表 */
+        .member-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .member-item:last-child {
+            border-bottom: none;
+        }
+
+        .member-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #f0f0f0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .member-info {
+            flex: 1;
+        }
+
+        .member-name {
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .member-role {
+            color: #888;
+            font-size: 12px;
+        }
+
+        .member-status {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #28a745;
+        }
+
+        /* 公告列表 */
+        .announcement-item {
+            padding: 15px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .announcement-item:last-child {
+            border-bottom: none;
+        }
+
+        .announcement-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .announcement-content {
+            color: #666;
+            font-size: 13px;
+            line-height: 1.5;
+            margin-bottom: 8px;
+        }
+
+        .announcement-time {
+            color: #888;
+            font-size: 12px;
+        }
+
+        /* 文件库 */
+        .file-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .file-item:hover {
+            background: #f8f9fa;
+        }
+
+        .file-item:last-child {
+            border-bottom: none;
+        }
+
+        .file-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            background: #e3f2fd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1976d2;
+        }
+
+        .file-info {
+            flex: 1;
+        }
+
+        .file-name {
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .file-meta {
+            color: #888;
+            font-size: 12px;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .main-content {
+                grid-template-columns: 250px 1fr;
+            }
+            
+            .sidebar {
+                display: none;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .left-sidebar {
+                display: none;
+            }
+            
+            .sidebar {
+                position: static;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .community-info {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .community-title-section {
+                flex-direction: column;
+                gap: 15px;
+                align-items: center;
+            }
+            
+            .join-section {
+                justify-content: center;
+            }
+            
+            .action-buttons {
+                justify-content: center;
+            }
+            
+            .content-tabs {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <header class="top-nav">
+        <div class="nav-container">
+            <div class="nav-left">
+                <div class="logo" onclick="window.location.href='index.html'" style="cursor: pointer;">
+                    <img src="images/logo.png" alt="三生AI论坛Logo" class="logo-image">
+                    <span class="logo-text">三生AI</span>
+                </div>
+                <nav class="main-nav">
+                    <a href="qa_preview.html" class="nav-link">知识问答</a>
+                    <a href="tech_share_demo.html" class="nav-link">技术分享</a>
+                    <a href="learning_resources_demo.html" class="nav-link">学习资料</a>
+                    <a href="community_preview.html" class="nav-link active">社群</a>
+                </nav>
+            </div>
+            <div class="nav-right">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="AI搜索">
+                </div>
+                <div class="user-actions">
+                    <a href="register.html" class="user-icon-link">
+                        <i class="fas fa-user-circle"></i>
+                    </a>
+                    <i class="fas fa-bell"></i>
+                    <a href="register.html" class="user-avatar-link">
+                        <div class="user-avatar">
+                            <img src="images/user.jpg" alt="用户头像">
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主要内容区域 -->
+    <main class="main-content">
+        <!-- 左侧导航栏 -->
+        <aside class="left-sidebar">
+            <!-- 导航菜单 -->
+            <nav class="sidebar-nav">
+                <a href="index.html" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    <span>首页</span>
+                </a>
+                <a href="qa_preview.html" class="nav-item">
+                    <i class="fas fa-question-circle"></i>
+                    <span>知识问答</span>
+                </a>
+                <a href="tech_share_demo.html" class="nav-item">
+                    <i class="fas fa-file-alt"></i>
+                    <span>技术分享</span>
+                </a>
+                <a href="learning_resources_demo.html" class="nav-item">
+                    <i class="fas fa-book"></i>
+                    <span>学习资料</span>
+                </a>
+                <a href="community_preview.html" class="nav-item active">
+                    <i class="fas fa-comments"></i>
+                    <span>社群</span>
+                </a>
+                <a href="search.html" class="nav-item">
+                    <i class="fas fa-search"></i>
+                    <span>搜索</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-trophy"></i>
+                    <span>积分规则</span>
+                </a>
+            </nav>
+
+            <!-- 用户等级 -->
+            <div class="user-level">
+                <h3>用户等级</h3>
+                <div class="level-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 65%;"></div>
+                    </div>
+                    <span class="level-text">Lv.3 技术达人</span>
+                </div>
+            </div>
+
+            <!-- 社区规则 -->
+            <div class="rules-section">
+                <h3>社区规则</h3>
+                <div class="rule-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>遵守社区规范</span>
+                </div>
+                <div class="rule-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>积极分享知识</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- 中间内容区域 -->
+        <div class="content-left">
+            <!-- 社群基本信息 -->
+            <div class="community-header">
+                <div class="community-info">
+                    <div class="community-avatar">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <div class="community-details">
+                        <div class="community-title-section">
+                            <h1 class="community-name">机器学习实践者</h1>
+                            <button class="join-btn" id="joinBtn" onclick="toggleJoin()">
+                                <i class="fas fa-plus"></i>
+                                加入社群
+                            </button>
+                        </div>
+                        <p class="community-description">专注于机器学习算法研究、实践应用和技术交流的专业社群，汇聚AI领域的专家和爱好者。</p>
+                        <div class="community-stats">
+                            <div class="stat-item">
+                                <i class="fas fa-users"></i>
+                                <span>1,234 成员</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-file-alt"></i>
+                                <span>567 帖子</span>
+                            </div>
+                            <div class="stat-item">
+                                <i class="fas fa-calendar"></i>
+                                <span>创建于 2023年3月</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button class="share-btn">
+                        <i class="fas fa-share"></i>
+                        分享
+                    </button>
+                    <button class="publish-btn-top" onclick="openPublishModal()">
+                        <i class="fas fa-edit"></i>
+                        发布动态
+                    </button>
+                </div>
+            </div>
+
+            <!-- 社群动态 -->
+            <div class="community-content">
+                <div class="content-tabs">
+                    <button class="content-tab active" onclick="switchTab('activity')">社群动态</button>
+                    <button class="content-tab" onclick="switchTab('posts')">精华帖子</button>
+                    <button class="content-tab" onclick="switchTab('events')">活动通知</button>
+                </div>
+
+                <div id="activityContent">
+                    <!-- 动态内容 -->
+                    <div class="activity-item">
+                        <div class="activity-avatar">张</div>
+                        <div class="activity-content">
+                            <div class="activity-header">
+                                <span class="activity-author">张明</span>
+                                <span class="activity-time">2小时前</span>
+                                <span class="activity-type">分享</span>
+                            </div>
+                            <div class="activity-text">
+                                刚刚完成了一个基于Transformer的文本分类项目，效果还不错！分享一下我的实现思路和遇到的问题，欢迎大家讨论交流。
+                            </div>
+                            <div class="activity-actions">
+                                <button class="action-btn">
+                                    <i class="fas fa-thumbs-up"></i>
+                                    <span>12</span>
+                                </button>
+                                <button class="action-btn">
+                                    <i class="fas fa-comment"></i>
+                                    <span>8</span>
+                                </button>
+                                <button class="action-btn">
+                                    <i class="fas fa-share"></i>
+                                    <span>分享</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-avatar">李</div>
+                        <div class="activity-content">
+                            <div class="activity-header">
+                                <span class="activity-author">李华</span>
+                                <span class="activity-time">4小时前</span>
+                                <span class="activity-type">提问</span>
+                            </div>
+                            <div class="activity-text">
+                                有人用过BERT做中文文本分类吗？我在处理中文数据时遇到了一些编码问题，想请教一下大家。
+                            </div>
+                            <div class="activity-actions">
+                                <button class="action-btn">
+                                    <i class="fas fa-thumbs-up"></i>
+                                    <span>5</span>
+                                </button>
+                                <button class="action-btn">
+                                    <i class="fas fa-comment"></i>
+                                    <span>15</span>
+                                </button>
+                                <button class="action-btn">
+                                    <i class="fas fa-share"></i>
+                                    <span>分享</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-avatar">王</div>
+                        <div class="activity-content">
+                            <div class="activity-header">
+                                <span class="activity-author">王芳</span>
+                                <span class="activity-time">6小时前</span>
+                                <span class="activity-type">公告</span>
+                            </div>
+                            <div class="activity-text">
+                                【社群活动】本周六下午2点，我们将举办"深度学习实战分享会"，邀请到业内专家分享最新的技术趋势，欢迎大家参加！
+                            </div>
+                            <div class="activity-actions">
+                                <button class="action-btn">
+                                    <i class="fas fa-thumbs-up"></i>
+                                    <span>28</span>
+                                </button>
+                                <button class="action-btn">
+                                    <i class="fas fa-comment"></i>
+                                    <span>12</span>
+                                </button>
+                                <button class="action-btn">
+                                    <i class="fas fa-share"></i>
+                                    <span>分享</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-avatar">陈</div>
+                        <div class="activity-content">
+                            <div class="activity-header">
+                                <span class="activity-author">陈强</span>
+                                <span class="activity-time">1天前</span>
+                                <span class="activity-type">资源</span>
+                            </div>
+                            <div class="activity-text">
+                                整理了一份机器学习入门资料包，包含经典论文、实战项目和在线课程推荐，有需要的朋友可以私信我获取。
+                            </div>
+                            <div class="activity-actions">
+                                <button class="action-btn">
+                                    <i class="fas fa-thumbs-up"></i>
+                                    <span>45</span>
+                                </button>
+                                <button class="action-btn">
+                                    <i class="fas fa-comment"></i>
+                                    <span>23</span>
+                                </button>
+                                <button class="action-btn">
+                                    <i class="fas fa-share"></i>
+                                    <span>分享</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 更多动态项目 -->
+                    <div class="activity-item">
+                        <div class="activity-avatar">刘</div>
+                        <div class="activity-content">
+                            <div class="activity-header">
+                                <span class="activity-author">刘伟</span>
+                                <span class="activity-time">2天前</span>
+                                <span class="activity-type">讨论</span>
+                            </div>
+                            <div class="activity-text">
+                                大家觉得未来AI发展的主要方向是什么？是继续做大模型，还是转向更专业化的领域应用？
+                            </div>
+                            <div class="activity-actions">
+                                <button class="action-btn">
+                                    <i class="fas fa-thumbs-up"></i>
+                                    <span>32</span>
+                                </button>
+                                <button class="action-btn">
+                                    <i class="fas fa-comment"></i>
+                                    <span>18</span>
+                                </button>
+                                <button class="action-btn">
+                                    <i class="fas fa-share"></i>
+                                    <span>分享</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-avatar">赵</div>
+                        <div class="activity-content">
+                            <div class="activity-header">
+                                <span class="activity-author">赵敏</span>
+                                <span class="activity-time">3天前</span>
+                                <span class="activity-type">分享</span>
+                            </div>
+                            <div class="activity-text">
+                                分享一个实用的Python数据处理技巧，使用pandas处理大规模数据时如何优化内存使用，希望对大家有帮助！
+                            </div>
+                            <div class="activity-actions">
+                                <button class="action-btn">
+                                    <i class="fas fa-thumbs-up"></i>
+                                    <span>67</span>
+                                </button>
+                                <button class="action-btn">
+                                    <i class="fas fa-comment"></i>
+                                    <span>34</span>
+                                </button>
+                                <button class="action-btn">
+                                    <i class="fas fa-share"></i>
+                                    <span>分享</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-avatar">孙</div>
+                        <div class="activity-content">
+                            <div class="activity-header">
+                                <span class="activity-author">孙丽</span>
+                                <span class="activity-time">4天前</span>
+                                <span class="activity-type">提问</span>
+                            </div>
+                            <div class="activity-text">
+                                想请教一下，在训练深度学习模型时，如何判断模型是否过拟合？有哪些有效的正则化方法？
+                            </div>
+                            <div class="activity-actions">
+                                <button class="action-btn">
+                                    <i class="fas fa-thumbs-up"></i>
+                                    <span>21</span>
+                                </button>
+                                <button class="action-btn">
+                                    <i class="fas fa-comment"></i>
+                                    <span>29</span>
+                                </button>
+                                <button class="action-btn">
+                                    <i class="fas fa-share"></i>
+                                    <span>分享</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="activity-item">
+                        <div class="activity-avatar">周</div>
+                        <div class="activity-content">
+                            <div class="activity-header">
+                                <span class="activity-author">周杰</span>
+                                <span class="activity-time">5天前</span>
+                                <span class="activity-type">资源</span>
+                            </div>
+                            <div class="activity-text">
+                                推荐一个很好的在线学习平台，里面有免费的AI课程，从基础到进阶都有，适合不同水平的学习者。
+                            </div>
+                            <div class="activity-actions">
+                                <button class="action-btn">
+                                    <i class="fas fa-thumbs-up"></i>
+                                    <span>89</span>
+                                </button>
+                                <button class="action-btn">
+                                    <i class="fas fa-comment"></i>
+                                    <span>41</span>
+                                </button>
+                                <button class="action-btn">
+                                    <i class="fas fa-share"></i>
+                                    <span>分享</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 分页组件 -->
+                <div class="pagination-container">
+                    <div class="pagination-info">
+                        <span>显示第 <span id="currentRange">1-5</span> 条，共 <span id="totalCount">25</span> 条动态</span>
+                    </div>
+                    <div class="pagination">
+                        <button class="page-btn" onclick="goToPage(1)" id="firstPage">
+                            <i class="fas fa-angle-double-left"></i>
+                        </button>
+                        <button class="page-btn" onclick="goToPage(currentPage - 1)" id="prevPage">
+                            <i class="fas fa-angle-left"></i>
+                        </button>
+                        
+                        <div class="page-numbers" id="pageNumbers">
+                            <button class="page-btn active" onclick="goToPage(1)">1</button>
+                            <button class="page-btn" onclick="goToPage(2)">2</button>
+                            <button class="page-btn" onclick="goToPage(3)">3</button>
+                            <button class="page-btn" onclick="goToPage(4)">4</button>
+                            <button class="page-btn" onclick="goToPage(5)">5</button>
+                        </div>
+                        
+                        <button class="page-btn" onclick="goToPage(currentPage + 1)" id="nextPage">
+                            <i class="fas fa-angle-right"></i>
+                        </button>
+                        <button class="page-btn" onclick="goToPage(totalPages)" id="lastPage">
+                            <i class="fas fa-angle-double-right"></i>
+                        </button>
+                    </div>
+                    <div class="page-size-selector">
+                        <span>每页显示：</span>
+                        <select id="pageSize" onchange="changePageSize()">
+                            <option value="5">5条</option>
+                            <option value="10" selected>10条</option>
+                            <option value="20">20条</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 右侧边栏 -->
+        <aside class="sidebar">
+            <!-- 社群成员 -->
+            <div class="sidebar-card">
+                <h3 class="sidebar-title">
+                    <i class="fas fa-users"></i>
+                    社群成员 (1,234)
+                </h3>
+                <div class="member-item">
+                    <div class="member-avatar">张</div>
+                    <div class="member-info">
+                        <div class="member-name">张明</div>
+                        <div class="member-role">群主</div>
+                    </div>
+                    <div class="member-status"></div>
+                </div>
+                <div class="member-item">
+                    <div class="member-avatar">李</div>
+                    <div class="member-info">
+                        <div class="member-name">李华</div>
+                        <div class="member-role">管理员</div>
+                    </div>
+                    <div class="member-status"></div>
+                </div>
+                <div class="member-item">
+                    <div class="member-avatar">王</div>
+                    <div class="member-info">
+                        <div class="member-name">王芳</div>
+                        <div class="member-role">成员</div>
+                    </div>
+                    <div class="member-status"></div>
+                </div>
+                <div class="member-item">
+                    <div class="member-avatar">陈</div>
+                    <div class="member-info">
+                        <div class="member-name">陈强</div>
+                        <div class="member-role">成员</div>
+                    </div>
+                    <div class="member-status"></div>
+                </div>
+                <div class="member-item">
+                    <div class="member-avatar">刘</div>
+                    <div class="member-info">
+                        <div class="member-name">刘伟</div>
+                        <div class="member-role">成员</div>
+                    </div>
+                    <div class="member-status"></div>
+                </div>
+            </div>
+
+            <!-- 社群公告 -->
+            <div class="sidebar-card">
+                <h3 class="sidebar-title">
+                    <i class="fas fa-bullhorn"></i>
+                    社群公告
+                </h3>
+                <div class="announcement-item">
+                    <div class="announcement-title">欢迎新成员加入！</div>
+                    <div class="announcement-content">请新成员先阅读社群规则，积极参与讨论，共同维护良好的交流环境。</div>
+                    <div class="announcement-time">2024-01-15</div>
+                </div>
+                <div class="announcement-item">
+                    <div class="announcement-title">每周技术分享活动</div>
+                    <div class="announcement-content">每周六下午2点举办技术分享会，欢迎大家踊跃报名分享自己的项目经验。</div>
+                    <div class="announcement-time">2024-01-10</div>
+                </div>
+                <div class="announcement-item">
+                    <div class="announcement-title">社群资料整理</div>
+                    <div class="announcement-content">我们正在整理社群内的优质内容，建立知识库，方便大家查阅和学习。</div>
+                    <div class="announcement-time">2024-01-05</div>
+                </div>
+            </div>
+
+            <!-- 文件库 -->
+            <div class="sidebar-card">
+                <h3 class="sidebar-title">
+                    <i class="fas fa-folder"></i>
+                    文件库
+                </h3>
+                <div class="file-item">
+                    <div class="file-icon">
+                        <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <div class="file-info">
+                        <div class="file-name">机器学习入门指南.pdf</div>
+                        <div class="file-meta">2.5MB • 2024-01-10</div>
+                    </div>
+                </div>
+                <div class="file-item">
+                    <div class="file-icon">
+                        <i class="fas fa-file-code"></i>
+                    </div>
+                    <div class="file-info">
+                        <div class="file-name">深度学习实战代码.zip</div>
+                        <div class="file-meta">15.2MB • 2024-01-08</div>
+                    </div>
+                </div>
+                <div class="file-item">
+                    <div class="file-icon">
+                        <i class="fas fa-file-word"></i>
+                    </div>
+                    <div class="file-info">
+                        <div class="file-name">社群规则说明.docx</div>
+                        <div class="file-meta">1.8MB • 2024-01-05</div>
+                    </div>
+                </div>
+                <div class="file-item">
+                    <div class="file-icon">
+                        <i class="fas fa-file-excel"></i>
+                    </div>
+                    <div class="file-info">
+                        <div class="file-name">学习资源清单.xlsx</div>
+                        <div class="file-meta">3.1MB • 2024-01-03</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <!-- 发布动态模态框 -->
+    <div id="publishModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <!-- 标题栏 -->
+            <div class="modal-header">
+                <h3>发布社群动态</h3>
+                <span class="close" onclick="closePublishModal()">&times;</span>
+            </div>
+            
+            <!-- 内容编辑区 -->
+            <div class="modal-body">
+                <div class="publish-form">
+                    <!-- 内容输入框 -->
+                    <div class="form-group">
+                        <textarea id="activityContent" class="form-control content-input" rows="8" 
+                                placeholder="分享你的想法、技术心得或活动信息..." 
+                                maxlength="500"></textarea>
+                        <div class="char-count">
+                            <span id="charCount">0</span>/500
+                        </div>
+                    </div>
+
+                    <!-- 多媒体插入区 -->
+                    <div class="media-section">
+                        <div class="media-buttons">
+                            <button class="media-btn" onclick="insertImage()">
+                                <i class="fas fa-image"></i>
+                                插入图片
+                            </button>
+                            <button class="media-btn" onclick="insertCode()">
+                                <i class="fas fa-code"></i>
+                                插入代码
+                            </button>
+                            <button class="media-btn" onclick="insertLink()">
+                                <i class="fas fa-link"></i>
+                                插入链接
+                            </button>
+                        </div>
+                        
+                        <!-- 图片上传区域 -->
+                        <div id="imageUploadArea" class="image-upload-area" style="display: none;">
+                            <div class="uploaded-images" id="uploadedImages"></div>
+                        </div>
+                    </div>
+
+                    <!-- 话题与标签区 -->
+                    <div class="tags-section">
+                        <div class="form-group">
+                            <label>话题标签</label>
+                            <input type="text" id="topicInput" class="form-control" 
+                                   placeholder="输入 #话题# 或选择常用标签">
+                        </div>
+                        <div class="common-tags">
+                            <span class="tag-label">常用标签：</span>
+                            <div class="tag-list">
+                                <span class="tag-item" onclick="addTag('技术交流')">技术交流</span>
+                                <span class="tag-item" onclick="addTag('活动通知')">活动通知</span>
+                                <span class="tag-item" onclick="addTag('问题求助')">问题求助</span>
+                                <span class="tag-item" onclick="addTag('经验分享')">经验分享</span>
+                                <span class="tag-item" onclick="addTag('资源推荐')">资源推荐</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 操作按钮区 -->
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="previewActivity()">
+                    <i class="fas fa-eye"></i>
+                    预览
+                </button>
+                <button class="btn btn-primary" id="publishBtn" onclick="publishActivity()" disabled>
+                    <i class="fas fa-paper-plane"></i>
+                    发布
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 代码插入模态框 -->
+    <div id="codeModal" class="modal" style="display: none;">
+        <div class="modal-content code-modal">
+            <div class="modal-header">
+                <h3>插入代码</h3>
+                <span class="close" onclick="closeCodeModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>编程语言</label>
+                    <select id="codeLanguage" class="form-control">
+                        <option value="python">Python</option>
+                        <option value="javascript">JavaScript</option>
+                        <option value="java">Java</option>
+                        <option value="cpp">C++</option>
+                        <option value="csharp">C#</option>
+                        <option value="php">PHP</option>
+                        <option value="sql">SQL</option>
+                        <option value="html">HTML</option>
+                        <option value="css">CSS</option>
+                        <option value="bash">Bash</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>代码内容</label>
+                    <textarea id="codeContent" class="form-control" rows="10" placeholder="在此输入代码..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeCodeModal()">取消</button>
+                <button class="btn btn-primary" onclick="insertCodeToContent()">插入代码</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 链接插入模态框 -->
+    <div id="linkModal" class="modal" style="display: none;">
+        <div class="modal-content link-modal">
+            <div class="modal-header">
+                <h3>插入链接</h3>
+                <span class="close" onclick="closeLinkModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>链接地址</label>
+                    <input type="url" id="linkUrl" class="form-control" placeholder="https://example.com">
+                </div>
+                <div class="form-group">
+                    <label>显示文本</label>
+                    <input type="text" id="linkText" class="form-control" placeholder="链接显示的文字">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeLinkModal()">取消</button>
+                <button class="btn btn-primary" onclick="insertLinkToContent()">插入链接</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 确认关闭模态框 -->
+    <div id="confirmModal" class="modal" style="display: none;">
+        <div class="modal-content confirm-modal">
+            <div class="modal-body">
+                <div class="confirm-content">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <h3>确定放弃发布？</h3>
+                    <p>已编辑内容将不保存</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="cancelClose()">取消</button>
+                <button class="btn btn-danger" onclick="confirmClose()">确定</button>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* 模态框样式 */
+        .modal {
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 25px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            color: #333;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close:hover {
+            color: #333;
+        }
+
+        .modal-body {
+            padding: 25px;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            padding: 20px 25px;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .publish-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .form-control {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #4A90E2;
+        }
+
+        textarea.form-control {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #4A90E2;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #357ABD;
+        }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #666;
+            border: 1px solid #e9ecef;
+        }
+
+        .btn-secondary:hover {
+            background: #e9ecef;
+        }
+
+        /* 发布动态页面样式 */
+        .content-input {
+            resize: vertical;
+            min-height: 120px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .content-input:focus {
+            border-color: #4A90E2;
+            box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.1);
+        }
+
+        .char-count {
+            text-align: right;
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .char-count.over-limit {
+            color: #dc3545;
+        }
+
+        /* 多媒体插入区 */
+        .media-section {
+            margin: 20px 0;
+        }
+
+        .media-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .media-btn {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            color: #666;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .media-btn:hover {
+            background: #e9ecef;
+            color: #4A90E2;
+        }
+
+        /* 图片上传区域 */
+        .image-upload-area {
+            margin-top: 15px;
+        }
+
+        .uploaded-images {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .image-item {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #e9ecef;
+        }
+
+        .image-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-remove {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 话题与标签区 */
+        .tags-section {
+            margin-top: 20px;
+        }
+
+        .common-tags {
+            margin-top: 15px;
+        }
+
+        .tag-label {
+            font-size: 14px;
+            color: #666;
+            margin-right: 10px;
+        }
+
+        .tag-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .tag-item {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tag-item:hover {
+            background: #1976d2;
+            color: white;
+        }
+
+        /* 代码模态框 */
+        .code-modal {
+            max-width: 700px;
+        }
+
+        /* 链接模态框 */
+        .link-modal {
+            max-width: 500px;
+        }
+
+        /* 确认模态框 */
+        .confirm-modal {
+            max-width: 400px;
+        }
+
+        .confirm-content {
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .confirm-content i {
+            font-size: 48px;
+            color: #ffc107;
+            margin-bottom: 15px;
+        }
+
+        .confirm-content h3 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .confirm-content p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        /* 按钮样式 */
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        /* 发布按钮状态 */
+        .btn-primary:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .btn-primary:disabled:hover {
+            background: #ccc;
+            transform: none;
+        }
+
+        /* 加载状态 */
+        .loading {
+            position: relative;
+            pointer-events: none;
+        }
+
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 16px;
+            height: 16px;
+            margin: -8px 0 0 -8px;
+            border: 2px solid transparent;
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* 分页组件样式 */
+        .pagination-container {
+            margin-top: 30px;
+            padding: 20px 0;
+            border-top: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .pagination-info {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .pagination {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .page-btn {
+            background: #fff;
+            border: 1px solid #e9ecef;
+            color: #666;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .page-btn:hover {
+            background: #f8f9fa;
+            color: #4A90E2;
+            border-color: #4A90E2;
+        }
+
+        .page-btn.active {
+            background: #4A90E2;
+            color: white;
+            border-color: #4A90E2;
+        }
+
+        .page-btn:disabled {
+            background: #f8f9fa;
+            color: #ccc;
+            cursor: not-allowed;
+            border-color: #e9ecef;
+        }
+
+        .page-btn:disabled:hover {
+            background: #f8f9fa;
+            color: #ccc;
+            border-color: #e9ecef;
+        }
+
+        .page-numbers {
+            display: flex;
+            gap: 5px;
+        }
+
+        .page-size-selector {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .page-size-selector select {
+            padding: 6px 10px;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            font-size: 14px;
+            background: #fff;
+            cursor: pointer;
+        }
+
+        .page-size-selector select:focus {
+            outline: none;
+            border-color: #4A90E2;
+        }
+
+        /* 响应式分页 */
+        @media (max-width: 768px) {
+            .pagination-container {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .pagination {
+                order: 1;
+            }
+            
+            .pagination-info {
+                order: 2;
+            }
+            
+            .page-size-selector {
+                order: 3;
+            }
+            
+            .page-numbers {
+                display: none;
+            }
+            
+            .page-btn {
+                min-width: 32px;
+                padding: 6px 8px;
+                font-size: 12px;
+            }
+        }
+    </style>
+
+    <script>
+        // 切换加入/退出状态
+        function toggleJoin() {
+            const btn = document.getElementById('joinBtn');
+            const isJoined = btn.textContent.includes('退出');
+            
+            if (isJoined) {
+                btn.innerHTML = '<i class="fas fa-plus"></i> 加入社群';
+                btn.className = 'join-btn';
+                alert('已退出社群');
+            } else {
+                btn.innerHTML = '<i class="fas fa-minus"></i> 退出社群';
+                btn.className = 'leave-btn';
+                alert('已加入社群');
+            }
+        }
+
+        // 切换内容标签
+        function switchTab(tabName) {
+            // 移除所有标签的active类
+            const tabs = document.querySelectorAll('.content-tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // 为当前标签添加active类
+            event.target.classList.add('active');
+            
+            // 这里可以添加切换内容的逻辑
+            console.log('切换到标签:', tabName);
+        }
+
+        // 全局变量
+        let hasContent = false;
+        let uploadedImages = [];
+        
+        // 分页相关变量
+        let currentPage = 1;
+        let pageSize = 10;
+        let totalItems = 25;
+        let totalPages = Math.ceil(totalItems / pageSize);
+        
+        // 模拟动态数据
+        const allActivities = [
+            {
+                id: 1,
+                author: '张明',
+                avatar: '张',
+                time: '2小时前',
+                type: '分享',
+                content: '刚刚完成了一个基于Transformer的文本分类项目，效果还不错！分享一下我的实现思路和遇到的问题，欢迎大家讨论交流。',
+                likes: 12,
+                comments: 8
+            },
+            {
+                id: 2,
+                author: '李华',
+                avatar: '李',
+                time: '4小时前',
+                type: '提问',
+                content: '有人用过BERT做中文文本分类吗？我在处理中文数据时遇到了一些编码问题，想请教一下大家。',
+                likes: 5,
+                comments: 15
+            },
+            {
+                id: 3,
+                author: '王芳',
+                avatar: '王',
+                time: '6小时前',
+                type: '公告',
+                content: '【社群活动】本周六下午2点，我们将举办"深度学习实战分享会"，邀请到业内专家分享最新的技术趋势，欢迎大家参加！',
+                likes: 28,
+                comments: 12
+            },
+            {
+                id: 4,
+                author: '陈强',
+                avatar: '陈',
+                time: '1天前',
+                type: '资源',
+                content: '整理了一份机器学习入门资料包，包含经典论文、实战项目和在线课程推荐，有需要的朋友可以私信我获取。',
+                likes: 45,
+                comments: 23
+            },
+            {
+                id: 5,
+                author: '刘伟',
+                avatar: '刘',
+                time: '2天前',
+                type: '讨论',
+                content: '大家觉得未来AI发展的主要方向是什么？是继续做大模型，还是转向更专业化的领域应用？',
+                likes: 32,
+                comments: 18
+            },
+            {
+                id: 6,
+                author: '赵敏',
+                avatar: '赵',
+                time: '3天前',
+                type: '分享',
+                content: '分享一个实用的Python数据处理技巧，使用pandas处理大规模数据时如何优化内存使用，希望对大家有帮助！',
+                likes: 67,
+                comments: 34
+            },
+            {
+                id: 7,
+                author: '孙丽',
+                avatar: '孙',
+                time: '4天前',
+                type: '提问',
+                content: '想请教一下，在训练深度学习模型时，如何判断模型是否过拟合？有哪些有效的正则化方法？',
+                likes: 21,
+                comments: 29
+            },
+            {
+                id: 8,
+                author: '周杰',
+                avatar: '周',
+                time: '5天前',
+                type: '资源',
+                content: '推荐一个很好的在线学习平台，里面有免费的AI课程，从基础到进阶都有，适合不同水平的学习者。',
+                likes: 89,
+                comments: 41
+            },
+            {
+                id: 9,
+                author: '吴刚',
+                avatar: '吴',
+                time: '6天前',
+                type: '分享',
+                content: '最近在研究强化学习，发现Q-learning算法在游戏AI中的应用非常有趣，有同好的朋友可以一起交流。',
+                likes: 38,
+                comments: 16
+            },
+            {
+                id: 10,
+                author: '郑红',
+                avatar: '郑',
+                time: '1周前',
+                type: '讨论',
+                content: '关于数据隐私和AI伦理的讨论越来越重要，大家觉得如何在技术发展和隐私保护之间找到平衡？',
+                likes: 56,
+                comments: 31
+            },
+            {
+                id: 11,
+                author: '马超',
+                avatar: '马',
+                time: '1周前',
+                type: '提问',
+                content: '想学习计算机视觉，从哪个框架开始比较好？OpenCV、TensorFlow还是PyTorch？',
+                likes: 43,
+                comments: 27
+            },
+            {
+                id: 12,
+                author: '朱莉',
+                avatar: '朱',
+                time: '1周前',
+                type: '资源',
+                content: '分享一个GitHub上的开源项目，包含了各种机器学习算法的实现，非常适合学习参考。',
+                likes: 72,
+                comments: 19
+            },
+            {
+                id: 13,
+                author: '胡斌',
+                avatar: '胡',
+                time: '2周前',
+                type: '分享',
+                content: '使用Docker部署机器学习模型的经验分享，包括环境配置、模型打包和部署流程。',
+                likes: 34,
+                comments: 22
+            },
+            {
+                id: 14,
+                author: '林娜',
+                avatar: '林',
+                time: '2周前',
+                type: '讨论',
+                content: '大家觉得AI在医疗领域的应用前景如何？有哪些具体的技术难点需要突破？',
+                likes: 61,
+                comments: 38
+            },
+            {
+                id: 15,
+                author: '杨帆',
+                avatar: '杨',
+                time: '2周前',
+                type: '提问',
+                content: '在自然语言处理中，如何处理多语言文本的预处理？有什么好的工具推荐吗？',
+                likes: 29,
+                comments: 25
+            },
+            {
+                id: 16,
+                author: '郭强',
+                avatar: '郭',
+                time: '2周前',
+                type: '资源',
+                content: '整理了一份深度学习面试题集，包含理论和实践题目，希望对准备面试的朋友有帮助。',
+                likes: 95,
+                comments: 47
+            },
+            {
+                id: 17,
+                author: '何静',
+                avatar: '何',
+                time: '3周前',
+                type: '分享',
+                content: '使用BERT进行文本分类的完整流程，从数据预处理到模型训练和评估。',
+                likes: 78,
+                comments: 33
+            },
+            {
+                id: 18,
+                author: '高伟',
+                avatar: '高',
+                time: '3周前',
+                type: '讨论',
+                content: '关于模型解释性的讨论，大家觉得黑盒模型的可解释性重要吗？有哪些解释方法？',
+                likes: 52,
+                comments: 28
+            },
+            {
+                id: 19,
+                author: '罗敏',
+                avatar: '罗',
+                time: '3周前',
+                type: '提问',
+                content: '在处理不平衡数据集时，除了过采样和欠采样，还有哪些有效的方法？',
+                likes: 41,
+                comments: 35
+            },
+            {
+                id: 20,
+                author: '梁华',
+                avatar: '梁',
+                time: '3周前',
+                type: '资源',
+                content: '推荐几个优质的AI学习网站和课程，包括免费和付费资源，适合不同阶段的学习者。',
+                likes: 83,
+                comments: 29
+            },
+            {
+                id: 21,
+                author: '谢军',
+                avatar: '谢',
+                time: '4周前',
+                type: '分享',
+                content: '使用PyTorch Lightning构建深度学习项目的经验分享，包括项目结构和最佳实践。',
+                likes: 67,
+                comments: 31
+            },
+            {
+                id: 22,
+                author: '唐丽',
+                avatar: '唐',
+                time: '4周前',
+                type: '讨论',
+                content: '关于AI在金融领域的应用，大家觉得有哪些具体的技术挑战和风险？',
+                likes: 58,
+                comments: 42
+            },
+            {
+                id: 23,
+                author: '韩强',
+                avatar: '韩',
+                time: '4周前',
+                type: '提问',
+                content: '在图像分割任务中，U-Net和DeepLab哪个效果更好？有什么使用建议？',
+                likes: 36,
+                comments: 24
+            },
+            {
+                id: 24,
+                author: '董敏',
+                avatar: '董',
+                time: '4周前',
+                type: '资源',
+                content: '分享一个机器学习项目管理的工具集，包括实验跟踪、模型版本管理和部署监控。',
+                likes: 71,
+                comments: 26
+            },
+            {
+                id: 25,
+                author: '袁华',
+                avatar: '袁',
+                time: '5周前',
+                type: '分享',
+                content: '使用AutoML进行自动化机器学习的心得体会，包括工具选择和实际应用效果。',
+                likes: 49,
+                comments: 21
+            }
+        ];
+
+        // 打开发布动态模态框
+        function openPublishModal() {
+            document.getElementById('publishModal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            
+            // 添加键盘事件监听
+            document.addEventListener('keydown', handleKeyboardEvents);
+        }
+
+        // 关闭发布动态模态框
+        function closePublishModal() {
+            if (hasContent) {
+                showConfirmModal();
+            } else {
+                actuallyCloseModal();
+            }
+        }
+
+        // 实际关闭模态框
+        function actuallyCloseModal() {
+            document.getElementById('publishModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+            resetForm();
+            document.removeEventListener('keydown', handleKeyboardEvents);
+        }
+
+        // 重置表单
+        function resetForm() {
+            document.getElementById('activityContent').value = '';
+            document.getElementById('topicInput').value = '';
+            document.getElementById('charCount').textContent = '0';
+            document.getElementById('charCount').classList.remove('over-limit');
+            document.getElementById('publishBtn').disabled = true;
+            document.getElementById('uploadedImages').innerHTML = '';
+            document.getElementById('imageUploadArea').style.display = 'none';
+            uploadedImages = [];
+            hasContent = false;
+        }
+
+        // 显示确认模态框
+        function showConfirmModal() {
+            document.getElementById('confirmModal').style.display = 'flex';
+        }
+
+        // 取消关闭
+        function cancelClose() {
+            document.getElementById('confirmModal').style.display = 'none';
+        }
+
+        // 确认关闭
+        function confirmClose() {
+            document.getElementById('confirmModal').style.display = 'none';
+            actuallyCloseModal();
+        }
+
+        // 键盘事件处理
+        function handleKeyboardEvents(event) {
+            if (event.key === 'Escape') {
+                closePublishModal();
+            } else if (event.ctrlKey && event.key === 'Enter') {
+                if (!document.getElementById('publishBtn').disabled) {
+                    publishActivity();
+                }
+            }
+        }
+
+        // 内容输入监听
+        document.addEventListener('DOMContentLoaded', function() {
+            const contentInput = document.getElementById('activityContent');
+            const charCount = document.getElementById('charCount');
+            const publishBtn = document.getElementById('publishBtn');
+
+            contentInput.addEventListener('input', function() {
+                const length = this.value.length;
+                charCount.textContent = length;
+                
+                if (length > 500) {
+                    charCount.classList.add('over-limit');
+                    this.value = this.value.substring(0, 500);
+                    charCount.textContent = '500';
+                } else {
+                    charCount.classList.remove('over-limit');
+                }
+
+                hasContent = length > 0;
+                publishBtn.disabled = !hasContent;
+            });
+        });
+
+        // 插入图片
+        function insertImage() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/jpeg,image/png,image/gif';
+            input.multiple = true;
+            
+            input.onchange = function(e) {
+                const files = Array.from(e.target.files);
+                
+                if (uploadedImages.length + files.length > 5) {
+                    alert('最多只能上传5张图片');
+                    return;
+                }
+
+                files.forEach(file => {
+                    if (file.size > 10 * 1024 * 1024) {
+                        alert(`图片 ${file.name} 超过10MB限制`);
+                        return;
+                    }
+
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        addImagePreview(e.target.result, file.name);
+                    };
+                    reader.readAsDataURL(file);
+                });
+            };
+            
+            input.click();
+        }
+
+        // 添加图片预览
+        function addImagePreview(src, name) {
+            const imageArea = document.getElementById('imageUploadArea');
+            const imagesContainer = document.getElementById('uploadedImages');
+            
+            imageArea.style.display = 'block';
+            
+            const imageItem = document.createElement('div');
+            imageItem.className = 'image-item';
+            imageItem.innerHTML = `
+                <img src="${src}" alt="${name}">
+                <button class="image-remove" onclick="removeImage(this)">&times;</button>
+            `;
+            
+            imagesContainer.appendChild(imageItem);
+            uploadedImages.push({ src, name });
+        }
+
+        // 移除图片
+        function removeImage(button) {
+            const imageItem = button.parentElement;
+            const index = Array.from(imageItem.parentElement.children).indexOf(imageItem);
+            
+            uploadedImages.splice(index, 1);
+            imageItem.remove();
+            
+            if (uploadedImages.length === 0) {
+                document.getElementById('imageUploadArea').style.display = 'none';
+            }
+        }
+
+        // 插入代码
+        function insertCode() {
+            document.getElementById('codeModal').style.display = 'flex';
+        }
+
+        // 关闭代码模态框
+        function closeCodeModal() {
+            document.getElementById('codeModal').style.display = 'none';
+            document.getElementById('codeContent').value = '';
+        }
+
+        // 插入代码到内容
+        function insertCodeToContent() {
+            const language = document.getElementById('codeLanguage').value;
+            const code = document.getElementById('codeContent').value;
+            
+            if (!code.trim()) {
+                alert('请输入代码内容');
+                return;
+            }
+
+            const codeBlock = `\n\`\`\`${language}\n${code}\n\`\`\`\n`;
+            const contentInput = document.getElementById('activityContent');
+            const cursorPos = contentInput.selectionStart;
+            
+            contentInput.value = contentInput.value.substring(0, cursorPos) + 
+                               codeBlock + 
+                               contentInput.value.substring(cursorPos);
+            
+            // 触发input事件更新字数统计
+            contentInput.dispatchEvent(new Event('input'));
+            
+            closeCodeModal();
+        }
+
+        // 插入链接
+        function insertLink() {
+            document.getElementById('linkModal').style.display = 'flex';
+        }
+
+        // 关闭链接模态框
+        function closeLinkModal() {
+            document.getElementById('linkModal').style.display = 'none';
+            document.getElementById('linkUrl').value = '';
+            document.getElementById('linkText').value = '';
+        }
+
+        // 插入链接到内容
+        function insertLinkToContent() {
+            const url = document.getElementById('linkUrl').value;
+            const text = document.getElementById('linkText').value;
+            
+            if (!url.trim()) {
+                alert('请输入链接地址');
+                return;
+            }
+
+            const linkText = text.trim() || url;
+            const linkBlock = `[${linkText}](${url})`;
+            const contentInput = document.getElementById('activityContent');
+            const cursorPos = contentInput.selectionStart;
+            
+            contentInput.value = contentInput.value.substring(0, cursorPos) + 
+                               linkBlock + 
+                               contentInput.value.substring(cursorPos);
+            
+            contentInput.dispatchEvent(new Event('input'));
+            closeLinkModal();
+        }
+
+        // 添加标签
+        function addTag(tag) {
+            const topicInput = document.getElementById('topicInput');
+            const currentValue = topicInput.value;
+            
+            if (currentValue) {
+                topicInput.value = currentValue + ' #' + tag + '#';
+            } else {
+                topicInput.value = '#' + tag + '#';
+            }
+        }
+
+        // 预览动态
+        function previewActivity() {
+            const content = document.getElementById('activityContent').value;
+            const topics = document.getElementById('topicInput').value;
+            
+            if (!content.trim()) {
+                alert('请先输入内容');
+                return;
+            }
+
+            // 这里可以实现预览功能
+            alert('预览功能：\n\n' + content + '\n\n话题：' + topics);
+        }
+
+        // 发布动态
+        function publishActivity() {
+            const content = document.getElementById('activityContent').value;
+            const topics = document.getElementById('topicInput').value;
+            
+            if (!content.trim()) {
+                alert('请输入动态内容');
+                return;
+            }
+
+            const publishBtn = document.getElementById('publishBtn');
+            publishBtn.classList.add('loading');
+            publishBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 发布中...';
+
+            // 模拟发布过程
+            setTimeout(() => {
+                console.log('发布动态:', {
+                    content: content,
+                    topics: topics,
+                    images: uploadedImages.length
+                });
+
+                // 模拟发布成功
+                publishBtn.classList.remove('loading');
+                publishBtn.innerHTML = '<i class="fas fa-paper-plane"></i> 发布';
+                
+                alert('动态发布成功！');
+                actuallyCloseModal();
+                
+                // 这里可以刷新动态列表
+                // refreshActivityList();
+            }, 2000);
+        }
+
+        // 点击模态框外部关闭
+        document.addEventListener('click', function(event) {
+            const publishModal = document.getElementById('publishModal');
+            const codeModal = document.getElementById('codeModal');
+            const linkModal = document.getElementById('linkModal');
+            const confirmModal = document.getElementById('confirmModal');
+            
+            if (event.target === publishModal) {
+                closePublishModal();
+            } else if (event.target === codeModal) {
+                closeCodeModal();
+            } else if (event.target === linkModal) {
+                closeLinkModal();
+            } else if (event.target === confirmModal) {
+                cancelClose();
+            }
+        });
+
+        // 分页功能函数
+        function goToPage(page) {
+            if (page < 1 || page > totalPages) return;
+            
+            currentPage = page;
+            renderActivities();
+            updatePagination();
+        }
+
+        function changePageSize() {
+            pageSize = parseInt(document.getElementById('pageSize').value);
+            totalPages = Math.ceil(totalItems / pageSize);
+            currentPage = 1; // 重置到第一页
+            renderActivities();
+            updatePagination();
+        }
+
+        function renderActivities() {
+            const startIndex = (currentPage - 1) * pageSize;
+            const endIndex = startIndex + pageSize;
+            const currentActivities = allActivities.slice(startIndex, endIndex);
+            
+            const activityContainer = document.getElementById('activityContent');
+            activityContainer.innerHTML = '';
+            
+            currentActivities.forEach(activity => {
+                const activityItem = document.createElement('div');
+                activityItem.className = 'activity-item';
+                activityItem.innerHTML = `
+                    <div class="activity-avatar">${activity.avatar}</div>
+                    <div class="activity-content">
+                        <div class="activity-header">
+                            <span class="activity-author">${activity.author}</span>
+                            <span class="activity-time">${activity.time}</span>
+                            <span class="activity-type">${activity.type}</span>
+                        </div>
+                        <div class="activity-text">
+                            ${activity.content}
+                        </div>
+                        <div class="activity-actions">
+                            <button class="action-btn">
+                                <i class="fas fa-thumbs-up"></i>
+                                <span>${activity.likes}</span>
+                            </button>
+                            <button class="action-btn">
+                                <i class="fas fa-comment"></i>
+                                <span>${activity.comments}</span>
+                            </button>
+                            <button class="action-btn">
+                                <i class="fas fa-share"></i>
+                                <span>分享</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                activityContainer.appendChild(activityItem);
+            });
+        }
+
+        function updatePagination() {
+            // 更新页码信息
+            const startItem = (currentPage - 1) * pageSize + 1;
+            const endItem = Math.min(currentPage * pageSize, totalItems);
+            document.getElementById('currentRange').textContent = `${startItem}-${endItem}`;
+            document.getElementById('totalCount').textContent = totalItems;
+            
+            // 更新页码按钮
+            const pageNumbers = document.getElementById('pageNumbers');
+            pageNumbers.innerHTML = '';
+            
+            // 计算显示的页码范围
+            let startPage = Math.max(1, currentPage - 2);
+            let endPage = Math.min(totalPages, currentPage + 2);
+            
+            // 确保显示5个页码（如果可能）
+            if (endPage - startPage < 4) {
+                if (startPage === 1) {
+                    endPage = Math.min(totalPages, startPage + 4);
+                } else {
+                    startPage = Math.max(1, endPage - 4);
+                }
+            }
+            
+            for (let i = startPage; i <= endPage; i++) {
+                const pageBtn = document.createElement('button');
+                pageBtn.className = `page-btn ${i === currentPage ? 'active' : ''}`;
+                pageBtn.onclick = () => goToPage(i);
+                pageBtn.textContent = i;
+                pageNumbers.appendChild(pageBtn);
+            }
+            
+            // 更新导航按钮状态
+            document.getElementById('firstPage').disabled = currentPage === 1;
+            document.getElementById('prevPage').disabled = currentPage === 1;
+            document.getElementById('nextPage').disabled = currentPage === totalPages;
+            document.getElementById('lastPage').disabled = currentPage === totalPages;
+        }
+
+        // 页面加载完成后的初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('社群详情页加载完成');
+            
+            // 初始化分页
+            renderActivities();
+            updatePagination();
+        });
+    </script>
+</body>
+</html> 

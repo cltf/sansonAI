@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学习资料详情 - AI论坛</title>
+    <link rel="icon" type="image/png" href="images/logo.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="images/logo.png" sizes="48x48">
+    <link rel="apple-touch-icon" href="images/logo.png" sizes="180x180">
+    <link rel="icon" type="image/png" href="images/logo.png" sizes="192x192">
+    <link rel="stylesheet" href="static/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .learning-resource-detail-page {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #fff;
+        }
+
+        .resource-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .resource-title {
+            font-size: 2.5rem;
+            margin: 0 0 20px 0;
+            font-weight: 700;
+        }
+
+        .resource-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .resource-basic-info {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .resource-type, .resource-size, .resource-format, .resource-upload-time {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        .uploader-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .uploader-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .uploader-name {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .uploader-level {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .resource-stats {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .resource-rating {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stars {
+            display: flex;
+            gap: 2px;
+        }
+
+        .stars i {
+            color: #ffd700;
+            font-size: 1.1rem;
+        }
+
+        .stars i.filled {
+            color: #ffd700;
+        }
+
+        .rating-text {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .rating-count {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .resource-downloads {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px 12px;
+            border-radius: 20px;
+        }
+
+        .resource-tags {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 0.9rem;
+        }
+
+        .resource-main-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .resource-preview-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+        }
+
+        .preview-container {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .ebook-preview .preview-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .preview-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .btn-preview-control {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn-preview-control:hover {
+            background: #0056b3;
+        }
+
+        .page-info {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .preview-content {
+            padding: 30px;
+            min-height: 400px;
+        }
+
+        .preview-page h4 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .preview-page p {
+            line-height: 1.8;
+            color: #555;
+            margin-bottom: 15px;
+        }
+
+        .resource-detail-section {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .resource-details,
+        .resource-description,
+        .download-section,
+        .comments-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+        }
+
+        .resource-details h3,
+        .resource-description h3,
+        .comments-section h3 {
+            margin: 0 0 20px 0;
+            color: #333;
+            font-size: 1.3rem;
+        }
+
+        .detail-content {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .detail-item:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            color: #666;
+            font-weight: 500;
+        }
+
+        .detail-value {
+            color: #333;
+            font-weight: 600;
+        }
+
+        .difficulty-intermediate {
+            color: #ffc107;
+        }
+
+        .description-content {
+            line-height: 1.8;
+            color: #555;
+        }
+
+        .download-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+        }
+
+        .points-required {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #e74c3c;
+            font-weight: 600;
+        }
+
+        .user-points {
+            color: #27ae60;
+            font-weight: 600;
+        }
+
+        .btn-download-resource {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-download-resource:hover {
+            transform: translateY(-2px);
+        }
+
+        .comments-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .btn-add-comment {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .comment-form {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .rating-input {
+            margin-bottom: 15px;
+        }
+
+        .rating-input label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .stars-input {
+            display: flex;
+            gap: 5px;
+            margin-bottom: 8px;
+        }
+
+        .stars-input i {
+            font-size: 1.5rem;
+            color: #ddd;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .stars-input i:hover,
+        .stars-input i.filled {
+            color: #ffd700;
+        }
+
+        .rating-text {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .comment-form textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        .comment-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn-submit-comment,
+        .btn-cancel-comment {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .btn-submit-comment {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-cancel-comment {
+            background: #6c757d;
+            color: white;
+        }
+
+        .comments-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .comment-item {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+
+        .commenter-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .commenter-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .commenter-name {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .commenter-level {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .comment-meta {
+            text-align: right;
+        }
+
+        .comment-rating {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 5px;
+        }
+
+        .comment-rating .stars {
+            font-size: 0.9rem;
+        }
+
+        .rating-value {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .comment-time {
+            font-size: 0.8rem;
+            color: #999;
+        }
+
+        .comment-content {
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .related-resources {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 30px;
+        }
+
+        .related-resources h3 {
+            margin: 0 0 25px 0;
+            color: #333;
+            font-size: 1.5rem;
+        }
+
+        .related-resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .related-resource-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+
+        .related-resource-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .related-resource-cover {
+            position: relative;
+            height: 150px;
+            overflow: hidden;
+        }
+
+        .related-resource-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .resource-type-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 5px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+
+        .related-resource-info {
+            padding: 15px;
+        }
+
+        .related-resource-title {
+            margin: 0 0 10px 0;
+            font-size: 1.1rem;
+        }
+
+        .related-resource-title a {
+            color: #333;
+            text-decoration: none;
+        }
+
+        .related-resource-title a:hover {
+            color: #007bff;
+        }
+
+        .related-resource-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .related-resource-stats {
+            display: flex;
+            gap: 15px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .related-resource-stats span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .related-resource-level {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .level-beginner {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .level-intermediate {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .level-advanced {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        @media (max-width: 768px) {
+            .resource-main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .resource-meta {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .resource-basic-info {
+                justify-content: flex-start;
+            }
+
+            .resource-stats {
+                justify-content: flex-start;
+            }
+
+            .related-resources-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 学习资料详情页 -->
+    <div class="learning-resource-detail-page">
+        <!-- 资料头部信息 -->
+        <div class="resource-header">
+            <div class="resource-title-section">
+                <h1 class="resource-title">深度学习实战：从入门到精通</h1>
+                <div class="resource-meta">
+                    <div class="resource-basic-info">
+                        <div class="resource-type">
+                            <i class="fas fa-book"></i>
+                            <span>电子书</span>
+                        </div>
+                        <div class="resource-size">
+                            <i class="fas fa-hdd"></i>
+                            <span>25.6 MB</span>
+                        </div>
+                        <div class="resource-format">
+                            <i class="fas fa-file"></i>
+                            <span>PDF</span>
+                        </div>
+                        <div class="resource-upload-time">
+                            <i class="fas fa-clock"></i>
+                            <span>2024-01-15 14:30</span>
+                        </div>
+                    </div>
+                    
+                    <div class="uploader-info">
+                        <img src="images/user.jpg" alt="张三" class="uploader-avatar">
+                        <div class="uploader-details">
+                            <div class="uploader-name">张三</div>
+                            <div class="uploader-level">Lv.8</div>
+                        </div>
+                    </div>
+                    
+                    <div class="resource-stats">
+                        <div class="resource-rating">
+                            <div class="stars">
+                                <i class="fas fa-star filled"></i>
+                                <i class="fas fa-star filled"></i>
+                                <i class="fas fa-star filled"></i>
+                                <i class="fas fa-star filled"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <span class="rating-text">4.2/5</span>
+                            <span class="rating-count">(156人评分)</span>
+                        </div>
+                        
+                        <div class="resource-downloads">
+                            <i class="fas fa-download"></i>
+                            <span>1,234 次下载</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 标签 -->
+                <div class="resource-tags">
+                    <span class="tag">深度学习</span>
+                    <span class="tag">机器学习</span>
+                    <span class="tag">Python</span>
+                    <span class="tag">神经网络</span>
+                    <span class="tag">实战教程</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 主要内容区域 -->
+        <div class="resource-main-content">
+            <!-- 左侧预览区 -->
+            <main class="resource-preview-section">
+                <div class="preview-container">
+                    <!-- 电子书预览 -->
+                    <div class="ebook-preview">
+                        <div class="preview-header">
+                            <h3>内容预览</h3>
+                            <div class="preview-controls">
+                                <button class="btn-preview-control" onclick="previousPage()">
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                                <span class="page-info">第 <span id="currentPage">1</span> 页，共 <span id="totalPages">50</span> 页</span>
+                                <button class="btn-preview-control" onclick="nextPage()">
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="preview-content" id="previewContent">
+                            <div class="preview-page">
+                                <h4>第一章 深度学习基础</h4>
+                                <p>深度学习是机器学习的一个重要分支，它通过多层神经网络来模拟人脑的学习过程。本章将介绍深度学习的基本概念、发展历程和核心算法。</p>
+                                <p>深度学习的主要特点包括：</p>
+                                <ul>
+                                    <li>多层神经网络结构</li>
+                                    <li>自动特征提取</li>
+                                    <li>端到端学习</li>
+                                    <li>强大的表达能力</li>
+                                </ul>
+                                <p>在本章中，我们将学习：</p>
+                                <ol>
+                                    <li>神经网络的基本原理</li>
+                                    <li>反向传播算法</li>
+                                    <li>激活函数的选择</li>
+                                    <li>损失函数的设计</li>
+                                </ol>
+                                <h5>1.1 神经网络简介</h5>
+                                <p>神经网络是由大量相互连接的神经元组成的计算模型。每个神经元接收来自其他神经元的输入，经过加权求和和激活函数处理后，产生输出传递给下一层神经元。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+            
+            <!-- 右侧详情区 -->
+            <aside class="resource-detail-section">
+                <!-- 资料详情 -->
+                <div class="resource-details">
+                    <h3>资料详情</h3>
+                    <div class="detail-content">
+                        <div class="detail-item">
+                            <span class="detail-label">资料类型：</span>
+                            <span class="detail-value">电子书</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">难度级别：</span>
+                            <span class="detail-value difficulty-intermediate">进阶</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">所属分类：</span>
+                            <span class="detail-value">深度学习</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">文件大小：</span>
+                            <span class="detail-value">25.6 MB</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">上传时间：</span>
+                            <span class="detail-value">2024-01-15 14:30</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">下载次数：</span>
+                            <span class="detail-value">1,234 次</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 详细简介 -->
+                <div class="resource-description">
+                    <h3>详细简介</h3>
+                    <div class="description-content">
+                        <p>这是一本全面介绍深度学习理论和实践的电子书，适合有一定机器学习基础的读者学习。</p>
+                        <p><strong>主要内容包括：</strong></p>
+                        <ul>
+                            <li>深度学习基础理论和数学原理</li>
+                            <li>神经网络架构设计</li>
+                            <li>常用深度学习框架使用</li>
+                            <li>图像识别、自然语言处理等应用</li>
+                            <li>模型优化和部署技巧</li>
+                        </ul>
+                        <p><strong>特色亮点：</strong></p>
+                        <ul>
+                            <li>理论与实践相结合</li>
+                            <li>丰富的代码示例</li>
+                            <li>实际项目案例分析</li>
+                            <li>最新的技术发展动态</li>
+                        </ul>
+                        <p>本书作者具有多年深度学习研究和实践经验，内容深入浅出，是学习深度学习的优秀参考资料。</p>
+                    </div>
+                </div>
+                
+                <!-- 下载区域 -->
+                <div class="download-section">
+                    <div class="download-info">
+                        <div class="points-required">
+                            <i class="fas fa-coins"></i>
+                            <span>需要积分：<strong>50</strong></span>
+                        </div>
+                        <div class="user-points">
+                            <span>您的积分：<strong>120</strong></span>
+                        </div>
+                    </div>
+                    <button class="btn-download-resource" onclick="downloadResource('1')">
+                        <i class="fas fa-download"></i>
+                        <span>下载资料</span>
+                    </button>
+                </div>
+                
+                <!-- 用户评论 -->
+                <div class="comments-section">
+                    <div class="comments-header">
+                        <h3>用户评论 (23)</h3>
+                        <button class="btn-add-comment" onclick="showCommentForm()">
+                            <i class="fas fa-plus"></i> 添加评论
+                        </button>
+                    </div>
+                    
+                    <!-- 评论表单 -->
+                    <div class="comment-form" id="commentForm" style="display: none;">
+                        <div class="rating-input">
+                            <label>评分：</label>
+                            <div class="stars-input">
+                                <i class="fas fa-star" data-rating="1" onclick="setRating(1)"></i>
+                                <i class="fas fa-star" data-rating="2" onclick="setRating(2)"></i>
+                                <i class="fas fa-star" data-rating="3" onclick="setRating(3)"></i>
+                                <i class="fas fa-star" data-rating="4" onclick="setRating(4)"></i>
+                                <i class="fas fa-star" data-rating="5" onclick="setRating(5)"></i>
+                            </div>
+                            <span class="rating-text">请选择评分</span>
+                        </div>
+                        <textarea id="commentContent" placeholder="写下您的评论..." rows="4"></textarea>
+                        <div class="comment-actions">
+                            <button class="btn-submit-comment" onclick="submitComment()">提交评论</button>
+                            <button class="btn-cancel-comment" onclick="hideCommentForm()">取消</button>
+                        </div>
+                    </div>
+                    
+                    <!-- 评论列表 -->
+                    <div class="comments-list">
+                        <div class="comment-item">
+                            <div class="comment-header">
+                                <div class="commenter-info">
+                                    <img src="images/user.jpg" alt="李四" class="commenter-avatar">
+                                    <div class="commenter-details">
+                                        <div class="commenter-name">李四</div>
+                                        <div class="commenter-level">Lv.6</div>
+                                    </div>
+                                </div>
+                                <div class="comment-meta">
+                                    <div class="comment-rating">
+                                        <div class="stars">
+                                            <i class="fas fa-star filled"></i>
+                                            <i class="fas fa-star filled"></i>
+                                            <i class="fas fa-star filled"></i>
+                                            <i class="fas fa-star filled"></i>
+                                            <i class="fas fa-star filled"></i>
+                                        </div>
+                                        <span class="rating-value">5/5</span>
+                                    </div>
+                                    <div class="comment-time">2024-01-20 10:30</div>
+                                </div>
+                            </div>
+                            <div class="comment-content">
+                                这本书写得非常好！内容深入浅出，代码示例很实用。特别是神经网络架构设计部分，让我对深度学习有了更深的理解。强烈推荐给想要学习深度学习的同学！
+                            </div>
+                        </div>
+                        
+                        <div class="comment-item">
+                            <div class="comment-header">
+                                <div class="commenter-info">
+                                    <img src="images/user.jpg" alt="王五" class="commenter-avatar">
+                                    <div class="commenter-details">
+                                        <div class="commenter-name">王五</div>
+                                        <div class="commenter-level">Lv.4</div>
+                                    </div>
+                                </div>
+                                <div class="comment-meta">
+                                    <div class="comment-rating">
+                                        <div class="stars">
+                                            <i class="fas fa-star filled"></i>
+                                            <i class="fas fa-star filled"></i>
+                                            <i class="fas fa-star filled"></i>
+                                            <i class="fas fa-star filled"></i>
+                                            <i class="fas fa-star"></i>
+                                        </div>
+                                        <span class="rating-value">4/5</span>
+                                    </div>
+                                    <div class="comment-time">2024-01-18 16:45</div>
+                                </div>
+                            </div>
+                            <div class="comment-content">
+                                内容很全面，适合进阶学习。不过对于初学者来说可能有些难度，建议先学习一些基础的机器学习知识。代码示例质量很高，可以直接运行。
+                            </div>
+                        </div>
+                        
+                        <div class="comment-item">
+                            <div class="comment-header">
+                                <div class="commenter-info">
+                                    <img src="images/user.jpg" alt="赵六" class="commenter-avatar">
+                                    <div class="commenter-details">
+                                        <div class="commenter-name">赵六</div>
+                                        <div class="commenter-level">Lv.7</div>
+                                    </div>
+                                </div>
+                                <div class="comment-meta">
+                                    <div class="comment-rating">
+                                        <div class="stars">
+                                            <i class="fas fa-star filled"></i>
+                                            <i class="fas fa-star filled"></i>
+                                            <i class="fas fa-star filled"></i>
+                                            <i class="fas fa-star filled"></i>
+                                            <i class="fas fa-star"></i>
+                                        </div>
+                                        <span class="rating-value">4/5</span>
+                                    </div>
+                                    <div class="comment-time">2024-01-16 09:15</div>
+                                </div>
+                            </div>
+                            <div class="comment-content">
+                                作者经验丰富，书中的很多技巧都是实战中总结出来的。特别是模型优化部分，解决了我很多实际问题。值得购买！
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+        
+        <!-- 相关资料推荐 -->
+        <section class="related-resources">
+            <h3>相关资料推荐</h3>
+            <div class="related-resources-grid">
+                <div class="related-resource-card">
+                    <div class="related-resource-cover">
+                        <img src="https://via.placeholder.com/300x150/4A90E2/FFFFFF?text=机器学习基础" alt="机器学习基础">
+                        <div class="resource-type-badge">
+                            <i class="fas fa-book"></i>
+                        </div>
+                    </div>
+                    <div class="related-resource-info">
+                        <h4 class="related-resource-title">
+                            <a href="#">机器学习基础理论与实践</a>
+                        </h4>
+                        <div class="related-resource-meta">
+                            <div class="related-resource-stats">
+                                <span class="rating">
+                                    <i class="fas fa-star"></i>
+                                    4.5
+                                </span>
+                                <span class="downloads">
+                                    <i class="fas fa-download"></i>
+                                    856
+                                </span>
+                            </div>
+                            <div class="related-resource-level level-beginner">
+                                入门
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="related-resource-card">
+                    <div class="related-resource-cover">
+                        <img src="https://via.placeholder.com/300x150/50C878/FFFFFF?text=神经网络" alt="神经网络">
+                        <div class="resource-type-badge">
+                            <i class="fas fa-video"></i>
+                        </div>
+                    </div>
+                    <div class="related-resource-info">
+                        <h4 class="related-resource-title">
+                            <a href="#">神经网络实战视频教程</a>
+                        </h4>
+                        <div class="related-resource-meta">
+                            <div class="related-resource-stats">
+                                <span class="rating">
+                                    <i class="fas fa-star"></i>
+                                    4.8
+                                </span>
+                                <span class="downloads">
+                                    <i class="fas fa-download"></i>
+                                    1,234
+                                </span>
+                            </div>
+                            <div class="related-resource-level level-intermediate">
+                                进阶
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="related-resource-card">
+                    <div class="related-resource-cover">
+                        <img src="https://via.placeholder.com/300x150/FF6B6B/FFFFFF?text=计算机视觉" alt="计算机视觉">
+                        <div class="resource-type-badge">
+                            <i class="fas fa-database"></i>
+                        </div>
+                    </div>
+                    <div class="related-resource-info">
+                        <h4 class="related-resource-title">
+                            <a href="#">计算机视觉数据集</a>
+                        </h4>
+                        <div class="related-resource-meta">
+                            <div class="related-resource-stats">
+                                <span class="rating">
+                                    <i class="fas fa-star"></i>
+                                    4.3
+                                </span>
+                                <span class="downloads">
+                                    <i class="fas fa-download"></i>
+                                    567
+                                </span>
+                            </div>
+                            <div class="related-resource-level level-advanced">
+                                高级
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+    // 预览功能
+    let currentPage = 1;
+    let totalPages = 50;
+
+    function previousPage() {
+        if (currentPage > 1) {
+            currentPage--;
+            updatePageDisplay();
+        }
+    }
+
+    function nextPage() {
+        if (currentPage < totalPages) {
+            currentPage++;
+            updatePageDisplay();
+        }
+    }
+
+    function updatePageDisplay() {
+        document.getElementById('currentPage').textContent = currentPage;
+        console.log('切换到第', currentPage, '页');
+    }
+
+    // 评分功能
+    let selectedRating = 0;
+
+    function setRating(rating) {
+        selectedRating = rating;
+        const stars = document.querySelectorAll('.stars-input i');
+        stars.forEach((star, index) => {
+            if (index < rating) {
+                star.classList.add('filled');
+            } else {
+                star.classList.remove('filled');
+            }
+        });
+        document.querySelector('.rating-text').textContent = `已选择 ${rating} 星`;
+    }
+
+    // 评论功能
+    function showCommentForm() {
+        document.getElementById('commentForm').style.display = 'block';
+    }
+
+    function hideCommentForm() {
+        document.getElementById('commentForm').style.display = 'none';
+        selectedRating = 0;
+        document.getElementById('commentContent').value = '';
+        document.querySelectorAll('.stars-input i').forEach(star => star.classList.remove('filled'));
+        document.querySelector('.rating-text').textContent = '请选择评分';
+    }
+
+    function submitComment() {
+        const content = document.getElementById('commentContent').value.trim();
+        
+        if (selectedRating === 0) {
+            alert('请选择评分');
+            return;
+        }
+        
+        if (!content) {
+            alert('请输入评论内容');
+            return;
+        }
+        
+        alert('评论提交成功！');
+        hideCommentForm();
+    }
+
+    // 下载功能
+    function downloadResource(resourceId) {
+        if (confirm('确定要下载这个资料吗？将消耗 50 积分。')) {
+            alert('开始下载资料...');
+        }
+    }
+
+    // 页面加载完成后的初始化
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('学习资料详情页加载完成');
+    });
+    </script>
+</body>
+</html> 

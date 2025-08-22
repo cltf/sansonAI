@@ -1,0 +1,539 @@
+{{define "content"}}
+<!-- 知识问答页面 -->
+<div class="qa-page">
+    <!-- 搜索区域 -->
+    <div class="search-section">
+        <div class="search-container">
+            <div class="search-box-large">
+                <i class="fas fa-search"></i>
+                <input type="text" id="searchInput" placeholder="搜索问答内容..." value="{{.keyword}}">
+                <button class="btn-search" onclick="performSearch()">搜索</button>
+                <button class="btn-advanced" onclick="toggleAdvancedSearch()">高级搜索</button>
+            </div>
+            
+            <!-- 高级搜索面板 -->
+            <div class="advanced-search" id="advancedSearch" style="display: none;">
+                <div class="advanced-search-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>标题包含</label>
+                            <input type="text" id="titleSearch" placeholder="标题关键词">
+                        </div>
+                        <div class="form-group">
+                            <label>内容包含</label>
+                            <input type="text" id="contentSearch" placeholder="内容关键词">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>提问者</label>
+                            <input type="text" id="authorSearch" placeholder="提问者用户名">
+                        </div>
+                        <div class="form-group">
+                            <label>状态</label>
+                            <select id="statusSearch">
+                                <option value="">全部</option>
+                                <option value="solved">已解决</option>
+                                <option value="unsolved">未解决</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>时间范围</label>
+                            <select id="timeRange">
+                                <option value="">全部时间</option>
+                                <option value="1d">最近1天</option>
+                                <option value="7d">最近7天</option>
+                                <option value="30d">最近30天</option>
+                                <option value="90d">最近90天</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>悬赏积分</label>
+                            <select id="rewardRange">
+                                <option value="">全部</option>
+                                <option value="10+">10积分以上</option>
+                                <option value="50+">50积分以上</option>
+                                <option value="100+">100积分以上</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button class="btn-primary" onclick="performAdvancedSearch()">搜索</button>
+                        <button class="btn-secondary" onclick="resetAdvancedSearch()">重置</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 标签筛选栏 -->
+    <div class="tags-filter">
+        <div class="tags-container">
+            <span class="filter-label">标签筛选:</span>
+            <div class="tags-list">
+                <span class="tag-filter active" data-tag="">全部</span>
+                {{range .tags}}
+                <span class="tag-filter" data-tag="{{.Name}}">{{.Name}}</span>
+                {{end}}
+            </div>
+        </div>
+    </div>
+
+    <!-- 主要内容区域 -->
+    <div class="qa-main-content">
+        <!-- 左侧分类导航 -->
+        <aside class="qa-sidebar">
+            <div class="qa-categories">
+                <h3>问答分类</h3>
+                <nav class="category-nav">
+                    <a href="/qa" class="category-item {{if eq .categoryID 0}}active{{end}}">
+                        <i class="fas fa-list"></i>
+                        <span>全部问答</span>
+                        <span class="count">({{.totalCount}})</span>
+                    </a>
+                    {{range .categories}}
+                    <a href="/qa?category={{.ID}}" class="category-item {{if eq $.categoryID .ID}}active{{end}}">
+                        <i class="fas fa-folder"></i>
+                        <span>{{.Name}}</span>
+                        <span class="count">({{.PostCount}})</span>
+                    </a>
+                    {{end}}
+                </nav>
+            </div>
+
+            <!-- 统计信息 -->
+            <div class="qa-stats">
+                <h3>统计信息</h3>
+                <div class="stats-item">
+                    <span class="stats-label">总问答数</span>
+                    <span class="stats-value">{{.totalCount}}</span>
+                </div>
+                <div class="stats-item">
+                    <span class="stats-label">已解决</span>
+                    <span class="stats-value">{{.solvedCount}}</span>
+                </div>
+                <div class="stats-item">
+                    <span class="stats-label">未解决</span>
+                    <span class="stats-value">{{.unsolvedCount}}</span>
+                </div>
+                <div class="stats-item">
+                    <span class="stats-label">今日新增</span>
+                    <span class="stats-value">{{.todayCount}}</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- 中间问答列表 -->
+        <section class="qa-content">
+            <div class="qa-header">
+                <h2>{{if .categoryName}}{{.categoryName}}{{else}}全部问答{{end}}</h2>
+                <div class="qa-actions">
+                    <div class="sort-options">
+                        <select id="sortSelect" onchange="changeSort()">
+                            <option value="latest" {{if eq .sort "latest"}}selected{{end}}>最新发布</option>
+                            <option value="hot" {{if eq .sort "hot"}}selected{{end}}>热门问答</option>
+                            <option value="reward" {{if eq .sort "reward"}}selected{{end}}>高悬赏</option>
+                            <option value="unsolved" {{if eq .sort "unsolved"}}selected{{end}}>待解决</option>
+                        </select>
+                    </div>
+                    {{if .user}}
+                    <button class="btn-ask" onclick="showAskForm()">
+                        <i class="fas fa-plus"></i>
+                        我要提问
+                    </button>
+                    {{else}}
+                    <a href="/auth/login" class="btn-ask">
+                        <i class="fas fa-plus"></i>
+                        我要提问
+                    </a>
+                    {{end}}
+                </div>
+            </div>
+
+            <div class="qa-list">
+                {{range .questions}}
+                <div class="qa-item {{if .IsSolved}}solved{{end}}">
+                    <div class="qa-status">
+                        {{if .IsSolved}}
+                        <div class="status-solved">
+                            <i class="fas fa-check-circle"></i>
+                            <span>已解决</span>
+                        </div>
+                        {{else}}
+                        <div class="status-unsolved">
+                            <i class="fas fa-question-circle"></i>
+                            <span>待解决</span>
+                        </div>
+                        {{end}}
+                        {{if gt .Reward 0}}
+                        <div class="reward-badge">
+                            <i class="fas fa-gift"></i>
+                            <span>{{.Reward}}积分</span>
+                        </div>
+                        {{end}}
+                    </div>
+
+                    <div class="qa-main">
+                        <div class="qa-title">
+                            <a href="/qa/{{.ID}}">{{.Title}}</a>
+                        </div>
+                        
+                        <div class="qa-summary">
+                            {{.Summary}}
+                        </div>
+
+                        {{if .IsSolved}}
+                        <div class="qa-accepted-answer">
+                            <div class="accepted-label">
+                                <i class="fas fa-star"></i>
+                                采纳的回答:
+                            </div>
+                            <div class="accepted-content">
+                                {{.AcceptedAnswer}}
+                            </div>
+                        </div>
+                        {{end}}
+
+                        <div class="qa-meta">
+                            <div class="qa-author">
+                                <img src="{{.UserAvatar}}" alt="用户头像">
+                                <span>{{.Username}}</span>
+                                <span class="qa-time">{{.CreatedAt.Format "2006-01-02 15:04"}}</span>
+                            </div>
+                            
+                            <div class="qa-tags">
+                                {{range split .Tags ","}}
+                                <span class="tag">{{.}}</span>
+                                {{end}}
+                            </div>
+
+                            <div class="qa-stats">
+                                <span><i class="fas fa-eye"></i> {{.ViewCount}}</span>
+                                <span><i class="fas fa-comment"></i> {{.ReplyCount}}</span>
+                                {{if gt .Reward 0}}
+                                <span><i class="fas fa-gift"></i> {{.Reward}}</span>
+                                {{end}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{end}}
+            </div>
+
+            <!-- 分页 -->
+            {{if gt .totalPages 1}}
+            <div class="pagination">
+                {{if gt .currentPage 1}}
+                <a href="?page={{subtract .currentPage 1}}{{if .categoryID}}&category={{.categoryID}}{{end}}{{if .keyword}}&q={{.keyword}}{{end}}{{if .sort}}&sort={{.sort}}{{end}}" class="page-link">
+                    <i class="fas fa-chevron-left"></i>
+                </a>
+                {{end}}
+                
+                {{range $i := sequence .totalPages}}
+                <a href="?page={{$i}}{{if $.categoryID}}&category={{$.categoryID}}{{end}}{{if $.keyword}}&q={{$.keyword}}{{end}}{{if $.sort}}&sort={{$.sort}}{{end}}" 
+                   class="page-link {{if eq $i $.currentPage}}active{{end}}">
+                    {{$i}}
+                </a>
+                {{end}}
+                
+                {{if lt .currentPage .totalPages}}
+                <a href="?page={{add .currentPage 1}}{{if .categoryID}}&category={{.categoryID}}{{end}}{{if .keyword}}&q={{.keyword}}{{end}}{{if .sort}}&sort={{.sort}}{{end}}" class="page-link">
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+                {{end}}
+            </div>
+            {{end}}
+        </section>
+
+        <!-- 右侧推荐区域 -->
+        <aside class="qa-recommendations">
+            <!-- 待解决问答 -->
+            <div class="recommendation-panel">
+                <h3>待解决问答</h3>
+                <div class="recommendation-list">
+                    {{range .pendingQuestions}}
+                    <div class="recommendation-item">
+                        <div class="rec-title">
+                            <a href="/qa/{{.ID}}">{{.Title}}</a>
+                        </div>
+                        <div class="rec-meta">
+                            <span>{{.Username}}</span>
+                            <span>{{.CreatedAt.Format "01-02"}}</span>
+                            {{if gt .Reward 0}}
+                            <span class="rec-reward">{{.Reward}}积分</span>
+                            {{end}}
+                        </div>
+                    </div>
+                    {{end}}
+                </div>
+            </div>
+
+            <!-- 高悬赏问答 -->
+            <div class="recommendation-panel">
+                <h3>高悬赏问答</h3>
+                <div class="recommendation-list">
+                    {{range .rewardQuestions}}
+                    <div class="recommendation-item">
+                        <div class="rec-title">
+                            <a href="/qa/{{.ID}}">{{.Title}}</a>
+                        </div>
+                        <div class="rec-meta">
+                            <span>{{.Username}}</span>
+                            <span class="rec-reward">{{.Reward}}积分</span>
+                        </div>
+                    </div>
+                    {{end}}
+                </div>
+            </div>
+        </aside>
+    </div>
+</div>
+
+<!-- 提问表单模态框 -->
+<div class="modal" id="askModal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>发布新问题</h3>
+            <button class="modal-close" onclick="hideAskForm()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <form class="ask-form" id="askForm">
+            <div class="form-group">
+                <label>问题标题 *</label>
+                <input type="text" name="title" placeholder="请简明扼要地描述您的问题" required>
+            </div>
+            
+            <div class="form-group">
+                <label>问题分类 *</label>
+                <select name="category_id" required>
+                    <option value="">请选择分类</option>
+                    {{range .categories}}
+                    <option value="{{.ID}}">{{.Name}}</option>
+                    {{end}}
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>问题描述 *</label>
+                <textarea name="content" id="contentEditor" placeholder="请详细描述您的问题，可以包含代码、图片等" required></textarea>
+                <div class="editor-toolbar">
+                    <button type="button" onclick="insertCode()">
+                        <i class="fas fa-code"></i> 插入代码
+                    </button>
+                    <button type="button" onclick="insertImage()">
+                        <i class="fas fa-image"></i> 插入图片
+                    </button>
+                    <button type="button" onclick="insertLink()">
+                        <i class="fas fa-link"></i> 插入链接
+                    </button>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>标签</label>
+                <div class="tags-input">
+                    <div class="tags-container" id="tagsContainer"></div>
+                    <input type="text" id="tagInput" placeholder="输入标签后按回车添加">
+                </div>
+                <div class="tags-suggestions">
+                    <span class="suggestion-label">常用标签:</span>
+                    {{range .tags}}
+                    <span class="tag-suggestion" onclick="addTag('{{.Name}}')">{{.Name}}</span>
+                    {{end}}
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label>悬赏积分</label>
+                <input type="number" name="reward" min="0" max="1000" value="0" placeholder="设置悬赏积分（可选）">
+                <small>悬赏积分越高，越容易获得回答</small>
+            </div>
+            
+            <div class="form-actions">
+                <button type="button" class="btn-secondary" onclick="hideAskForm()">取消</button>
+                <button type="submit" class="btn-primary">发布问题</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+// 搜索功能
+function performSearch() {
+    const keyword = document.getElementById('searchInput').value.trim();
+    if (keyword) {
+        window.location.href = `/qa?q=${encodeURIComponent(keyword)}`;
+    }
+}
+
+function toggleAdvancedSearch() {
+    const advancedSearch = document.getElementById('advancedSearch');
+    advancedSearch.style.display = advancedSearch.style.display === 'none' ? 'block' : 'none';
+}
+
+function performAdvancedSearch() {
+    const title = document.getElementById('titleSearch').value;
+    const content = document.getElementById('contentSearch').value;
+    const author = document.getElementById('authorSearch').value;
+    const status = document.getElementById('statusSearch').value;
+    const timeRange = document.getElementById('timeRange').value;
+    const rewardRange = document.getElementById('rewardRange').value;
+    
+    const params = new URLSearchParams();
+    if (title) params.append('title', title);
+    if (content) params.append('content', content);
+    if (author) params.append('author', author);
+    if (status) params.append('status', status);
+    if (timeRange) params.append('time', timeRange);
+    if (rewardRange) params.append('reward', rewardRange);
+    
+    window.location.href = `/qa?${params.toString()}`;
+}
+
+function resetAdvancedSearch() {
+    document.getElementById('titleSearch').value = '';
+    document.getElementById('contentSearch').value = '';
+    document.getElementById('authorSearch').value = '';
+    document.getElementById('statusSearch').value = '';
+    document.getElementById('timeRange').value = '';
+    document.getElementById('rewardRange').value = '';
+}
+
+// 标签筛选
+document.querySelectorAll('.tag-filter').forEach(tag => {
+    tag.addEventListener('click', function() {
+        document.querySelectorAll('.tag-filter').forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+        
+        const selectedTag = this.dataset.tag;
+        const currentUrl = new URL(window.location);
+        if (selectedTag) {
+            currentUrl.searchParams.set('tag', selectedTag);
+        } else {
+            currentUrl.searchParams.delete('tag');
+        }
+        window.location.href = currentUrl.toString();
+    });
+});
+
+// 排序功能
+function changeSort() {
+    const sort = document.getElementById('sortSelect').value;
+    const currentUrl = new URL(window.location);
+    currentUrl.searchParams.set('sort', sort);
+    window.location.href = currentUrl.toString();
+}
+
+// 提问表单
+function showAskForm() {
+    document.getElementById('askModal').style.display = 'flex';
+}
+
+function hideAskForm() {
+    document.getElementById('askModal').style.display = 'none';
+}
+
+// 标签管理
+let selectedTags = [];
+
+function addTag(tagName) {
+    if (!selectedTags.includes(tagName) && selectedTags.length < 5) {
+        selectedTags.push(tagName);
+        updateTagsDisplay();
+    }
+}
+
+function removeTag(tagName) {
+    selectedTags = selectedTags.filter(tag => tag !== tagName);
+    updateTagsDisplay();
+}
+
+function updateTagsDisplay() {
+    const container = document.getElementById('tagsContainer');
+    container.innerHTML = selectedTags.map(tag => 
+        `<span class="tag-selected">
+            ${tag}
+            <i class="fas fa-times" onclick="removeTag('${tag}')"></i>
+        </span>`
+    ).join('');
+}
+
+// 编辑器功能
+function insertCode() {
+    const editor = document.getElementById('contentEditor');
+    const code = '\n```\n// 在这里插入代码\n```\n';
+    editor.value += code;
+    editor.focus();
+}
+
+function insertImage() {
+    const url = prompt('请输入图片URL:');
+    if (url) {
+        const editor = document.getElementById('contentEditor');
+        const imgTag = `\n![图片](${url})\n`;
+        editor.value += imgTag;
+        editor.focus();
+    }
+}
+
+function insertLink() {
+    const url = prompt('请输入链接URL:');
+    const text = prompt('请输入链接文本:');
+    if (url && text) {
+        const editor = document.getElementById('contentEditor');
+        const linkTag = `[${text}](${url})`;
+        editor.value += linkTag;
+        editor.focus();
+    }
+}
+
+// 标签输入
+document.getElementById('tagInput').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        const tagName = this.value.trim();
+        if (tagName && selectedTags.length < 5) {
+            addTag(tagName);
+            this.value = '';
+        }
+    }
+});
+
+// 表单提交
+document.getElementById('askForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    formData.append('tags', selectedTags.join(','));
+    
+    fetch('/qa/ask', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('问题发布成功！');
+            hideAskForm();
+            window.location.reload();
+        } else {
+            alert('发布失败: ' + data.error);
+        }
+    })
+    .catch(error => {
+        alert('发布失败: ' + error.message);
+    });
+});
+
+// 回车搜索
+document.getElementById('searchInput').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        performSearch();
+    }
+});
+</script>
+{{end}} 

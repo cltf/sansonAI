@@ -1,0 +1,1771 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学习资料页面演示 - AI论坛</title>
+    <link rel="icon" type="image/png" href="images/logo.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="images/logo.png" sizes="48x48">
+    <link rel="apple-touch-icon" href="images/logo.png" sizes="180x180">
+    <link rel="icon" type="image/png" href="images/logo.png" sizes="192x192">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <header class="top-nav">
+        <div class="nav-container">
+            <div class="nav-left">
+                <div class="logo" onclick="window.location.href='index.html'" style="cursor: pointer;">
+                    <img src="images/logo.png" alt="AI论坛Logo" class="logo-image">
+                    <span class="logo-text">三生AI</span>
+                </div>
+                <nav class="main-nav">
+                    <a href="qa_preview.html" class="nav-link">知识问答</a>
+                    <a href="tech_share_demo.html" class="nav-link">技术分享</a>
+                    <a href="learning_resources_demo.html" class="nav-link active">学习资料</a>
+                    <a href="community_preview.html" class="nav-link">社群</a>
+                </nav>
+            </div>
+            <div class="nav-right">
+                <span class="nav-title"></span>
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="AI搜索">
+                </div>
+                <div class="user-actions">
+                    <i class="fas fa-user-circle"></i>
+                    <i class="fas fa-bell"></i>
+                    <div class="user-avatar">
+                        <img src="images/user.jpg" alt="用户头像">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主要内容区域 -->
+    <main class="main-content">
+        <!-- 左侧导航区 -->
+        <aside class="sidebar">
+            <nav class="sidebar-nav">
+                <a href="index.html" class="nav-item">
+                    <i class="fas fa-home"></i>
+                    <span>首页</span>
+                </a>
+                <a href="qa_preview.html" class="nav-item">
+                    <i class="fas fa-question-circle"></i>
+                    <span>知识问答</span>
+                </a>
+                <a href="tech_share_demo.html" class="nav-item">
+                    <i class="fas fa-file-alt"></i>
+                    <span>技术分享</span>
+                </a>
+                <a href="learning_resources_demo.html" class="nav-item active">
+                    <i class="fas fa-book"></i>
+                    <span>学习资料</span>
+                </a>
+                <a href="community_preview.html" class="nav-item">
+                    <i class="fas fa-comments"></i>
+                    <span>社群</span>
+                </a>
+                <a href="search.html" class="nav-item">
+                    <i class="fas fa-search"></i>
+                    <span>搜索</span>
+                </a>
+                <a href="#" class="nav-item">
+                    <i class="fas fa-trophy"></i>
+                    <span>积分规则</span>
+                </a>
+            </nav>
+
+            <!-- 用户等级 -->
+            <div class="user-level">
+                <h3>用户等级</h3>
+                <div class="level-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 65%;"></div>
+                    </div>
+                    <span class="level-text">Lv.3 技术达人</span>
+                </div>
+            </div>
+
+            <!-- 社区规则 -->
+            <div class="rules-section">
+                <h3>社区规则</h3>
+                <div class="rule-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>遵守社区规范</span>
+                </div>
+                <div class="rule-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>积极分享知识</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- 中间内容展示区 -->
+        <section class="content-area">
+            <style>
+                /* Logo链接样式 */
+                .logo-link {
+                    text-decoration: none;
+                    color: inherit;
+                    display: flex;
+                    align-items: center;
+                    transition: opacity 0.3s ease;
+                }
+                
+                .logo-link:hover {
+                    opacity: 0.8;
+                }
+                
+                /* 学习资料页面专用样式 */
+                .learning-resources-page {
+                    width: 100%;
+                    max-width: none;
+                    margin: 0;
+                    padding: 0;
+                }
+                
+
+                
+                .search-filter-section {
+                    background: #fff;
+                    border-radius: 12px;
+                    padding: 20px;
+                    margin-bottom: 20px;
+                    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+                }
+                
+                .learning-resources-main {
+                    display: block;
+                }
+                
+                /* 资料分类页卡样式 */
+                .categories-tabs-section {
+                    background: #fff;
+                    border-radius: 12px;
+                    padding: 20px;
+                    margin-bottom: 20px;
+                    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+                }
+                
+                .categories-tabs {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 10px;
+                }
+                
+                .category-tab {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    padding: 10px 16px;
+                    text-decoration: none;
+                    color: #666;
+                    border-radius: 20px;
+                    border: 1px solid #e0e0e0;
+                    background: #fff;
+                    transition: all 0.3s ease;
+                    font-size: 14px;
+                    font-weight: 500;
+                }
+                
+                .category-tab:hover {
+                    border-color: #4A90E2;
+                    color: #4A90E2;
+                    background: #f8f9fa;
+                }
+                
+                .category-tab.active {
+                    background: #4A90E2;
+                    border-color: #4A90E2;
+                    color: white;
+                }
+                
+                .category-tab i {
+                    font-size: 16px;
+                }
+                
+                .category-tab .category-count {
+                    font-size: 12px;
+                    opacity: 0.8;
+                }
+                
+                .categories-sidebar {
+                    background: #fff;
+                    border-radius: 12px;
+                    padding: 20px;
+                    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+                    height: fit-content;
+                }
+                
+                .categories-header h3 {
+                    margin-bottom: 15px;
+                    color: #333;
+                    font-size: 18px;
+                    font-weight: 600;
+                }
+                
+                .categories-nav {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 8px;
+                }
+                
+                .category-item {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                    padding: 12px 15px;
+                    text-decoration: none;
+                    color: #666;
+                    border-radius: 8px;
+                    transition: all 0.3s ease;
+                }
+                
+                .category-item:hover {
+                    background: #f8f9fa;
+                    color: #4A90E2;
+                }
+                
+                .category-item.active {
+                    background: #4A90E2;
+                    color: white;
+                }
+                
+                .category-item i {
+                    width: 16px;
+                    text-align: center;
+                }
+                
+                .category-count {
+                    margin-left: auto;
+                    font-size: 12px;
+                    opacity: 0.7;
+                }
+                
+                .resources-section {
+                    background: #fff;
+                    border-radius: 12px;
+                    padding: 20px;
+                    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+                }
+                
+                .resources-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: 20px;
+                    padding-bottom: 15px;
+                    border-bottom: 1px solid #f0f0f0;
+                }
+                
+                .resources-header h2 {
+                    color: #333;
+                    font-size: 24px;
+                    font-weight: 600;
+                }
+                
+                .btn-upload {
+                    background: #4A90E2;
+                    color: white;
+                    border: none;
+                    padding: 10px 20px;
+                    border-radius: 25px;
+                    font-size: 14px;
+                    font-weight: 500;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    text-decoration: none;
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                }
+                
+                .btn-upload:hover {
+                    background: #357ABD;
+                    transform: translateY(-1px);
+                }
+                
+                .resources-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+                    gap: 20px;
+                }
+                
+                .resource-card {
+                    border: 1px solid #e9ecef;
+                    border-radius: 12px;
+                    overflow: hidden;
+                    transition: all 0.3s ease;
+                    background: white;
+                }
+                
+                .resource-card:hover {
+                    border-color: #4A90E2;
+                    box-shadow: 0 4px 15px rgba(74, 144, 226, 0.1);
+                    transform: translateY(-2px);
+                }
+                
+                .resource-cover {
+                    position: relative;
+                    height: 200px;
+                    overflow: hidden;
+                }
+                
+                .resource-cover img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                }
+                
+                .resource-type-badge {
+                    position: absolute;
+                    top: 10px;
+                    right: 10px;
+                    background: rgba(74, 144, 226, 0.9);
+                    color: white;
+                    padding: 6px 10px;
+                    border-radius: 20px;
+                    font-size: 12px;
+                    font-weight: 500;
+                }
+                
+                .resource-size {
+                    position: absolute;
+                    bottom: 10px;
+                    right: 10px;
+                    background: rgba(0, 0, 0, 0.7);
+                    color: white;
+                    padding: 4px 8px;
+                    border-radius: 4px;
+                    font-size: 12px;
+                }
+                
+                .resource-info {
+                    padding: 20px;
+                }
+                
+                .resource-title {
+                    margin-bottom: 15px;
+                }
+                
+                .resource-title a {
+                    color: #333;
+                    text-decoration: none;
+                    font-size: 18px;
+                    font-weight: 600;
+                    line-height: 1.4;
+                }
+                
+                .resource-title a:hover {
+                    color: #4A90E2;
+                }
+                
+                .resource-meta {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: 15px;
+                }
+                
+                .uploader-info {
+                    display: flex;
+                    align-items: center;
+                    gap: 8px;
+                    font-size: 14px;
+                    color: #666;
+                }
+                
+                .uploader-avatar {
+                    width: 24px;
+                    height: 24px;
+                    border-radius: 50%;
+                    object-fit: cover;
+                }
+                
+                .upload-time {
+                    color: #999;
+                }
+                
+                .resource-stats {
+                    display: flex;
+                    align-items: center;
+                    gap: 15px;
+                }
+                
+                .resource-rating {
+                    display: flex;
+                    align-items: center;
+                    gap: 5px;
+                }
+                
+                .stars {
+                    display: flex;
+                    gap: 2px;
+                }
+                
+                .stars i {
+                    color: #ddd;
+                    font-size: 12px;
+                }
+                
+                .stars i.filled {
+                    color: #FFD700;
+                }
+                
+                .rating-text {
+                    font-size: 12px;
+                }
+                
+                /* 右侧推荐区域样式 */
+                .recommendations-sidebar {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 20px;
+                }
+                
+                .latest-resources,
+                .top-rated-resources {
+                    background: #fff;
+                    border-radius: 12px;
+                    padding: 20px;
+                    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+                }
+                
+                .latest-resources h4,
+                .top-rated-resources h4 {
+                    margin: 0 0 15px 0;
+                    color: #333;
+                    font-size: 18px;
+                    font-weight: 600;
+                }
+                
+                .latest-resources-list,
+                .top-rated-resources-list {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 12px;
+                }
+                
+                .latest-resource-item,
+                .top-rated-resource-item {
+                    display: flex;
+                    gap: 12px;
+                    padding: 12px;
+                    border-radius: 8px;
+                    text-decoration: none;
+                    color: inherit;
+                    transition: all 0.3s ease;
+                }
+                
+                .latest-resource-item:hover,
+                .top-rated-resource-item:hover {
+                    background: #f8f9fa;
+                    transform: translateX(5px);
+                }
+                
+                .latest-resource-cover,
+                .top-rated-resource-cover {
+                    position: relative;
+                    width: 50px;
+                    height: 35px;
+                    border-radius: 6px;
+                    overflow: hidden;
+                    flex-shrink: 0;
+                }
+                
+                .latest-resource-cover img,
+                .top-rated-resource-cover img {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                }
+                
+                .resource-type-icon {
+                    position: absolute;
+                    top: 2px;
+                    right: 2px;
+                    background: rgba(0, 0, 0, 0.7);
+                    color: white;
+                    width: 16px;
+                    height: 16px;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 8px;
+                }
+                
+                .rating-badge {
+                    position: absolute;
+                    top: 2px;
+                    right: 2px;
+                    background: #FFD700;
+                    color: #333;
+                    padding: 2px 4px;
+                    border-radius: 4px;
+                    font-size: 10px;
+                    font-weight: 600;
+                    display: flex;
+                    align-items: center;
+                    gap: 2px;
+                }
+                
+                .latest-resource-info,
+                .top-rated-resource-info {
+                    flex: 1;
+                    min-width: 0;
+                }
+                
+                .latest-resource-info h5,
+                .top-rated-resource-info h5 {
+                    margin: 0 0 5px 0;
+                    font-size: 14px;
+                    font-weight: 600;
+                    color: #333;
+                    line-height: 1.3;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                }
+                
+                .latest-resource-meta,
+                .top-rated-resource-meta {
+                    display: flex;
+                    gap: 10px;
+                    font-size: 12px;
+                    color: #666;
+                }
+                
+                .uploader,
+                .time,
+                .category,
+                .downloads {
+                    display: flex;
+                    align-items: center;
+                }
+                
+                /* 模态框样式 */
+                .modal {
+                    display: none;
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0, 0, 0, 0.5);
+                    z-index: 1000;
+                    align-items: center;
+                    justify-content: center;
+                }
+                
+                .modal.large .modal-content {
+                    width: 90%;
+                    max-width: 800px;
+                    max-height: 90vh;
+                    overflow-y: auto;
+                }
+                
+                .modal-content {
+                    background: white;
+                    border-radius: 12px;
+                    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+                    width: 90%;
+                    max-width: 600px;
+                }
+                
+                .modal-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    padding: 20px 25px;
+                    border-bottom: 1px solid #f0f0f0;
+                }
+                
+                .modal-header h3 {
+                    margin: 0;
+                    color: #333;
+                    font-size: 20px;
+                    font-weight: 600;
+                }
+                
+                .modal-close {
+                    background: none;
+                    border: none;
+                    font-size: 20px;
+                    color: #666;
+                    cursor: pointer;
+                    padding: 5px;
+                    border-radius: 50%;
+                    transition: all 0.3s ease;
+                }
+                
+                .modal-close:hover {
+                    background: #f0f0f0;
+                    color: #333;
+                }
+                
+                .modal-body {
+                    padding: 25px;
+                }
+                
+                .upload-form {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 20px;
+                }
+                
+                .form-group {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 8px;
+                }
+                
+                .form-group label {
+                    font-weight: 500;
+                    color: #333;
+                    font-size: 14px;
+                }
+                
+                .form-group input,
+                .form-group textarea,
+                .form-group select {
+                    padding: 12px 15px;
+                    border: 1px solid #ddd;
+                    border-radius: 8px;
+                    font-size: 14px;
+                    transition: border-color 0.3s ease;
+                }
+                
+                .form-group input:focus,
+                .form-group textarea:focus,
+                .form-group select:focus {
+                    outline: none;
+                    border-color: #4A90E2;
+                    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+                }
+                
+                .form-group textarea {
+                    resize: vertical;
+                    min-height: 100px;
+                }
+                
+                .form-row {
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 20px;
+                }
+                
+                .cover-upload,
+                .file-upload {
+                    border: 2px dashed #ddd;
+                    border-radius: 8px;
+                    padding: 20px;
+                    text-align: center;
+                    transition: all 0.3s ease;
+                }
+                
+                .cover-upload:hover,
+                .file-upload:hover {
+                    border-color: #4A90E2;
+                    background: #f8f9fa;
+                }
+                
+                .upload-preview,
+                .upload-area {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: 10px;
+                    color: #666;
+                }
+                
+                .upload-preview i,
+                .upload-area i {
+                    font-size: 24px;
+                    color: #4A90E2;
+                }
+                
+                .file-list {
+                    margin-top: 15px;
+                }
+                
+                .form-actions {
+                    display: flex;
+                    gap: 15px;
+                    justify-content: flex-end;
+                    margin-top: 20px;
+                }
+                
+                .btn-primary,
+                .btn-secondary {
+                    padding: 12px 24px;
+                    border: none;
+                    border-radius: 8px;
+                    font-size: 14px;
+                    font-weight: 500;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                }
+                
+                .btn-primary {
+                    background: #4A90E2;
+                    color: white;
+                }
+                
+                .btn-primary:hover {
+                    background: #357ABD;
+                }
+                
+                .btn-secondary {
+                    background: #f8f9fa;
+                    color: #666;
+                    border: 1px solid #ddd;
+                }
+                
+                .btn-secondary:hover {
+                    background: #e9ecef;
+                }
+                
+                .resource-actions {
+                    display: flex;
+                    gap: 10px;
+                    font-size: 12px;
+                    color: #666;
+                }
+                
+                .resource-description {
+                    color: #666;
+                    font-size: 14px;
+                    line-height: 1.5;
+                    margin-bottom: 15px;
+                }
+                
+                .resource-tags {
+                    display: flex;
+                    gap: 8px;
+                    margin-bottom: 15px;
+                    flex-wrap: wrap;
+                }
+                
+                .resource-tags .tag {
+                    background: #f0f7ff;
+                    color: #4A90E2;
+                    padding: 4px 10px;
+                    border-radius: 12px;
+                    font-size: 12px;
+                    font-weight: 500;
+                }
+                
+                .resource-footer {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                }
+                
+                .difficulty-level {
+                    padding: 4px 12px;
+                    border-radius: 12px;
+                    font-size: 12px;
+                    font-weight: 500;
+                }
+                
+                .level-beginner {
+                    background: #e8f5e8;
+                    color: #28a745;
+                }
+                
+                .level-intermediate {
+                    background: #fff3cd;
+                    color: #856404;
+                }
+                
+                .level-advanced {
+                    background: #f8d7da;
+                    color: #721c24;
+                }
+                
+                .btn-download {
+                    background: #4A90E2;
+                    color: white;
+                    border: none;
+                    padding: 8px 16px;
+                    border-radius: 20px;
+                    font-size: 14px;
+                    cursor: pointer;
+                    transition: all 0.3s ease;
+                    display: flex;
+                    align-items: center;
+                    gap: 5px;
+                }
+                
+                .btn-download:hover {
+                    background: #357ABD;
+                }
+                
+                /* 搜索和筛选样式 */
+                .search-container {
+                    max-width: 800px;
+                    margin: 0 auto;
+                }
+                
+                .content-search-box {
+                    display: flex;
+                    align-items: center;
+                    background: #f8f9fa;
+                    border: 2px solid #e9ecef;
+                    border-radius: 50px;
+                    padding: 12px 20px;
+                    margin-bottom: 20px;
+                }
+                
+                .content-search-box i {
+                    color: #6c757d;
+                    margin-right: 10px;
+                }
+                
+                .content-search-box input {
+                    flex: 1;
+                    border: none;
+                    background: transparent;
+                    outline: none;
+                    font-size: 14px;
+                }
+                
+                .btn-search {
+                    background: #4A90E2;
+                    color: white;
+                    border: none;
+                    padding: 8px 16px;
+                    border-radius: 20px;
+                    cursor: pointer;
+                    font-size: 14px;
+                }
+                
+                .filter-options {
+                    display: flex;
+                    gap: 15px;
+                    flex-wrap: wrap;
+                }
+                
+                .filter-group {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 5px;
+                }
+                
+                .filter-group label {
+                    font-size: 12px;
+                    color: #666;
+                    font-weight: 500;
+                }
+                
+                .filter-group select {
+                    padding: 6px 10px;
+                    border: 1px solid #ddd;
+                    border-radius: 6px;
+                    font-size: 12px;
+                    background: white;
+                }
+                
+                /* 分页样式 */
+                .pagination {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    gap: 8px;
+                    margin-top: 30px;
+                    padding: 20px 0;
+                }
+                
+                .page-link {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    min-width: 40px;
+                    height: 40px;
+                    padding: 0 12px;
+                    border: 1px solid #e0e0e0;
+                    border-radius: 8px;
+                    background: #fff;
+                    color: #666;
+                    text-decoration: none;
+                    font-size: 14px;
+                    font-weight: 500;
+                    transition: all 0.3s ease;
+                }
+                
+                .page-link:hover {
+                    border-color: #4A90E2;
+                    color: #4A90E2;
+                    background: #f8f9fa;
+                }
+                
+                .page-link.active {
+                    background: #4A90E2;
+                    border-color: #4A90E2;
+                    color: white;
+                }
+                
+                .page-link:disabled {
+                    opacity: 0.5;
+                    cursor: not-allowed;
+                }
+                
+                .page-ellipsis {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    min-width: 40px;
+                    height: 40px;
+                    padding: 0 12px;
+                    color: #666;
+                    font-size: 14px;
+                    font-weight: 500;
+                }
+                
+                /* 响应式设计 */
+                @media (max-width: 768px) {
+                    .categories-tabs {
+                        flex-direction: column;
+                        gap: 8px;
+                    }
+                    
+                    .category-tab {
+                        justify-content: center;
+                        padding: 12px 16px;
+                    }
+                    
+                    .resources-grid {
+                        grid-template-columns: 1fr;
+                    }
+                    
+                    .filter-options {
+                        flex-direction: column;
+                    }
+                    
+                    .form-row {
+                        grid-template-columns: 1fr;
+                    }
+                    
+                    .modal.large .modal-content {
+                        width: 95%;
+                        margin: 20px;
+                    }
+                    
+                    .pagination {
+                        gap: 6px;
+                        margin-top: 20px;
+                        padding: 15px 0;
+                    }
+                    
+                    .page-link {
+                        min-width: 36px;
+                        height: 36px;
+                        padding: 0 10px;
+                        font-size: 13px;
+                    }
+                }
+            </style>
+            
+            <!-- 学习资料页面 -->
+            <div class="learning-resources-page">
+        <!-- 搜索筛选区 -->
+        <div class="search-filter-section">
+            <div class="search-container">
+                <div class="content-search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="搜索学习资料..." value="">
+                    <button class="btn-search" onclick="performSearch()">搜索</button>
+                </div>
+                
+                <div class="filter-options">
+                    <div class="filter-group">
+                        <label>资料类型</label>
+                        <select id="typeFilter" onchange="filterByType()">
+                            <option value="">全部类型</option>
+                            <option value="ebook">电子书</option>
+                            <option value="video">视频教程</option>
+                            <option value="slides">课件</option>
+                            <option value="dataset">数据集</option>
+                            <option value="code">代码示例</option>
+                            <option value="paper">论文</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>难度级别</label>
+                        <select id="levelFilter" onchange="filterByLevel()">
+                            <option value="">全部级别</option>
+                            <option value="beginner">入门</option>
+                            <option value="intermediate">进阶</option>
+                            <option value="advanced">高级</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>上传时间</label>
+                        <select id="timeFilter" onchange="filterByTime()">
+                            <option value="">全部时间</option>
+                            <option value="today">今天</option>
+                            <option value="week">本周</option>
+                            <option value="month">本月</option>
+                            <option value="year">今年</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label>评分</label>
+                        <select id="ratingFilter" onchange="filterByRating()">
+                            <option value="">全部评分</option>
+                            <option value="5">5星</option>
+                            <option value="4">4星及以上</option>
+                            <option value="3">3星及以上</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 资料分类页卡 -->
+        <div class="categories-tabs-section">
+            <div class="categories-tabs">
+                <a href="#" class="category-tab active">
+                    <i class="fas fa-brain"></i>
+                    <span>机器学习</span>
+                    <span class="category-count">(156)</span>
+                </a>
+                <a href="#" class="category-tab">
+                    <i class="fas fa-network-wired"></i>
+                    <span>深度学习</span>
+                    <span class="category-count">(89)</span>
+                </a>
+                <a href="#" class="category-tab">
+                    <i class="fas fa-robot"></i>
+                    <span>机器人学</span>
+                    <span class="category-count">(67)</span>
+                </a>
+                <a href="#" class="category-tab">
+                    <i class="fas fa-eye"></i>
+                    <span>计算机视觉</span>
+                    <span class="category-count">(78)</span>
+                </a>
+                <a href="#" class="category-tab">
+                    <i class="fas fa-language"></i>
+                    <span>自然语言处理</span>
+                    <span class="category-count">(92)</span>
+                </a>
+                <a href="#" class="category-tab">
+                    <i class="fas fa-gamepad"></i>
+                    <span>强化学习</span>
+                    <span class="category-count">(45)</span>
+                </a>
+                <a href="#" class="category-tab">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>数据科学</span>
+                    <span class="category-count">(134)</span>
+                </a>
+                <a href="#" class="category-tab">
+                    <i class="fas fa-balance-scale"></i>
+                    <span>AI伦理</span>
+                    <span class="category-count">(38)</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- 主要内容区域 -->
+        <div class="learning-resources-main">
+            <!-- 中间资料列表 -->
+            <main class="resources-section">
+                <div class="resources-header">
+                    <h2>学习资料</h2>
+                    <button class="btn-upload" onclick="showUploadForm()">
+                        <i class="fas fa-upload"></i> 上传资料
+                    </button>
+                </div>
+                
+                <div class="resources-grid" id="resourcesGrid">
+                    <div class="resource-card" data-resource-id="1">
+                        <div class="resource-cover">
+                            <img src="images/AI.png" alt="机器学习实战">
+                            <div class="resource-type-badge">
+                                <i class="fas fa-book"></i>
+                            </div>
+                            <div class="resource-size">15.0 MB</div>
+                        </div>
+                        
+                        <div class="resource-info">
+                            <h3 class="resource-title">
+                                <a href="learning_resource_detail.html?id=1">机器学习实战：从理论到实践</a>
+                            </h3>
+                            
+                            <div class="resource-meta">
+                                <div class="uploader-info">
+                                    <img src="images/user.jpg" alt="张三" class="uploader-avatar">
+                                    <span class="uploader-name">张三</span>
+                                    <span class="upload-time">2024-01-15</span>
+                                </div>
+                                
+                                <div class="resource-stats">
+                                    <div class="resource-rating">
+                                        <div class="stars">
+                                            <i class="fas fa-star filled"></i>
+                                            <i class="fas fa-star filled"></i>
+                                            <i class="fas fa-star filled"></i>
+                                            <i class="fas fa-star filled"></i>
+                                            <i class="fas fa-star"></i>
+                                        </div>
+                                        <span class="rating-text">4.5/5</span>
+                                    </div>
+                                    
+                                    <div class="resource-actions">
+                                        <span class="download-count">
+                                            <i class="fas fa-download"></i>
+                                            156
+                                        </span>
+                                        <span class="comment-count">
+                                            <i class="fas fa-comment"></i>
+                                            23
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="resource-description">一本全面的机器学习入门书籍，涵盖监督学习、无监督学习、深度学习等核心概念，配有大量实战案例。</div>
+                            
+                            <div class="resource-tags">
+                                <span class="tag">机器学习</span>
+                                <span class="tag">入门</span>
+                                <span class="tag">实战</span>
+                            </div>
+                            
+                            <div class="resource-footer">
+                                <div class="difficulty-level level-beginner">
+                                    入门
+                                </div>
+                                <button class="btn-download" onclick="downloadResource('1')">
+                                    <i class="fas fa-download"></i>
+                                    下载
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="resource-card" data-resource-id="2">
+                        <div class="resource-cover">
+                            <img src="images/AI.png" alt="深度学习视频教程">
+                            <div class="resource-type-badge">
+                                <i class="fas fa-video"></i>
+                            </div>
+                            <div class="resource-size">500.0 MB</div>
+                        </div>
+                        
+                        <div class="resource-info">
+                            <h3 class="resource-title">
+                                <a href="learning_resource_detail.html?id=2">深度学习视频教程：神经网络详解</a>
+                            </h3>
+                            
+                            <div class="resource-meta">
+                                <div class="uploader-info">
+                                    <img src="images/user.jpg" alt="李四" class="uploader-avatar">
+                                    <span class="uploader-name">李四</span>
+                                    <span class="upload-time">2024-01-14</span>
+                                </div>
+                                
+                                <div class="resource-stats">
+                                    <div class="resource-rating">
+                                        <div class="stars">
+                                            <i class="fas fa-star filled"></i>
+                                            <i class="fas fa-star filled"></i>
+                                            <i class="fas fa-star filled"></i>
+                                            <i class="fas fa-star filled"></i>
+                                            <i class="fas fa-star filled"></i>
+                                        </div>
+                                        <span class="rating-text">4.8/5</span>
+                                    </div>
+                                    
+                                    <div class="resource-actions">
+                                        <span class="download-count">
+                                            <i class="fas fa-download"></i>
+                                            89
+                                        </span>
+                                        <span class="comment-count">
+                                            <i class="fas fa-comment"></i>
+                                            15
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="resource-description">深入浅出的深度学习视频教程，从基础概念到高级应用，包含完整的代码实现和项目实战。</div>
+                            
+                            <div class="resource-tags">
+                                <span class="tag">深度学习</span>
+                                <span class="tag">神经网络</span>
+                                <span class="tag">视频教程</span>
+                            </div>
+                            
+                            <div class="resource-footer">
+                                <div class="difficulty-level level-intermediate">
+                                    进阶
+                                </div>
+                                <button class="btn-download" onclick="downloadResource('2')">
+                                    <i class="fas fa-download"></i>
+                                    下载
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="resource-card" data-resource-id="3">
+                        <div class="resource-cover">
+                            <img src="images/AI.png" alt="计算机视觉课件">
+                            <div class="resource-type-badge">
+                                <i class="fas fa-presentation"></i>
+                            </div>
+                            <div class="resource-size">20.0 MB</div>
+                        </div>
+                        
+                        <div class="resource-info">
+                            <h3 class="resource-title">
+                                <a href="learning_resource_detail.html?id=3">计算机视觉算法课件</a>
+                            </h3>
+                            
+                            <div class="resource-meta">
+                                <div class="uploader-info">
+                                    <img src="images/user.jpg" alt="张三" class="uploader-avatar">
+                                    <span class="uploader-name">张三</span>
+                                    <span class="upload-time">2024-01-13</span>
+                                </div>
+                                
+                                <div class="resource-stats">
+                                    <div class="resource-rating">
+                                        <div class="stars">
+                                            <i class="fas fa-star filled"></i>
+                                            <i class="fas fa-star filled"></i>
+                                            <i class="fas fa-star filled"></i>
+                                            <i class="fas fa-star filled"></i>
+                                            <i class="fas fa-star"></i>
+                                        </div>
+                                        <span class="rating-text">4.2/5</span>
+                                    </div>
+                                    
+                                    <div class="resource-actions">
+                                        <span class="download-count">
+                                            <i class="fas fa-download"></i>
+                                            67
+                                        </span>
+                                        <span class="comment-count">
+                                            <i class="fas fa-comment"></i>
+                                            8
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="resource-description">计算机视觉核心算法的详细课件，包含图像处理、特征提取、目标检测等内容。</div>
+                            
+                            <div class="resource-tags">
+                                <span class="tag">计算机视觉</span>
+                                <span class="tag">算法</span>
+                                <span class="tag">课件</span>
+                            </div>
+                            
+                            <div class="resource-footer">
+                                <div class="difficulty-level level-advanced">
+                                    高级
+                                </div>
+                                <button class="btn-download" onclick="downloadResource('3')">
+                                    <i class="fas fa-download"></i>
+                                    下载
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="resource-card" data-resource-id="4">
+                        <div class="resource-cover">
+                            <img src="images/AI.png" alt="MNIST数据集">
+                            <div class="resource-type-badge">
+                                <i class="fas fa-database"></i>
+                            </div>
+                            <div class="resource-size">10.0 MB</div>
+                        </div>
+                        
+                        <div class="resource-info">
+                            <h3 class="resource-title">
+                                <a href="learning_resource_detail.html?id=4">MNIST手写数字数据集</a>
+                            </h3>
+                            
+                            <div class="resource-meta">
+                                <div class="uploader-info">
+                                    <img src="images/user.jpg" alt="李四" class="uploader-avatar">
+                                    <span class="uploader-name">李四</span>
+                                    <span class="upload-time">2024-01-12</span>
+                                </div>
+                                
+                                <div class="resource-stats">
+                                    <div class="resource-rating">
+                                        <div class="stars">
+                                            <i class="fas fa-star filled"></i>
+                                            <i class="fas fa-star filled"></i>
+                                            <i class="fas fa-star filled"></i>
+                                            <i class="fas fa-star filled"></i>
+                                            <i class="fas fa-star filled"></i>
+                                        </div>
+                                        <span class="rating-text">4.6/5</span>
+                                    </div>
+                                    
+                                    <div class="resource-actions">
+                                        <span class="download-count">
+                                            <i class="fas fa-download"></i>
+                                            234
+                                        </span>
+                                        <span class="comment-count">
+                                            <i class="fas fa-comment"></i>
+                                            12
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="resource-description">经典的MNIST手写数字识别数据集，包含60000张训练图片和10000张测试图片。</div>
+                            
+                            <div class="resource-tags">
+                                <span class="tag">数据集</span>
+                                <span class="tag">MNIST</span>
+                                <span class="tag">手写数字</span>
+                            </div>
+                            
+                            <div class="resource-footer">
+                                <div class="difficulty-level level-beginner">
+                                    入门
+                                </div>
+                                <button class="btn-download" onclick="downloadResource('4')">
+                                    <i class="fas fa-download"></i>
+                                    下载
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 分页 -->
+                <div class="pagination">
+                    <a href="#" class="page-link" title="上一页">
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                    <a href="#" class="page-link active">1</a>
+                    <a href="#" class="page-link">2</a>
+                    <a href="#" class="page-link">3</a>
+                    <a href="#" class="page-link">4</a>
+                    <a href="#" class="page-link">5</a>
+                    <span class="page-ellipsis">...</span>
+                    <a href="#" class="page-link">10</a>
+                    <a href="#" class="page-link" title="下一页">
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- 上传资料模态框 -->
+    <div class="modal large" id="uploadModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>上传学习资料</h3>
+                <button class="modal-close" onclick="closeUploadModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="uploadForm" class="upload-form">
+                    <div class="form-group">
+                        <label for="resourceTitle">资料名称 *</label>
+                        <input type="text" id="resourceTitle" name="title" required placeholder="请输入资料名称">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="resourceDescription">资料简介 *</label>
+                        <textarea id="resourceDescription" name="description" rows="4" required placeholder="请简要描述资料内容、适用人群等"></textarea>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="resourceType">资料类型 *</label>
+                            <select id="resourceType" name="type" required>
+                                <option value="">请选择资料类型</option>
+                                <option value="ebook">电子书</option>
+                                <option value="video">视频教程</option>
+                                <option value="slides">课件</option>
+                                <option value="dataset">数据集</option>
+                                <option value="code">代码示例</option>
+                                <option value="paper">论文</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="resourceLevel">难度级别 *</label>
+                            <select id="resourceLevel" name="level" required>
+                                <option value="">请选择难度级别</option>
+                                <option value="beginner">入门</option>
+                                <option value="intermediate">进阶</option>
+                                <option value="advanced">高级</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="resourceCategory">所属分类 *</label>
+                        <select id="resourceCategory" name="category" required>
+                            <option value="">请选择分类</option>
+                            <option value="machine-learning">机器学习</option>
+                            <option value="deep-learning">深度学习</option>
+                            <option value="robotics">机器人学</option>
+                            <option value="computer-vision">计算机视觉</option>
+                            <option value="nlp">自然语言处理</option>
+                            <option value="reinforcement-learning">强化学习</option>
+                            <option value="data-science">数据科学</option>
+                            <option value="ai-ethics">AI伦理</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="resourceTags">标签</label>
+                        <input type="text" id="resourceTags" name="tags" placeholder="请输入标签，用逗号分隔">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="resourceCover">封面图片</label>
+                        <div class="cover-upload">
+                            <input type="file" id="resourceCover" name="cover" accept="image/*">
+                            <div class="upload-preview" id="coverPreview">
+                                <i class="fas fa-image"></i>
+                                <span>点击上传封面图片</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="resourceFiles">资料文件 *</label>
+                        <div class="file-upload">
+                            <input type="file" id="resourceFiles" name="files" multiple required>
+                            <div class="upload-area" id="uploadArea">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <span>拖拽文件到此处或点击选择文件</span>
+                                <small>支持多文件上传，最大单个文件100MB</small>
+                            </div>
+                            <div class="file-list" id="fileList"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" onclick="closeUploadModal()">取消</button>
+                        <button type="submit" class="btn-primary">上传资料</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 搜索和筛选功能
+        function performSearch() {
+            const keyword = document.getElementById('searchInput').value;
+            const type = document.getElementById('typeFilter').value;
+            const level = document.getElementById('levelFilter').value;
+            const time = document.getElementById('timeFilter').value;
+            const rating = document.getElementById('ratingFilter').value;
+            
+            alert(`搜索参数：\n关键词：${keyword}\n类型：${type}\n级别：${level}\n时间：${time}\n评分：${rating}`);
+        }
+
+        function filterByType() {
+            performSearch();
+        }
+
+        function filterByLevel() {
+            performSearch();
+        }
+
+        function filterByTime() {
+            performSearch();
+        }
+
+        function filterByRating() {
+            performSearch();
+        }
+
+        // 下载资源
+        function downloadResource(resourceId) {
+            if (confirm('确定要下载这个资料吗？')) {
+                alert('开始下载资料...');
+                // 这里可以添加实际的下载逻辑
+            }
+        }
+
+        // 上传功能
+        function showUploadForm() {
+            document.getElementById('uploadModal').style.display = 'flex';
+        }
+
+        function closeUploadModal() {
+            document.getElementById('uploadModal').style.display = 'none';
+            document.getElementById('uploadForm').reset();
+            document.getElementById('coverPreview').innerHTML = '<i class="fas fa-image"></i><span>点击上传封面图片</span>';
+            document.getElementById('fileList').innerHTML = '';
+        }
+
+        // 封面图片预览
+        document.getElementById('resourceCover').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('coverPreview').innerHTML = `<img src="${e.target.result}" alt="封面预览">`;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // 文件上传处理
+        document.getElementById('resourceFiles').addEventListener('change', function(e) {
+            const files = Array.from(e.target.files);
+            const fileList = document.getElementById('fileList');
+            fileList.innerHTML = '';
+            
+            files.forEach(file => {
+                const fileItem = document.createElement('div');
+                fileItem.className = 'file-item';
+                fileItem.innerHTML = `
+                    <i class="fas fa-file"></i>
+                    <span class="file-name">${file.name}</span>
+                    <span class="file-size">${formatFileSize(file.size)}</span>
+                `;
+                fileList.appendChild(fileItem);
+            });
+        });
+
+        // 拖拽上传
+        const uploadArea = document.getElementById('uploadArea');
+        uploadArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            
+            const files = Array.from(e.dataTransfer.files);
+            const fileInput = document.getElementById('resourceFiles');
+            
+            // 创建新的FileList对象
+            const dt = new DataTransfer();
+            files.forEach(file => dt.items.add(file));
+            fileInput.files = dt.files;
+            
+            // 触发change事件
+            fileInput.dispatchEvent(new Event('change'));
+        });
+
+        // 表单提交
+        document.getElementById('uploadForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            alert('资料上传成功！');
+            closeUploadModal();
+        });
+
+        // 工具函数
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // 点击模态框外部关闭
+        window.onclick = function(event) {
+            const uploadModal = document.getElementById('uploadModal');
+            if (event.target === uploadModal) {
+                closeUploadModal();
+            }
+        }
+
+        // 分类页卡点击事件
+        document.querySelectorAll('.category-tab').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // 移除所有active类
+                document.querySelectorAll('.category-tab').forEach(i => i.classList.remove('active'));
+                
+                // 添加active类到当前项
+                this.classList.add('active');
+                
+                const categoryName = this.querySelector('span').textContent;
+                alert(`切换到分类：${categoryName}`);
+            });
+        });
+
+        // 资料卡片点击跳转功能
+        document.addEventListener('DOMContentLoaded', function() {
+            const resourceCards = document.querySelectorAll('.resource-card');
+            
+            resourceCards.forEach(card => {
+                card.addEventListener('click', function(e) {
+                    // 如果点击的是链接、按钮或其他交互元素，不执行跳转
+                    if (e.target.tagName === 'A' || e.target.tagName === 'BUTTON' || 
+                        e.target.closest('a') || e.target.closest('button') ||
+                        e.target.closest('.resource-actions')) {
+                        return;
+                    }
+                    
+                    // 获取资料ID并跳转到详情页
+                    const resourceId = this.dataset.resourceId;
+                    if (resourceId) {
+                        window.location.href = `learning_resource_detail.html?id=${resourceId}`;
+                    }
+                });
+                
+                // 添加鼠标悬停效果
+                card.style.cursor = 'pointer';
+            });
+        });
+    </script>
+        </section>
+
+        <!-- 右侧信息推荐区 -->
+        <aside class="recommendation-area">
+            <!-- 登录面板 -->
+            <div class="login-panel">
+                <div class="panel-header">
+                    <h3>登录</h3>
+                    <a href="#" class="register-link">注册</a>
+                </div>
+                <div class="user-info">
+                    <img src="images/user.jpg" alt="用户头像">
+                    <div class="user-details">
+                        <h4><a href="profile_preview.html">用户彬容砺</a></h4>
+                        <div class="user-level-info">
+                            <span>2018</span>
+                            <div class="stars">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <form class="login-form">
+                    <div class="form-group">
+                        <input type="text" placeholder="用户名" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" placeholder="用户密码" required>
+                    </div>
+                    <button type="submit" class="btn-login">登录</button>
+                </form>
+                <div class="form-footer">
+                    <span>用户密</span>
+                    <a href="forgot_password.html" class="forgot-password">忘记密码</a>
+                </div>
+            </div>
+
+            <!-- 活跃社群推荐 -->
+            <div class="community-panel">
+                <h3>活跃社群推荐</h3>
+                <div class="community-list">
+                    <div class="community-item">
+                        <div class="community-avatar">
+                            <img src="images/user.jpg" alt="社群头像">
+                        </div>
+                        <div class="community-info">
+                            <h4><a href="community_detail_preview.html">AI技术交流群</a></h4>
+                            <p>成员: 1,234 | 近期活动: 5</p>
+                        </div>
+                    </div>
+                    <div class="community-item">
+                        <div class="community-avatar">
+                            <img src="images/user.jpg" alt="社群头像">
+                        </div>
+                        <div class="community-info">
+                            <h4><a href="community_detail_preview.html">机器学习实践</a></h4>
+                            <p>成员: 856 | 近期活动: 3</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="section-footer">
+                    <a href="community_preview.html" class="view-more">查看更多社群 <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+
+            <!-- 专家学者推荐 -->
+            <div class="expert-panel">
+                <h3>专家学者推荐</h3>
+                <div class="expert-list">
+                    <div class="expert-item">
+                        <img src="images/user.jpg" alt="专家头像">
+                        <div class="expert-info">
+                            <h4>张教授</h4>
+                            <p>计算机视觉专家</p>
+                        </div>
+                    </div>
+                    <div class="expert-item">
+                        <img src="images/user.jpg" alt="专家头像">
+                        <div class="expert-info">
+                            <h4>李博士</h4>
+                            <p>自然语言处理</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 热门标签 -->
+            <div class="tags-panel">
+                <h3>热门标签</h3>
+                <div class="tag-cloud">
+                    <span class="tag">新</span>
+                    <span class="tag">等分</span>
+                    <span class="tag">运营</span>
+                    <span class="tag">活创社区推荐</span>
+                    <span class="tag">陈吴敦</span>
+                    <span class="tag">SEALIB</span>
+                    <span class="tag">回答</span>
+                    <span class="tag">提问</span>
+                    <span class="tag">歌铝</span>
+                    <span class="tag">信息</span>
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <span>三生AI</span>
+            </div>
+            <div class="footer-links">
+                <a href="#">关于我们</a>
+                <a href="#">使用条款</a>
+                <a href="#">隐私政策</a>
+                <a href="#">联系我们</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html> 

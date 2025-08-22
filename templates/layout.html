@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.title}} - AI论坛</title>
+    <link rel="icon" type="image/png" href="/static/images/logo.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="/static/images/logo.png" sizes="48x48">
+    <link rel="apple-touch-icon" href="/static/images/logo.png" sizes="180x180">
+    <link rel="icon" type="image/png" href="/static/images/logo.png" sizes="192x192">
+    <link rel="stylesheet" href="/static/styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <header class="top-nav">
+        <div class="nav-container">
+            <div class="nav-left">
+                <div class="logo">
+                    <img src="/images/logo.png" alt="AI论坛Logo" class="logo-image">
+                </div>
+                <nav class="main-nav">
+                    <a href="/" class="nav-link">首页</a>
+                    <a href="/qa" class="nav-link">知识问答</a>
+                    <a href="/category/1" class="nav-link">技术分享</a>
+                    <a href="/category/2" class="nav-link">学习资料</a>
+                </nav>
+            </div>
+            <div class="nav-right">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="AI搜索" id="searchInput">
+                </div>
+                <div class="user-actions">
+                    {{if .user}}
+                        <i class="fas fa-bell"></i>
+                        <div class="user-avatar">
+                            <img src="{{.user.Avatar}}" alt="用户头像">
+                        </div>
+                        <div class="user-menu">
+                            <a href="/profile">个人资料</a>
+                            <a href="/auth/logout">退出登录</a>
+                        </div>
+                    {{else}}
+                        <a href="/auth/login" class="btn-login">登录</a>
+                        <a href="/auth/register" class="btn-register">注册</a>
+                    {{end}}
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主要内容区域 -->
+    <main class="main-content">
+        {{template "content" .}}
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <span>三生AI</span>
+            </div>
+            <div class="footer-links">
+                <a href="#">关于我们</a>
+                <a href="#">使用条款</a>
+                <a href="#">隐私政策</a>
+                <a href="#">联系我们</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="/static/script.js"></script>
+</body>
+</html> 
